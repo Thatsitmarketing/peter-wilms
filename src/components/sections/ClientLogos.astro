@@ -1,0 +1,66 @@
+---
+import { clients } from '../../data/site';
+---
+
+<section class="clients" aria-label="Auftraggeber">
+  <div class="container">
+    <p class="clients__title" data-reveal>
+      Vertraut von öffentlichen Auftraggebern, Bauunternehmen und Ingenieurbüros
+    </p>
+    <ul class="clients__list" data-reveal style="--reveal-delay: 0.15s">
+      {clients.map((client) => (
+        <li class="clients__logo" title={`Platzhalter – Logo ${client}`}>
+          {client}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .clients {
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+    background: var(--color-bg-soft);
+  }
+
+  .clients__title {
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-slate);
+    margin-bottom: 1.75rem;
+  }
+
+  .clients__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem 2rem;
+  }
+
+  /* Logo-Platzhalter: Textmarken in Kapseln, später durch <img> ersetzen */
+  .clients__logo {
+    display: grid;
+    place-items: center;
+    min-width: 9rem;
+    padding: 0.85rem 1.5rem;
+    border: 1px dashed #b3bec9;
+    border-radius: var(--radius);
+    color: #7c8a98;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    filter: grayscale(1);
+    transition: filter 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  }
+
+  .clients__logo:hover {
+    filter: grayscale(0);
+    color: var(--color-ink);
+    border-color: var(--color-slate);
+  }
+</style>

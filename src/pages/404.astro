@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Seite nicht gefunden – Peter Willms Bauunternehmung GmbH">
+  <section class="section">
+    <div class="container notfound">
+      <p class="notfound__code">404</p>
+      <h1>Diese Seite wurde nicht gefunden</h1>
+      <p>Die aufgerufene Seite existiert nicht oder wurde verschoben.</p>
+      <a href="/" class="btn btn--primary">Zur Startseite</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    text-align: center;
+    padding-block: 4rem;
+  }
+
+  .notfound__code {
+    font-size: 5rem;
+    font-weight: 800;
+    color: var(--color-line);
+    margin: 0;
+    line-height: 1;
+  }
+</style>

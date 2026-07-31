@@ -1,0 +1,395 @@
+---
+import { company } from '../../data/site';
+---
+
+<section class="section section--ink" id="kontakt" aria-labelledby="contact-title">
+  <div class="container">
+    <div class="contact__grid">
+      <div class="contact__info" data-reveal="left">
+        <span class="section__kicker">Kontakt</span>
+        <h2 class="section__title" id="contact-title">
+          Sprechen Sie mit uns über Ihr Bauwerk
+        </h2>
+        <p class="section__intro">
+          Ob Ausschreibung, Direktvergabe oder Nachunternehmerleistung – wir melden
+          uns kurzfristig zurück.
+        </p>
+
+        <dl class="contact__details">
+          <div>
+            <dt>Anschrift</dt>
+            <dd>
+              {company.name}<br />
+              {company.address.street}<br />
+              {company.address.zip} {company.address.city}
+            </dd>
+          </div>
+          <div>
+            <dt>Telefon Zentrale</dt>
+            <dd>
+              <a href={`tel:${company.contact.phoneCentral.replace(/\s/g, '')}`}>
+                {company.contact.phoneCentralDisplay}
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt>Bauleitung</dt>
+            <dd>
+              <a href={`tel:${company.contact.siteManagement.replace(/\s/g, '')}`}>
+                {company.contact.siteManagementDisplay}
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt>E-Mail</dt>
+            <dd>
+              <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a>
+            </dd>
+          </div>
+        </dl>
+
+        <!-- Anfahrt: Zwei-Klick-Lösung. Die Karte (z. B. Google Maps) wird erst
+             nach Klick UND vorliegender Einwilligung „Darstellung & Funktion"
+             geladen – vorher fließen keine Daten an Google. -->
+        <div
+          class="contact__map"
+          data-consent-placeholder="functional"
+          data-map-src={`https://www.google.com/maps?q=${encodeURIComponent(
+            `${company.name}, ${company.address.street}, ${company.address.zip} ${company.address.city}`
+          )}&output=embed`}
+        >
+          <div class="contact__map-inner" data-map-placeholder>
+            <p class="contact__map-title">Anfahrt &amp; Karte</p>
+            <p class="contact__map-text">
+              Zum Schutz Ihrer Daten wird die Karte (Google Maps) erst nach Ihrer
+              Einwilligung geladen. Mit dem Klick stimmen Sie der Übertragung von
+              Daten an Google zu (Kategorie „Darstellung &amp; Funktion").
+            </p>
+            <button type="button" class="btn btn--ghost" data-map-load>
+              Karte laden
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <form class="contact__form" data-contact-form novalidate data-reveal="right">
+        <h3 class="contact__form-title">Anfrage senden</h3>
+
+        <div class="form-field">
+          <label for="cf-name">Name *</label>
+          <input type="text" id="cf-name" name="name" required autocomplete="name" />
+        </div>
+
+        <div class="form-field">
+          <label for="cf-company">Firma / Institution</label>
+          <input type="text" id="cf-company" name="company" autocomplete="organization" />
+        </div>
+
+        <div class="form-field">
+          <label for="cf-email">E-Mail *</label>
+          <input type="email" id="cf-email" name="email" required autocomplete="email" />
+        </div>
+
+        <div class="form-field">
+          <label for="cf-phone">Telefon</label>
+          <input type="tel" id="cf-phone" name="phone" autocomplete="tel" />
+        </div>
+
+        <div class="form-field">
+          <label for="cf-message">Ihre Nachricht *</label>
+          <textarea id="cf-message" name="message" rows="5" required></textarea>
+        </div>
+
+        <!-- Honeypot gegen Spam-Bots: für Menschen unsichtbar, bleibt leer -->
+        <div class="form-field form-field--hp" aria-hidden="true">
+          <label for="cf-website">Website</label>
+          <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="form-field form-field--consent">
+          <input type="checkbox" id="cf-privacy" name="privacy" required />
+          <label for="cf-privacy">
+            Ich habe die <a href="/datenschutz">Datenschutzerklärung</a> zur Kenntnis
+            genommen und bin damit einverstanden, dass meine Angaben zur Bearbeitung
+            der Anfrage gespeichert werden. *
+          </label>
+        </div>
+
+        <p class="form-note">* Pflichtfelder. Ihre Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet.</p>
+
+        <button type="submit" class="btn btn--primary contact__submit">
+          Nachricht senden
+        </button>
+
+        <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  .contact__grid .section__title {
+    color: #fff;
+  }
+
+  .contact__details {
+    margin: 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1.5rem;
+  }
+
+  .contact__details dt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8697a8;
+    margin-bottom: 0.35rem;
+  }
+
+  .contact__details dd {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .contact__details a {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .contact__details a:hover {
+    color: var(--color-accent);
+  }
+
+  /* Karten-Platzhalter (Zwei-Klick-Lösung) */
+  .contact__map {
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius);
+    overflow: hidden;
+    min-height: 14rem;
+    display: grid;
+  }
+
+  .contact__map-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1.5rem;
+  }
+
+  .contact__map-title {
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+  }
+
+  .contact__map-text {
+    font-size: 0.85rem;
+    color: #97a5b3;
+    margin: 0 0 0.75rem;
+    max-width: 48ch;
+  }
+
+  .contact__map :global(iframe) {
+    width: 100%;
+    height: 100%;
+    min-height: 18rem;
+    border: 0;
+    display: block;
+  }
+
+  /* Formular */
+  .contact__form {
+    background: #fff;
+    color: var(--color-ink);
+    border-radius: var(--radius);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+  }
+
+  .contact__form-title {
+    font-size: 1.3rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-field {
+    margin-bottom: 1.1rem;
+  }
+
+  .form-field label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+
+  .form-field input[type='text'],
+  .form-field input[type='email'],
+  .form-field input[type='tel'],
+  .form-field textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    font: inherit;
+    color: inherit;
+    background: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .form-field input:focus,
+  .form-field textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(232, 99, 10, 0.18);
+  }
+
+  .form-field textarea {
+    resize: vertical;
+  }
+
+  /* Honeypot unsichtbar positionieren (nicht display:none – Bots erkennen das) */
+  .form-field--hp {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+  }
+
+  .form-field--consent {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.65rem;
+    align-items: start;
+  }
+
+  .form-field--consent input {
+    margin-top: 0.3rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--color-accent);
+  }
+
+  .form-field--consent label {
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--color-slate);
+    margin: 0;
+  }
+
+  .form-note {
+    font-size: 0.78rem;
+    color: var(--color-slate);
+    margin-bottom: 1.25rem;
+  }
+
+  .contact__submit {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .form-status {
+    margin: 0.9rem 0 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-height: 1.4em;
+  }
+
+  .form-status.is-success {
+    color: #15803d;
+  }
+
+  .form-status.is-error {
+    color: #b91c1c;
+  }
+
+  @media (max-width: 56rem) {
+    .contact__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  /* ---------- Karten-Platzhalter (Zwei-Klick-Lösung) ---------- */
+  import { consentManager } from '../../scripts/consent';
+
+  const mapContainer = document.querySelector<HTMLElement>('[data-consent-placeholder="functional"]');
+  const mapLoadBtn = document.querySelector<HTMLButtonElement>('[data-map-load]');
+
+  function loadMap() {
+    if (!mapContainer || mapContainer.querySelector('iframe')) return;
+    const src = mapContainer.dataset.mapSrc;
+    if (!src) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = src;
+    iframe.title = 'Anfahrtskarte (Google Maps)';
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'no-referrer-when-downgrade';
+    mapContainer.querySelector('[data-map-placeholder]')?.remove();
+    mapContainer.appendChild(iframe);
+  }
+
+  // Klick auf „Karte laden" gilt als Einwilligung für „Darstellung & Funktion".
+  // Kein Auto-Load bei bereits erteilter Einwilligung – die Karte lädt erst,
+  // wenn sie bewusst angefordert wird.
+  mapLoadBtn?.addEventListener('click', () => {
+    if (!consentManager.hasConsent('functional')) {
+      consentManager.save({ functional: true });
+    }
+    loadMap();
+  });
+
+  /* ---------- Kontaktformular ---------- */
+
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const status = document.querySelector<HTMLElement>('[data-form-status]');
+
+  function setStatus(message: string, type: 'success' | 'error') {
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle('is-success', type === 'success');
+    status.classList.toggle('is-error', type === 'error');
+  }
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    setStatus('Nachricht wird gesendet …', 'success');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      form.reset();
+      setStatus('Vielen Dank! Ihre Nachricht wurde übermittelt. Wir melden uns kurzfristig.', 'success');
+    } catch {
+      setStatus(
+        'Die Nachricht konnte nicht gesendet werden. Bitte kontaktieren Sie uns telefonisch oder per E-Mail.',
+        'error'
+      );
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
+</script>

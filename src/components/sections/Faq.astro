@@ -1,0 +1,143 @@
+---
+import { faq } from '../../data/site';
+---
+
+<section class="section" id="faq" aria-labelledby="faq-title">
+  <div class="container faq__container">
+    <span class="section__kicker" data-reveal>FAQ</span>
+    <h2 class="section__title" id="faq-title" data-reveal>Häufige Fragen</h2>
+
+    <div class="faq__list">
+      {faq.map((item, index) => (
+        <!-- Reveal auf dem Wrapper – <details> hat eigene transition-Regeln -->
+        <div data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
+        <details class="faq-item" data-faq>
+          <summary class="faq-item__question">
+            <span>{item.question}</span>
+            <span class="faq-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-item__answer-wrap">
+            <p class="faq-item__answer">{item.answer}</p>
+          </div>
+        </details>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq__container {
+    max-width: 50rem;
+  }
+
+  .faq__list {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .faq-item {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    background: #fff;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .faq-item[open] {
+    border-color: var(--color-ink);
+    box-shadow: var(--shadow-card);
+  }
+
+  .faq-item__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.15rem 1.35rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq-item__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item__icon {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--color-bg-soft);
+    color: var(--color-ink);
+    flex-shrink: 0;
+    transition: transform 0.3s var(--ease-out), background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .faq-item[open] .faq-item__icon {
+    transform: rotate(45deg);
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  /* Sanfte Auf-/Zuklapp-Animation über grid-template-rows (JS setzt .is-animating) */
+  .faq-item__answer-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s var(--ease-out);
+  }
+
+  .faq-item[open] .faq-item__answer-wrap {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-item__answer {
+    overflow: hidden;
+    margin: 0;
+    padding: 0 1.35rem;
+    color: var(--color-slate);
+  }
+
+  .faq-item[open] .faq-item__answer {
+    padding-bottom: 1.25rem;
+  }
+</style>
+
+<script>
+  /**
+   * <details> klappt nativ ohne Animation auf/zu. Für die sanfte Animation
+   * steuern wir das open-Attribut selbst: Beim Schließen bleibt es gesetzt,
+   * bis die CSS-Transition (grid-template-rows) abgeschlossen ist.
+   */
+  document.querySelectorAll<HTMLDetailsElement>('[data-faq]').forEach((details) => {
+    const summary = details.querySelector('summary');
+    const wrap = details.querySelector<HTMLElement>('.faq-item__answer-wrap');
+    if (!summary || !wrap) return;
+
+    summary.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      if (details.open) {
+        // Schließen: erst Transition auslösen, open-Attribut danach entfernen
+        details.classList.add('is-closing');
+        wrap.style.gridTemplateRows = '0fr';
+        const onEnd = () => {
+          details.open = false;
+          details.classList.remove('is-closing');
+          wrap.style.gridTemplateRows = '';
+          wrap.removeEventListener('transitionend', onEnd);
+        };
+        wrap.addEventListener('transitionend', onEnd);
+      } else {
+        details.open = true;
+      }
+    });
+  });
+</script>

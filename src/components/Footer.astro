@@ -1,0 +1,137 @@
+---
+import { company, navigation } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__col footer__col--brand">
+      <p class="footer__brand">Peter Willms<br />Bauunternehmung GmbH</p>
+      <p class="footer__claim">
+        Spezialist für Brücken- und Bauwerksinstandsetzung in Nordrhein-Westfalen.
+      </p>
+    </div>
+
+    <div class="footer__col">
+      <p class="footer__heading">Kontakt</p>
+      <address class="footer__address">
+        {company.address.street}<br />
+        {company.address.zip} {company.address.city}<br />
+        <a href={`tel:${company.contact.phoneCentral.replace(/\s/g, '')}`}>
+          {company.contact.phoneCentralDisplay}
+        </a><br />
+        <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a>
+      </address>
+    </div>
+
+    <div class="footer__col">
+      <p class="footer__heading">Navigation</p>
+      <ul class="footer__list">
+        {navigation.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+        <li><a href="/#kontakt">Kontakt</a></li>
+      </ul>
+    </div>
+
+    <div class="footer__col">
+      <p class="footer__heading">Rechtliches</p>
+      <ul class="footer__list">
+        <li><a href="/impressum">Impressum</a></li>
+        <li><a href="/datenschutz">Datenschutz</a></li>
+        <li>
+          <!-- Öffnet den Consent-Dialog erneut (DSGVO: jederzeit anpassbar) -->
+          <button type="button" class="footer__consent-btn" data-open-consent>
+            Cookie-Einstellungen
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <p>© {year} {company.name}. Alle Rechte vorbehalten.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-ink);
+    color: #b7c2cd;
+    font-size: 0.95rem;
+  }
+
+  .footer a,
+  .footer__consent-btn {
+    color: #dfe6ec;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer a:hover,
+  .footer__consent-btn:hover {
+    color: var(--color-accent);
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 2.5rem;
+    padding-block: 3.5rem 2.5rem;
+  }
+
+  .footer__brand {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.35;
+    margin-bottom: 0.75rem;
+  }
+
+  .footer__claim {
+    max-width: 26ch;
+  }
+
+  .footer__heading {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8697a8;
+    margin-bottom: 1rem;
+  }
+
+  .footer__address {
+    font-style: normal;
+    line-height: 1.9;
+  }
+
+  .footer__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .footer__consent-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .footer__bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-block: 1.5rem;
+    font-size: 0.85rem;
+    color: #8697a8;
+  }
+
+  .footer__bottom p {
+    margin: 0;
+  }
+</style>

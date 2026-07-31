@@ -1,0 +1,246 @@
+---
+import { company, navigation } from '../data/site';
+---
+
+<header class="header" data-header>
+  <div class="container header__inner">
+    <a href="/" class="header__brand" aria-label={`${company.name} – Startseite`}>
+      <span class="header__logo" aria-hidden="true">PW</span>
+      <span class="header__name">
+        <strong>Willms</strong>
+        <span>Bauunternehmung GmbH</span>
+      </span>
+    </a>
+
+    <nav class="header__nav" aria-label="Hauptnavigation">
+      <button
+        class="header__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="main-menu"
+        data-nav-toggle
+      >
+        <span class="sr-only">Menü öffnen</span>
+        <span class="header__toggle-bar" aria-hidden="true"></span>
+      </button>
+      <ul class="header__menu" id="main-menu" data-nav-menu>
+        {navigation.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+        <li>
+          <a href="/#kontakt" class="btn btn--primary header__cta">Kontakt</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--color-line);
+    transition: box-shadow 0.25s ease;
+  }
+
+  .header.is-scrolled {
+    box-shadow: 0 4px 20px rgba(22, 33, 44, 0.08);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 4.5rem;
+  }
+
+  .header__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--color-ink);
+  }
+
+  .header__logo {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: var(--color-ink);
+    color: #fff;
+    font-weight: 800;
+    border-radius: var(--radius);
+    letter-spacing: 0.02em;
+  }
+
+  .header__name {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  .header__name strong {
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .header__name span {
+    font-size: 0.78rem;
+    color: var(--color-slate);
+  }
+
+  .header__menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .header__menu a:not(.btn) {
+    text-decoration: none;
+    color: var(--color-ink);
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding-block: 0.5rem;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .header__menu a:not(.btn):hover {
+    color: var(--color-accent-dark);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .header__cta {
+    padding: 0.55rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .header__toggle {
+    display: none;
+    position: relative;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .header__toggle-bar,
+  .header__toggle-bar::before,
+  .header__toggle-bar::after {
+    position: absolute;
+    left: 50%;
+    width: 1.25rem;
+    height: 2px;
+    background: var(--color-ink);
+    transform: translateX(-50%);
+    transition: transform 0.25s var(--ease-out), opacity 0.2s ease;
+    content: '';
+  }
+
+  .header__toggle-bar {
+    top: 50%;
+  }
+
+  .header__toggle-bar::before {
+    top: -6px;
+  }
+
+  .header__toggle-bar::after {
+    top: 6px;
+  }
+
+  .header__toggle[aria-expanded='true'] .header__toggle-bar {
+    background: transparent;
+  }
+
+  .header__toggle[aria-expanded='true'] .header__toggle-bar::before {
+    transform: translateX(-50%) translateY(6px) rotate(45deg);
+  }
+
+  .header__toggle[aria-expanded='true'] .header__toggle-bar::after {
+    transform: translateX(-50%) translateY(-6px) rotate(-45deg);
+  }
+
+  @media (max-width: 56rem) {
+    .header__toggle {
+      display: block;
+    }
+
+    .header__menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      background: #fff;
+      border-bottom: 1px solid var(--color-line);
+      box-shadow: 0 16px 32px rgba(22, 33, 44, 0.12);
+      padding: 0.5rem 1.25rem 1.25rem;
+      display: none;
+    }
+
+    .header__menu.is-open {
+      display: flex;
+    }
+
+    .header__menu li {
+      border-bottom: 1px solid var(--color-line);
+    }
+
+    .header__menu li:last-child {
+      border-bottom: none;
+      padding-top: 1rem;
+    }
+
+    .header__menu a:not(.btn) {
+      display: block;
+      padding: 0.85rem 0;
+      border-bottom: none;
+    }
+
+    .header__cta {
+      justify-content: center;
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-nav-menu]');
+
+  if (header) {
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  if (toggle && menu) {
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      menu.classList.toggle('is-open', !open);
+    });
+
+    // Menü nach Klick auf einen Anker schließen
+    menu.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) {
+        toggle.setAttribute('aria-expanded', 'false');
+        menu.classList.remove('is-open');
+      }
+    });
+  }
+</script>
