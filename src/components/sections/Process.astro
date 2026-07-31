@@ -55,7 +55,8 @@ import { processSection, processSteps } from '../../data/site';
 <style>
   .process {
     padding-top: clamp(3rem, 6vw, 5rem);
-    padding-bottom: 0;
+    /* 8 vh Abstand nach der Navigation, bevor der nächste Abschnitt beginnt */
+    padding-bottom: 8vh;
   }
 
   /* Stage bestimmt die vertikale Scroll-Distanz für den Sticky-Effekt.
@@ -67,22 +68,23 @@ import { processSection, processSteps } from '../../data/site';
 
   /* Sticky-Viewport enthält den kompletten Sektions-Inhalt (Intro + Steps +
      Controls) und klebt an der Navigation, während intern der Track
-     horizontal durchgescrollt wird. */
+     horizontal durchgescrollt wird. Kompakte Höhe: Intro + 35 vh Kacheln +
+     Controls sitzen dicht beieinander. */
   .process__viewport {
     position: sticky;
-    top: 4vh;
-    height: 92vh;
+    top: 5vh;
+    height: 62vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     background: var(--color-bg);
   }
 
-  /* Intro sitzt oben im Viewport und scrollt NICHT mit dem Track weg */
+  /* Intro sitzt oben im Viewport, dicht am Slider – kein zusätzliches Padding */
   .process__intro {
     flex-shrink: 0;
-    padding-top: clamp(1rem, 2vw, 1.75rem);
-    padding-bottom: clamp(1rem, 2vw, 1.5rem);
+    padding-top: 0;
+    padding-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
   }
 
   .process__intro .section__title {
@@ -120,15 +122,20 @@ import { processSection, processSteps } from '../../data/site';
 
   .process-card {
     flex: 0 0 clamp(20rem, 34vw, 30rem);
-    height: 45vh;
-    padding: clamp(1.5rem, 2.5vw, 2.5rem);
+    /* Nur 35 vh hoch – Kacheln bleiben schlank */
+    height: 35vh;
+    min-height: 35vh;
+    padding: clamp(1.25rem, 2vw, 2rem);
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
   }
 
   .process__photo {
     flex: 0 0 clamp(14rem, 22vw, 22rem);
-    height: 45vh;
+    height: 35vh;
+    min-height: 35vh;
   }
 
   .process-card--light {
@@ -148,10 +155,10 @@ import { processSection, processSteps } from '../../data/site';
 
   .process-card__number {
     font-family: var(--font-heading);
-    font-size: clamp(4rem, 7vw, 6rem);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
     font-weight: 700;
     line-height: 0.9;
-    margin: 0 0 1.25rem;
+    margin: 0 0 0.75rem;
   }
 
   .process-card--light .process-card__number {
@@ -161,9 +168,9 @@ import { processSection, processSteps } from '../../data/site';
   .process-card__chip {
     align-self: flex-start;
     font-weight: 600;
-    font-size: 0.95rem;
-    padding: 0.35rem 0.9rem;
-    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    padding: 0.25rem 0.75rem;
+    margin-bottom: 0.6rem;
     background: var(--color-red);
     color: #fff;
   }
@@ -175,14 +182,14 @@ import { processSection, processSteps } from '../../data/site';
   .process-card__subtitle {
     font-family: var(--font-body);
     font-weight: 700;
-    font-size: 1rem;
-    margin-bottom: 0.65rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
   }
 
   .process-card__text {
     margin: 0;
-    font-size: 0.92rem;
-    line-height: 1.65;
+    font-size: 0.85rem;
+    line-height: 1.5;
   }
 
   .process-card--light .process-card__text {
@@ -193,14 +200,14 @@ import { processSection, processSteps } from '../../data/site';
     color: var(--color-on-dark-soft);
   }
 
-  /* Controls sitzen bündig unten im Viewport */
+  /* Controls sitzen dicht unter dem Track im Viewport */
   .process__controls {
     flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    padding-top: clamp(0.75rem, 1.5vw, 1.25rem);
-    padding-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
+    padding-top: clamp(0.5rem, 1vw, 0.85rem);
+    padding-bottom: 0;
   }
 
   .process__progress {
@@ -334,8 +341,8 @@ import { processSection, processSteps } from '../../data/site';
       update();
     };
 
-    // Sticky-Offset synchron zum CSS-Wert (viewport top: 4vh)
-    const stickyOffset = () => window.innerHeight * 0.04;
+    // Sticky-Offset synchron zum CSS-Wert (viewport top: 5vh)
+    const stickyOffset = () => window.innerHeight * 0.05;
 
     const update = () => {
       if (!isDesktop() || prefersReduced()) return;
