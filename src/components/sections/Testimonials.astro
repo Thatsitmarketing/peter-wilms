@@ -57,9 +57,9 @@ import { testimonials, testimonialsSection } from '../../data/site';
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    /* Erste Karte sitzt rechtsbündig im Viewport: großes Left-Padding schiebt
-       den Slider nach rechts, Nutzer scrollt nach links (bzw. wischt) weiter. */
-    padding-inline: max(var(--gutter), calc(100vw - min(38rem, 86vw) - var(--gutter))) var(--gutter);
+    /* Karten sitzen rechts im Viewport – links entsteht luftiger Freiraum,
+       ähnlich wie in der Referenz. Rechts guckt die nächste Karte an. */
+    padding-inline: max(var(--gutter), calc(100vw - min(46rem, 88vw) - var(--gutter))) clamp(3rem, 8vw, 6rem);
     padding-bottom: 0.5rem;
   }
 
@@ -68,42 +68,45 @@ import { testimonials, testimonialsSection } from '../../data/site';
   }
 
   .testimonial-card {
-    flex: 0 0 min(38rem, 86vw);
+    flex: 0 0 min(46rem, 88vw);
     scroll-snap-align: start;
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    gap: 1.75rem;
+    gap: 2rem;
     margin: 0;
     background: #fff;
-    padding: 2rem;
+    padding: 2.25rem 2.5rem;
     box-shadow: var(--shadow-card);
   }
 
   .testimonial-card__photo {
     aspect-ratio: 3 / 4;
+    align-self: stretch;
   }
 
   .testimonial-card__body {
     display: flex;
     flex-direction: column;
+    justify-content: center;
   }
 
   .testimonial-card__quote {
-    margin: 0 0 1.25rem;
+    margin: 0 0 1.5rem;
   }
 
   .testimonial-card__quote p {
     margin: 0;
-    font-weight: 600;
-    font-size: 1.05rem;
+    font-weight: 500;
+    font-size: 1rem;
     line-height: 1.6;
+    color: var(--color-ink);
   }
 
   .testimonial-card__caption {
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
   }
 
   .testimonial-card__caption strong {
@@ -116,14 +119,17 @@ import { testimonials, testimonialsSection } from '../../data/site';
     color: var(--color-slate);
   }
 
+  /* Logo prominenter, rechts unten mit Unterstrich – wie in der Referenz. */
   .testimonial-card__logo {
     margin-top: auto;
     align-self: flex-start;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: #9a9a9a;
-    border: 1px dashed #c4c4c4;
-    padding: 0.5rem 1rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    color: var(--color-ink);
+    padding: 0.5rem 0 0.55rem;
+    border-bottom: 2px solid var(--color-ink);
   }
 
   .testimonials__progress {

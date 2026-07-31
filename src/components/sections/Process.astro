@@ -30,9 +30,6 @@ import { processSection, processSteps } from '../../data/site';
             </div>
           </>
         ))}
-        <!-- Expliziter Spacer am Ende: schiebt Schritt 4 nach links, sodass
-             am Ende des Scrolls sichtbar Freiraum rechts bleibt. -->
-        <div class="process__end-spacer" aria-hidden="true"></div>
       </div>
 
       <div class="container process__controls">
@@ -115,13 +112,6 @@ import { processSection, processSteps } from '../../data/site';
     will-change: transform;
     transform: translate3d(0, 0, 0);
     min-height: 0;
-  }
-
-  /* Spacer so groß wie der Container-Rand rechts (--gutter, ~10 %). Damit
-     endet Foto 4 am Ende des Scrolls exakt bündig mit dem rechten Pfeil
-     der Steuerung darunter – beide sitzen an der Container-Kante bei 90 vw. */
-  .process__end-spacer {
-    flex: 0 0 var(--gutter);
   }
 
   .process-card {
