@@ -52,11 +52,11 @@ import { processSection, processSteps } from '../../data/site';
 
 <style>
   .process {
-    padding-block: clamp(1.5rem, 3.5vw, 2.75rem) 0;
+    padding-block: clamp(4rem, 7vw, 6rem) 0;
   }
 
   .process__intro {
-    margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+    margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
   }
 
   /* Stage bestimmt die Scroll-Distanz: höher = mehr horizontale Fläche */
@@ -66,14 +66,17 @@ import { processSection, processSteps } from '../../data/site';
     height: 300vh;
   }
 
-  /* Sticky-Viewport hält den Track auf Bildschirmhöhe, während vertikal gescrollt wird */
+  /* Sticky-Viewport hält den Track auf Bildschirmhöhe, während vertikal gescrollt wird.
+     Pin liegt bei ~10 vh vom Oberrand, sodass der Effekt schon in der oberen Bildschirmhälfte
+     einsetzt (statt erst wenn die Sektion oben andockt) und Controls direkt unter dem Track sitzen. */
   .process__viewport {
     position: sticky;
-    top: 0;
-    height: 100vh;
+    top: 10vh;
+    height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 1.25rem;
     overflow: hidden;
     background: var(--color-bg);
   }
@@ -163,13 +166,13 @@ import { processSection, processSteps } from '../../data/site';
     color: var(--color-on-dark-soft);
   }
 
-  /* Steuerung + Fortschrittsanzeige unterhalb des Tracks */
+  /* Steuerung + Fortschrittsanzeige direkt unter dem Track */
   .process__controls {
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    margin-top: auto;
-    padding-block: 0.75rem 1rem;
+    margin-top: 0;
+    padding-block: 0;
   }
 
   .process__progress {
@@ -303,10 +306,15 @@ import { processSection, processSteps } from '../../data/site';
       update();
     };
 
+    // Sticky-Offset synchron zum CSS-Wert (viewport top: 10vh)
+    const stickyOffset = () => window.innerHeight * 0.10;
+
     const update = () => {
       if (!isDesktop() || prefersReduced()) return;
       const rect = stage.getBoundingClientRect();
-      const scrolled = Math.min(Math.max(-rect.top, 0), maxScroll);
+      // Effekt beginnt sobald die Sektion in die obere Bildschirmhälfte gescrollt ist,
+      // nicht erst am Viewport-Oben.
+      const scrolled = Math.min(Math.max(stickyOffset() - rect.top, 0), maxScroll);
       track.style.transform = `translate3d(${-scrolled}px, 0, 0)`;
       const ratio = maxScroll === 0 ? 1 : scrolled / maxScroll;
       if (progress) progress.style.width = `${Math.max(12, Math.round(ratio * 100))}%`;
