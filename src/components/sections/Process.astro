@@ -1,110 +1,196 @@
 ---
-import { processSteps } from '../../data/site';
+import { processSection, processSteps } from '../../data/site';
 ---
 
-<section class="section section--soft" id="ablauf" aria-labelledby="process-title">
+<section class="section process" id="ablauf" aria-labelledby="process-title">
   <div class="container">
-    <span class="section__kicker" data-reveal>So arbeiten wir</span>
-    <h2 class="section__title" id="process-title" data-reveal>
-      Vom ersten Kontakt bis zur Abnahme
-    </h2>
-    <p class="section__intro" data-reveal>
-      Klare Abläufe geben Auftraggebern Planungssicherheit. So läuft ein Projekt
-      mit uns – Schritt für Schritt.
-    </p>
+    <h2 class="section__title" id="process-title" data-reveal>{processSection.title}</h2>
+    <p class="section__intro" data-reveal style="--reveal-delay: 0.1s">{processSection.intro}</p>
+  </div>
 
-    <ol class="process">
-      <!-- Kein data-reveal auf den Schritten: sie haben eine eigene
-           Opacity-Logik (Scroll-Hervorhebung via .is-active) -->
+  <!-- Horizontaler Kartenstrang wie in der Referenz:
+       große Nummern, wechselnde Farbwelten, Fotos dazwischen -->
+  <div class="process__viewport" data-reveal style="--reveal-delay: 0.15s">
+    <div class="process__track" data-process-track tabindex="0" aria-label="Ablauf in vier Schritten – horizontal scrollbar">
       {processSteps.map((step, index) => (
-        <li class="process__step" data-process-step>
-          <div class="process__marker" aria-hidden="true">
-            <span class="process__num">{String(index + 1).padStart(2, '0')}</span>
-            <span class="process__line"></span>
+        <>
+          <article class:list={['process-card', `process-card--${step.theme}`]} data-process-card>
+            <p class="process-card__number" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </p>
+            <p class="process-card__chip">{step.chip}</p>
+            <h3 class="process-card__subtitle">{step.subtitle}</h3>
+            <p class="process-card__text">{step.text}</p>
+          </article>
+          <div class="process__photo photo-placeholder" role="img" aria-label={`Platzhalter – ${step.photoLabel}`}>
+            <div class="photo-placeholder__tag"><span>{step.photoLabel}</span></div>
           </div>
-          <div class="process__body">
-            <h3 class="process__title">{step.title}</h3>
-            <p class="process__text">{step.text}</p>
-          </div>
-        </li>
+        </>
       ))}
-    </ol>
+    </div>
+
+    <div class="container process__controls">
+      <button type="button" class="process__arrow" data-process-prev aria-label="Vorherige Schritte">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+      </button>
+      <button type="button" class="process__arrow" data-process-next aria-label="Nächste Schritte">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+      </button>
+    </div>
   </div>
 </section>
 
 <style>
   .process {
-    list-style: none;
-    margin: 3rem 0 0;
-    padding: 0;
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+  }
+
+  .process__viewport {
+    margin-top: 2.5rem;
+  }
+
+  .process__track {
     display: flex;
-    flex-direction: column;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    /* linker Einzug wie Container */
+    padding-inline: max(calc((100vw - var(--container)) / 2 + 1.25rem), 1.25rem);
+    gap: 0;
   }
 
-  .process__step {
-    display: grid;
-    grid-template-columns: 4.5rem 1fr;
-    gap: 1.5rem;
-    /* Scroll-Hervorhebung: inaktive Schritte leicht zurückgenommen */
-    opacity: 0.55;
-    transition: opacity 0.4s ease;
-  }
-
-  .process__step.is-active {
-    opacity: 1;
-  }
-
-  .process__marker {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .process__num {
-    display: grid;
-    place-items: center;
-    width: 3.25rem;
-    height: 3.25rem;
-    border-radius: 50%;
-    border: 2px solid var(--color-line);
-    background: #fff;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-    color: var(--color-slate);
-    transition: border-color 0.4s ease, color 0.4s ease, background-color 0.4s ease,
-      transform 0.4s var(--ease-out);
-  }
-
-  .process__step.is-active .process__num {
-    border-color: var(--color-accent);
-    color: var(--color-accent-dark);
-    transform: scale(1.06);
-  }
-
-  .process__line {
-    flex: 1;
-    width: 2px;
-    min-height: 2.5rem;
-    background: var(--color-line);
-  }
-
-  .process__step:last-child .process__line {
+  .process__track::-webkit-scrollbar {
     display: none;
   }
 
-  .process__body {
-    padding-bottom: 2.5rem;
+  .process-card {
+    flex: 0 0 clamp(20rem, 38vw, 34rem);
+    scroll-snap-align: start;
+    padding: clamp(1.75rem, 3vw, 3rem);
+    min-height: clamp(26rem, 48vw, 30rem);
+    display: flex;
+    flex-direction: column;
   }
 
-  .process__title {
-    font-size: 1.15rem;
-    margin: 0.6rem 0 0.4rem;
+  .process__photo {
+    flex: 0 0 clamp(10rem, 22vw, 19rem);
+    min-height: clamp(26rem, 48vw, 30rem);
   }
 
-  .process__text {
+  /* Farbwelten der Karten (Referenz: hell → dunkel → rot → hell) */
+  .process-card--light {
+    background: var(--color-bg-soft);
+    color: var(--color-ink);
+  }
+
+  .process-card--dark {
+    background: var(--color-dark);
+    color: var(--color-on-dark);
+  }
+
+  .process-card--red {
+    background: var(--color-red);
+    color: #fff;
+  }
+
+  .process-card__number {
+    font-family: var(--font-heading);
+    font-size: clamp(4.5rem, 8vw, 7rem);
+    font-weight: 700;
+    line-height: 0.9;
+    margin: 0 0 1.5rem;
+  }
+
+  .process-card--light .process-card__number {
+    color: var(--color-ink);
+  }
+
+  .process-card__chip {
+    align-self: flex-start;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.35rem 0.9rem;
+    margin-bottom: 1.1rem;
+    background: var(--color-red);
+    color: #fff;
+  }
+
+  .process-card--red .process-card__chip {
+    background: var(--color-dark);
+  }
+
+  .process-card__subtitle {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .process-card__text {
     margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .process-card--light .process-card__text {
     color: var(--color-slate);
-    max-width: 65ch;
+  }
+
+  .process-card--dark .process-card__text {
+    color: var(--color-on-dark-soft);
+  }
+
+  .process__controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+  }
+
+  .process__arrow {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--color-line);
+    background: #fff;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .process__arrow:hover {
+    background: var(--color-red);
+    border-color: var(--color-red);
+    color: #fff;
+  }
+
+  .process__arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
   }
 </style>
+
+<script>
+  const track = document.querySelector<HTMLElement>('[data-process-track]');
+  const prev = document.querySelector<HTMLButtonElement>('[data-process-prev]');
+  const next = document.querySelector<HTMLButtonElement>('[data-process-next]');
+
+  if (track && prev && next) {
+    const cardWidth = () =>
+      track.querySelector<HTMLElement>('[data-process-card]')?.offsetWidth ?? 480;
+
+    prev.addEventListener('click', () => track.scrollBy({ left: -cardWidth(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: cardWidth(), behavior: 'smooth' }));
+
+    const updateArrows = () => {
+      const max = track.scrollWidth - track.clientWidth - 4;
+      prev.disabled = track.scrollLeft <= 4;
+      next.disabled = track.scrollLeft >= max;
+    };
+    updateArrows();
+    track.addEventListener('scroll', updateArrows, { passive: true });
+    window.addEventListener('resize', updateArrows);
+  }
+</script>

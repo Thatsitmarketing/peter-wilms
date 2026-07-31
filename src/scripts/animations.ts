@@ -1,6 +1,7 @@
 /**
- * Scroll-Animationen: Reveal-Effekte, Kennzahlen-Zähler und
- * Prozess-Hervorhebung. Alle Effekte respektieren `prefers-reduced-motion`.
+ * Scroll-Animationen: Reveal-Effekte und Kennzahlen-Zähler.
+ * Alle Effekte respektieren `prefers-reduced-motion`.
+ * (Karussell-Logik für Ablauf/Kundenstimmen liegt in den jeweiligen Komponenten.)
  */
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -77,25 +78,5 @@ function initCounters(): void {
   counters.forEach((el) => observer.observe(el));
 }
 
-/* ---------- 3. Prozess-Schritte: aktiven Schritt beim Scrollen hervorheben ---------- */
-
-function initProcessHighlight(): void {
-  const steps = document.querySelectorAll<HTMLElement>('[data-process-step]');
-  if (steps.length === 0 || !('IntersectionObserver' in window)) return;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        entry.target.classList.toggle('is-active', entry.isIntersecting);
-      });
-    },
-    // Schmales Beobachtungsfenster in der Bildschirmmitte
-    { rootMargin: '-40% 0px -40% 0px' }
-  );
-
-  steps.forEach((step) => observer.observe(step));
-}
-
 initReveal();
 initCounters();
-initProcessHighlight();

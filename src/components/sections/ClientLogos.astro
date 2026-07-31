@@ -5,9 +5,9 @@ import { clients } from '../../data/site';
 <section class="clients" aria-label="Auftraggeber">
   <div class="container">
     <p class="clients__title" data-reveal>
-      Vertraut von öffentlichen Auftraggebern, Bauunternehmen und Ingenieurbüros
+      Vertraut von öffentlichen Auftraggebern und Bauunternehmen
     </p>
-    <ul class="clients__list" data-reveal style="--reveal-delay: 0.15s">
+    <ul class="clients__list" data-reveal style="--reveal-delay: 0.12s">
       {clients.map((client) => (
         <li class="clients__logo" title={`Platzhalter – Logo ${client}`}>
           {client}
@@ -19,18 +19,17 @@ import { clients } from '../../data/site';
 
 <style>
   .clients {
-    padding-block: clamp(2.5rem, 6vw, 4rem);
-    background: var(--color-bg-soft);
+    background: #fff;
+    padding-block: clamp(2.75rem, 6vw, 4.5rem);
   }
 
   .clients__title {
     text-align: center;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--color-slate);
-    margin-bottom: 1.75rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--color-ink);
+    margin-bottom: 2rem;
   }
 
   .clients__list {
@@ -40,19 +39,19 @@ import { clients } from '../../data/site';
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 1rem 2rem;
+    align-items: center;
+    gap: 1rem 2.25rem;
   }
 
-  /* Logo-Platzhalter: Textmarken in Kapseln, später durch <img> ersetzen */
+  /* Logo-Platzhalter: Textmarken in Rahmen, später durch <img> ersetzen */
   .clients__logo {
     display: grid;
     place-items: center;
-    min-width: 9rem;
-    padding: 0.85rem 1.5rem;
-    border: 1px dashed #b3bec9;
-    border-radius: var(--radius);
-    color: #7c8a98;
-    font-weight: 700;
+    min-width: 9.5rem;
+    padding: 0.9rem 1.5rem;
+    border: 1px dashed #c4c4c4;
+    color: #8a8a8a;
+    font-weight: 600;
     letter-spacing: 0.03em;
     filter: grayscale(1);
     transition: filter 0.25s ease, color 0.25s ease, border-color 0.25s ease;

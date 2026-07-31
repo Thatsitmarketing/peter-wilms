@@ -1,26 +1,31 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/sections/Hero.astro';
-import Stats from '../components/sections/Stats.astro';
 import ClientLogos from '../components/sections/ClientLogos.astro';
 import Services from '../components/sections/Services.astro';
-import WhyUs from '../components/sections/WhyUs.astro';
+import About from '../components/sections/About.astro';
+import VideoSection from '../components/sections/VideoSection.astro';
 import Process from '../components/sections/Process.astro';
-import References from '../components/sections/References.astro';
-import Team from '../components/sections/Team.astro';
+import Projects from '../components/sections/Projects.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import JobsCta from '../components/sections/JobsCta.astro';
 import Faq from '../components/sections/Faq.astro';
 import Contact from '../components/sections/Contact.astro';
 ---
 
-<BaseLayout title="Peter Willms Bauunternehmung GmbH – Brücken- und Bauwerksinstandsetzung in NRW">
+<BaseLayout
+  title="Peter Willms Bauunternehmung GmbH – Brücken- und Bauwerksinstandsetzung in NRW"
+  transparentHeader
+>
   <Hero />
-  <Stats />
   <ClientLogos />
   <Services />
-  <WhyUs />
+  <About />
+  <VideoSection />
   <Process />
-  <References />
-  <Team />
+  <Projects />
+  <Testimonials />
+  <JobsCta />
   <Faq />
   <Contact />
 </BaseLayout>

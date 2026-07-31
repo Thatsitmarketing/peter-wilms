@@ -1,14 +1,29 @@
 ---
-import { company, navigation } from '../data/site';
+import { navigation } from '../data/site';
+
+interface Props {
+  /** true = liegt transparent über dem Hero und wird beim Scrollen weiß */
+  transparent?: boolean;
+}
+
+const { transparent = false } = Astro.props;
+const { pathname } = Astro.url;
 ---
 
-<header class="header" data-header>
+<header class:list={['header', { 'header--transparent': transparent }]} data-header>
   <div class="container header__inner">
-    <a href="/" class="header__brand" aria-label={`${company.name} – Startseite`}>
-      <span class="header__logo" aria-hidden="true">PW</span>
+    <a href="/" class="header__brand" aria-label="Peter Willms Bauunternehmung – Startseite">
+      <!-- Logo-Platzhalter: wird durch das echte (farbige) Logo ersetzt -->
+      <span class="header__logo" aria-hidden="true">
+        <svg viewBox="0 0 40 26" width="34" height="22" fill="none" aria-hidden="true">
+          <path d="M20 1 38 15H2L20 1z" fill="var(--color-red)" />
+          <rect x="7" y="15" width="26" height="10" fill="#f7c600" />
+        </svg>
+      </span>
       <span class="header__name">
-        <strong>Willms</strong>
-        <span>Bauunternehmung GmbH</span>
+        <small>Brücken &amp; Bauwerks-Instandsetzung</small>
+        <strong>Peter Willms</strong>
+        <span>Bauunternehmung</span>
       </span>
     </a>
 
@@ -25,11 +40,15 @@ import { company, navigation } from '../data/site';
       </button>
       <ul class="header__menu" id="main-menu" data-nav-menu>
         {navigation.map((item) => (
-          <li><a href={item.href}>{item.label}</a></li>
+          <li>
+            <a
+              href={item.href}
+              class:list={{ 'is-active': item.href === '/' && pathname === '/' }}
+            >
+              {item.label}
+            </a>
+          </li>
         ))}
-        <li>
-          <a href="/#kontakt" class="btn btn--primary header__cta">Kontakt</a>
-        </li>
       </ul>
     </nav>
   </div>
@@ -40,28 +59,37 @@ import { company, navigation } from '../data/site';
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--color-line);
-    transition: box-shadow 0.25s ease;
+    background: #fff;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
   }
 
   .header.is-scrolled {
-    box-shadow: 0 4px 20px rgba(22, 33, 44, 0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Transparent über dem Hero (Startseite) */
+  .header--transparent {
+    position: fixed;
+    inset-inline: 0;
+    background: transparent;
+  }
+
+  .header--transparent.is-scrolled {
+    background: #fff;
   }
 
   .header__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
-    min-height: 4.5rem;
+    min-height: 5.25rem;
+    position: relative;
   }
 
   .header__brand {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.7rem;
     text-decoration: none;
     color: var(--color-ink);
   }
@@ -69,58 +97,80 @@ import { company, navigation } from '../data/site';
   .header__logo {
     display: grid;
     place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    background: var(--color-ink);
-    color: #fff;
-    font-weight: 800;
-    border-radius: var(--radius);
-    letter-spacing: 0.02em;
+    width: 3rem;
+    height: 3rem;
+    background: #fff;
+    border: 1px dashed #b9b9b9;
+    padding: 0.2rem;
   }
 
   .header__name {
     display: flex;
     flex-direction: column;
-    line-height: 1.15;
+    line-height: 1.2;
   }
 
-  .header__name strong {
-    font-size: 1.1rem;
-    letter-spacing: -0.01em;
-  }
-
-  .header__name span {
-    font-size: 0.78rem;
+  .header__name small {
+    font-size: 0.58rem;
+    letter-spacing: 0.03em;
     color: var(--color-slate);
   }
 
+  .header__name strong {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+  }
+
+  .header__name > span {
+    font-size: 0.72rem;
+    color: var(--color-slate);
+  }
+
+  /* Nav mittig wie in der Referenz */
   .header__menu {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 2.5rem;
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  .header__menu a:not(.btn) {
+  .header__menu a {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.1rem;
     text-decoration: none;
     color: var(--color-ink);
-    font-weight: 500;
-    font-size: 0.95rem;
-    padding-block: 0.5rem;
-    border-bottom: 2px solid transparent;
-    transition: border-color 0.2s ease, color 0.2s ease;
+    transition: color 0.2s ease;
   }
 
-  .header__menu a:not(.btn):hover {
-    color: var(--color-accent-dark);
-    border-bottom-color: var(--color-accent);
+  .header__menu a:hover,
+  .header__menu a.is-active {
+    color: var(--color-red);
   }
 
-  .header__cta {
-    padding: 0.55rem 1.2rem;
-    font-size: 0.95rem;
+  /* Über dem Hero: weiße Schrift */
+  .header--transparent:not(.is-scrolled) .header__brand,
+  .header--transparent:not(.is-scrolled) .header__menu a {
+    color: #fff;
+  }
+
+  .header--transparent:not(.is-scrolled) .header__menu a:hover,
+  .header--transparent:not(.is-scrolled) .header__menu a.is-active {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--color-red);
+  }
+
+  .header--transparent:not(.is-scrolled) .header__name small,
+  .header--transparent:not(.is-scrolled) .header__name > span {
+    color: rgba(255, 255, 255, 0.75);
   }
 
   .header__toggle {
@@ -129,7 +179,6 @@ import { company, navigation } from '../data/site';
     width: 2.75rem;
     height: 2.75rem;
     border: 1px solid var(--color-line);
-    border-radius: var(--radius);
     background: #fff;
     cursor: pointer;
   }
@@ -171,7 +220,7 @@ import { company, navigation } from '../data/site';
     transform: translateX(-50%) translateY(-6px) rotate(-45deg);
   }
 
-  @media (max-width: 56rem) {
+  @media (max-width: 48rem) {
     .header__toggle {
       display: block;
     }
@@ -181,13 +230,13 @@ import { company, navigation } from '../data/site';
       top: 100%;
       left: 0;
       right: 0;
+      transform: none;
       flex-direction: column;
       align-items: stretch;
       gap: 0;
       background: #fff;
-      border-bottom: 1px solid var(--color-line);
-      box-shadow: 0 16px 32px rgba(22, 33, 44, 0.12);
-      padding: 0.5rem 1.25rem 1.25rem;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.14);
+      padding: 0.5rem 1.5rem 1.25rem;
       display: none;
     }
 
@@ -201,18 +250,13 @@ import { company, navigation } from '../data/site';
 
     .header__menu li:last-child {
       border-bottom: none;
-      padding-top: 1rem;
     }
 
-    .header__menu a:not(.btn) {
+    .header__menu a {
       display: block;
-      padding: 0.85rem 0;
-      border-bottom: none;
-    }
-
-    .header__cta {
-      justify-content: center;
-      width: 100%;
+      padding: 0.9rem 0;
+      color: var(--color-ink) !important;
+      text-decoration: none !important;
     }
   }
 </style>
@@ -223,7 +267,7 @@ import { company, navigation } from '../data/site';
   const menu = document.querySelector<HTMLElement>('[data-nav-menu]');
 
   if (header) {
-    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
   }
@@ -235,7 +279,6 @@ import { company, navigation } from '../data/site';
       menu.classList.toggle('is-open', !open);
     });
 
-    // Menü nach Klick auf einen Anker schließen
     menu.addEventListener('click', (event) => {
       if ((event.target as HTMLElement).closest('a')) {
         toggle.setAttribute('aria-expanded', 'false');
