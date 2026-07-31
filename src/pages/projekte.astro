@@ -28,7 +28,7 @@ const stats = [
         </p>
         <div class="projekte-hero__actions">
           <a class="btn btn--red" href="#projektliste">Entdecken</a>
-          <a class="btn btn--white" href="/kontakt">Kontakt</a>
+          <a class="btn btn--outline" href="/kontakt">Kontakt</a>
         </div>
       </div>
       <div class="projekte-hero__media photo-placeholder" role="img" aria-label="Referenzprojekt">
@@ -85,7 +85,7 @@ const stats = [
                 <span>Sanierung</span>
                 <span>NRW</span>
               </div>
-              <a class="project__link" href="/kontakt">Ansehen <span aria-hidden="true">→</span></a>
+              <a class="btn btn--red btn--small project__link" href={`/projekte/${project.slug}`}>Projekt ansehen</a>
             </div>
             <div class="project__media photo-placeholder" aria-hidden="true">
               <div class="photo-placeholder__tag"><span>Foto: {project.title}</span></div>
@@ -269,10 +269,7 @@ const stats = [
   }
 
   .project__link {
-    color: var(--color-red);
-    text-decoration: none;
-    font-weight: 700;
-    font-family: var(--font-heading);
+    margin-top: 0.5rem;
   }
 
   .projektliste__more {

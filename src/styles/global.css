@@ -183,10 +183,27 @@ a {
 .btn--white {
   background: #fff;
   color: var(--color-ink);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
 .btn--white:hover {
   background: var(--color-bg-soft);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* Outline-Variante – für hellen Hintergrund, klar sichtbar umrandet */
+.btn--outline {
+  background: #fff;
+  color: var(--color-ink);
+  border: 2px solid var(--color-ink);
+  padding: calc(1rem - 2px) calc(2rem - 2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.btn--outline:hover {
+  background: var(--color-ink);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
 }
 
 .btn--small {

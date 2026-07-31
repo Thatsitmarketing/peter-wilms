@@ -14,6 +14,10 @@ export const company = {
     zip: '59320',
     city: 'Ennigerloh-Westkirchen',
     region: 'Nordrhein-Westfalen',
+    /** Direktlink zu Google Maps mit der vollständigen Adresse. */
+    mapsUrl:
+      'https://www.google.com/maps/search/?api=1&query=' +
+      encodeURIComponent('Peter Willms Bauunternehmung GmbH, Münsterlandstraße 1, 59320 Ennigerloh-Westkirchen'),
   },
   contact: {
     phoneCentral: '+49 2587 935006',
@@ -71,6 +75,11 @@ export const servicesSection = {
   title: 'Gebündelte Kompetenz für Ihre Sanierungsmaßnahme',
   intro:
     'Durch die Zusammenarbeit mit kompetenten Fachpartnern bieten wir das vollständige Leistungsspektrum der Bauwerksinstandsetzung — koordiniert, normkonform und termingerecht.',
+} as const;
+
+export const servicesCta = {
+  label: 'Jetzt anfragen',
+  href: '/#kontakt',
 } as const;
 
 export const services = [
@@ -181,21 +190,87 @@ export const processSteps = [
 
 export const projectsSection = {
   title: 'Unsere Projekte',
+  ctaLabel: 'Alle Projekte',
+  ctaHref: '/projekte',
 } as const;
 
-/** Referenzprojekte – Platzhalterinhalte, echte Projektdaten folgen. */
+/** Referenzprojekte – Platzhalterinhalte, echte Projektdaten folgen.
+ *  slug wird für die Detailseite /projekte/[slug] verwendet. */
 export const projects = [
   {
+    slug: 'brueckeninstandsetzung-landesstrasse',
     title: 'Brückeninstandsetzung an einer Landesstraße',
     meta: 'Öffentlicher Auftraggeber · Betoninstandsetzung, Kappensanierung',
+    tags: ['Betoninstandsetzung', 'Kappensanierung', 'NRW'],
+    client: 'Straßen.NRW',
+    date: '2024',
+    role: 'Hauptauftragnehmer',
+    website: '—',
+    summary:
+      'Umfassende Instandsetzung einer Brückenkonstruktion an einer stark befahrenen Landesstraße – von der Kappensanierung bis zur Neuabdichtung.',
+    intro: [
+      'Die Brücke wies nach Jahrzehnten Verkehrslast typische Verschleißerscheinungen auf: karbonatisierter Beton, geschädigte Kappen und undichte Übergänge. Ziel der Maßnahme war der langfristige Substanzerhalt bei laufendem Verkehr.',
+      'Nach der Zustandserfassung und Abstimmung mit dem Auftraggeber wurden die Arbeiten in mehreren Bauphasen unter Verkehrssicherung nach RSA durchgeführt – termingerecht und ohne Vollsperrung.',
+    ],
+    challenge: {
+      title: 'Sanierung unter laufendem Verkehr',
+      text: 'Die Instandsetzung musste bei fließendem Verkehr und in engen Zeitfenstern erfolgen. Wir haben Bauphasen, Verkehrsführung und Kolonneneinsätze so aufeinander abgestimmt, dass Anlieger und Pendler kaum beeinträchtigt wurden.',
+      bullets: [
+        'Verkehrssicherung nach RSA in mehreren Bauphasen',
+        'Kappensanierung mit neuem Geländer',
+        'Betoninstandsetzung nach DIN EN 1504',
+      ],
+    },
   },
   {
+    slug: 'fahrbahnuebergaenge-autobahn',
     title: 'Fahrbahnübergänge an einem Autobahnbauwerk',
     meta: 'Nachunternehmer · Fahrbahnübergänge, Betonbau',
+    tags: ['Fahrbahnübergänge', 'Betonbau', 'Autobahn'],
+    client: 'Bau- und Generalunternehmer',
+    date: '2023',
+    role: 'Nachunternehmer',
+    website: '—',
+    summary:
+      'Austausch von Fahrbahnübergangskonstruktionen an einem Autobahnbauwerk – termingerecht, verkehrssicher und nach ZTV-ING ausgeführt.',
+    intro: [
+      'Die vorhandenen Fahrbahnübergänge hatten das Ende ihrer Nutzungsdauer erreicht. Für den Nachunternehmerauftrag koordinierten wir Ausbau, Betonarbeiten und den Einbau der neuen Konstruktionen im engen Zeitfenster einer Wochenendsperrung.',
+      'Die Arbeiten erfolgten nach ZTV-ING, mit vollständiger Dokumentation und lückenloser Qualitätssicherung – bereit zur Verkehrsfreigabe nach nur wenigen Tagen.',
+    ],
+    challenge: {
+      title: 'Kurze Sperrzeiten, klare Abläufe',
+      text: 'Wochenendsperrung, feste Freigabetermine, kein Puffer: Wir haben Rückbau, Bewehrung, Betonage und Einbau der neuen Übergänge in einem lückenlosen Ablauf geplant und mit eigenen Kolonnen umgesetzt.',
+      bullets: [
+        'Rückbau der Bestandskonstruktion',
+        'Nachträgliche Bewehrungsanschlüsse',
+        'Einbau nach ZTV-ING mit Dokumentation',
+      ],
+    },
   },
   {
+    slug: 'rissverpressung-ingenieurbauwerk',
     title: 'Rissverpressung an einem Ingenieurbauwerk',
     meta: 'Ingenieurbüro · Rissverpressung, Injektion',
+    tags: ['Rissverpressung', 'Injektion', 'Ingenieurbau'],
+    client: 'Ingenieurbüro / öffentlicher Auftraggeber',
+    date: '2023',
+    role: 'Fachunternehmer',
+    website: '—',
+    summary:
+      'Kraftschlüssige und dehnbare Verpressung von Rissen in einem tragenden Ingenieurbauwerk – normgerecht, dokumentiert und dauerhaft.',
+    intro: [
+      'Am Bauwerk waren an mehreren Stellen Risse aufgetreten, die eine langfristige Beeinträchtigung der Tragfähigkeit und Dauerhaftigkeit befürchten ließen. Auf Basis der Untersuchung durch das Ingenieurbüro wurde ein Injektionskonzept mit uns abgestimmt.',
+      'Die Ausführung erfolgte durch unsere SIVV-qualifizierten Fachkräfte – kraftschlüssig, wo Tragwirkung gefordert war, und dehnbar, wo Bewegungen zu erwarten sind.',
+    ],
+    challenge: {
+      title: 'Präzise Injektion, lückenlose Dokumentation',
+      text: 'Jede Injektionsstelle wurde vorbereitet, verpresst und dokumentiert – nachvollziehbar für Auftraggeber, Ingenieurbüro und spätere Prüfungen.',
+      bullets: [
+        'Bohrpackerraster nach Injektionsplan',
+        'Kraftschluss und Dehnbarkeit fallspezifisch',
+        'Dokumentation je Injektionsstelle',
+      ],
+    },
   },
 ] as const;
 

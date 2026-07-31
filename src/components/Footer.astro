@@ -22,8 +22,10 @@ const year = new Date().getFullYear();
     <div class="footer__col">
       <address class="footer__address">
         <strong>{company.name}</strong><br />
-        {company.address.street}<br />
-        {company.address.zip} {company.address.city}<br />
+        <a href={company.address.mapsUrl} target="_blank" rel="noopener noreferrer">
+          {company.address.street}<br />
+          {company.address.zip} {company.address.city}
+        </a><br />
         <a href={`tel:${company.contact.phoneCentral.replace(/\s/g, '')}`}>
           {company.contact.phoneCentralDisplay}
         </a><br />
