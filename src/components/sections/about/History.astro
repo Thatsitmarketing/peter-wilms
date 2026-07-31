@@ -2,6 +2,9 @@
 import { aboutPage } from '../../../data/site';
 
 const { history } = aboutPage;
+
+/** Farbwelten rotieren: hell → dunkel → rot */
+const themes = ['light', 'dark', 'red'] as const;
 ---
 
 <section class="section section--soft history" id="geschichte" aria-labelledby="history-title">
@@ -14,16 +17,13 @@ const { history } = aboutPage;
       </h2>
     </aside>
 
-    <!-- Rechte Spalte: Scroll-Stapel – jede Karte "klebt" beim Scrollen und die nächste
+    <!-- Rechte Spalte: Scroll-Stapel – jede Karte klebt beim Scrollen und die nächste
          schiebt sich mit leichtem Versatz darüber. -->
     <ol class="history__list">
       {history.milestones.map((item, index) => (
         <li
-          class:list={[
-            'milestone',
-            index % 2 === 0 ? 'milestone--light' : 'milestone--dark',
-          ]}
-          style={`--i: ${index}; --total: ${history.milestones.length};`}
+          class:list={['milestone', `milestone--${themes[index % themes.length]}`]}
+          style={`--i: ${index};`}
         >
           <article class="milestone__card">
             <header class="milestone__header">
@@ -32,8 +32,6 @@ const { history } = aboutPage;
             </header>
             <p class="milestone__text">{item.text}</p>
           </article>
-          <span class="milestone__shadow" aria-hidden="true"></span>
-          <span class="milestone__accent" aria-hidden="true"></span>
         </li>
       ))}
     </ol>
@@ -60,30 +58,28 @@ const { history } = aboutPage;
   }
 
   /* Der Stapel bekommt genug Raum, damit jede Karte ihren Scroll-Slot hat.
-     "overflow: clip" verhindert, dass ein umliegender Container die sticky-Logik zerstört. */
+     Kompakte Distanz zwischen den Sticky-Punkten. */
   .history__list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    /* Puffer zwischen den Sticky-Punkten – gleichzeitig die Scroll-Distanz pro Karte */
-    gap: 65vh;
-    padding-bottom: 4rem;
+    gap: 18vh;
+    padding-bottom: 2rem;
   }
 
   .milestone {
     position: sticky;
     /* Jede Karte klebt etwas tiefer als die vorherige → sichtbarer Stapel-Effekt */
-    top: calc(6.5rem + var(--i, 0) * 1.25rem);
+    top: calc(6.5rem + var(--i, 0) * 1rem);
     width: 100%;
   }
 
+  /* Einzelne, flache Kachel – kein Shadow-/Akzent-Layer mehr */
   .milestone__card {
-    position: relative;
-    z-index: 2;
-    padding: clamp(1.4rem, 2.6vw, 2.25rem) clamp(1.5rem, 2.8vw, 2.5rem);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+    padding: clamp(1.75rem, 3vw, 2.75rem) clamp(1.75rem, 3vw, 2.75rem);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
   }
 
   .milestone--light .milestone__card {
@@ -94,6 +90,11 @@ const { history } = aboutPage;
   .milestone--dark .milestone__card {
     background: var(--color-dark);
     color: var(--color-on-dark);
+  }
+
+  .milestone--red .milestone__card {
+    background: var(--color-red);
+    color: #fff;
   }
 
   .milestone__header {
@@ -133,26 +134,8 @@ const { history } = aboutPage;
     color: var(--color-on-dark-soft);
   }
 
-  /* Schwarzer Schattenblock hinter jeder Karte */
-  .milestone__shadow {
-    position: absolute;
-    left: 1.25rem;
-    right: -1.25rem;
-    bottom: -1.25rem;
-    height: clamp(2rem, 4vw, 2.75rem);
-    background: var(--color-dark);
-    z-index: 1;
-  }
-
-  /* Roter Akzentstreifen unterhalb des Schattens */
-  .milestone__accent {
-    position: absolute;
-    left: 2.5rem;
-    right: -2.5rem;
-    bottom: -2.25rem;
-    height: 0.65rem;
-    background: var(--color-red);
-    z-index: 0;
+  .milestone--red .milestone__text {
+    color: rgba(255, 255, 255, 0.92);
   }
 
   @media (max-width: 62rem) {
@@ -168,24 +151,14 @@ const { history } = aboutPage;
 
   @media (max-width: 40rem) {
     .history__list {
-      gap: 55vh;
-    }
-
-    .milestone__shadow {
-      left: 0.75rem;
-      right: -0.75rem;
-    }
-
-    .milestone__accent {
-      left: 1.5rem;
-      right: -1.5rem;
+      gap: 14vh;
     }
   }
 
   /* Reduced motion: klassische, statische Anordnung ohne Sticky-Stapel */
   @media (prefers-reduced-motion: reduce) {
     .history__list {
-      gap: clamp(2.25rem, 4vw, 3.25rem);
+      gap: clamp(1.5rem, 3vw, 2.25rem);
       padding-bottom: 0;
     }
 
