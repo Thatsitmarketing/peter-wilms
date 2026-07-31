@@ -3,7 +3,7 @@ import { testimonials, testimonialsSection } from '../../data/site';
 ---
 
 <section class="section section--soft testimonials" aria-labelledby="testimonials-title">
-  <div class="testimonials__inner">
+  <div class="testimonials__heading container">
     <h2 class="section__title testimonials__title" id="testimonials-title" data-reveal>
       <span>Was Auftraggeber über die</span>
       <span>Zusammenarbeit sagen</span>
@@ -34,25 +34,33 @@ import { testimonials, testimonialsSection } from '../../data/site';
       ))}
     </div>
 
-    <div class="testimonials__inner">
+    <div class="testimonials__controls">
       <div class="testimonials__progress" aria-hidden="true">
         <span data-testimonials-progress></span>
+      </div>
+      <div class="testimonials__buttons">
+        <button type="button" class="testimonials__arrow" data-testimonials-prev aria-label="Vorherige Kundenstimme">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+        </button>
+        <button type="button" class="testimonials__arrow" data-testimonials-next aria-label="Nächste Kundenstimme">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* Nach dem Kögel-Muster: Titel und Karten sind links um 20 % vom Rand
-     eingerückt. Wir verwenden diesen Wert als eigene Sektions-Variable, damit
-     Titel, Karten und Fortschrittsbalken exakt bündig laufen. */
+  /* Karten sitzen 20 % vom linken Rand eingerückt. Der Titel folgt jedoch
+     dem allgemeinen Sektions-Gutter (10 %), damit er bündig mit der
+     Ablauf-Überschrift oben steht. */
   .testimonials {
     --testimonials-inset: 20%;
   }
 
-  .testimonials__inner {
-    width: 100%;
-    padding-inline: var(--testimonials-inset) var(--gutter);
+  /* Überschrift folgt dem globalen .container-Gutter (10 % links). */
+  .testimonials__heading {
+    /* nutzt .container-Padding */
   }
 
   .testimonials__viewport {
@@ -206,11 +214,21 @@ import { testimonials, testimonialsSection } from '../../data/site';
     background: var(--color-ink);
   }
 
-  .testimonials__progress {
+  /* Fortschrittsbalken + Prev/Next-Pfeile, wie im Ablauf. */
+  .testimonials__controls {
     margin-top: 2.5rem;
+    padding-inline: var(--gutter);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .testimonials__progress {
+    flex: 1;
     height: 3px;
     background: #e0e0e0;
     position: relative;
+    overflow: hidden;
   }
 
   .testimonials__progress span {
@@ -220,6 +238,35 @@ import { testimonials, testimonialsSection } from '../../data/site';
     width: 25%;
     background: var(--color-dark);
     transition: width 0.2s ease, left 0.2s ease;
+  }
+
+  .testimonials__buttons {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .testimonials__arrow {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--color-line);
+    background: #fff;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .testimonials__arrow:hover {
+    background: var(--color-red);
+    border-color: var(--color-red);
+    color: #fff;
+  }
+
+  .testimonials__arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
   }
 
   /* Auf mittleren Viewports 20 % Einzug etwas reduzieren, damit Inhalt
@@ -256,6 +303,8 @@ import { testimonials, testimonialsSection } from '../../data/site';
 <script>
   const track = document.querySelector<HTMLElement>('[data-testimonials-track]');
   const bar = document.querySelector<HTMLElement>('[data-testimonials-progress]');
+  const prevBtn = document.querySelector<HTMLButtonElement>('[data-testimonials-prev]');
+  const nextBtn = document.querySelector<HTMLButtonElement>('[data-testimonials-next]');
 
   if (track && bar) {
     const update = () => {
@@ -264,16 +313,36 @@ import { testimonials, testimonialsSection } from '../../data/site';
       const pos = max > 0 ? track.scrollLeft / max : 0;
       bar.style.width = `${Math.max(ratio * 100, 8)}%`;
       bar.style.left = `${pos * (100 - Math.max(ratio * 100, 8))}%`;
+      if (prevBtn) prevBtn.disabled = track.scrollLeft <= 1;
+      if (nextBtn) nextBtn.disabled = track.scrollLeft >= max - 1;
     };
     update();
     track.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
 
+    // Distanz einer Kartenspanne (Kartenbreite + Gap) – für Prev/Next & Snap.
+    const stepDistance = () => {
+      const card = track.querySelector<HTMLElement>('.testimonial-card');
+      if (!card) return 500;
+      const style = getComputedStyle(track);
+      const gap = parseFloat(style.columnGap || style.gap || '0') || 0;
+      return card.offsetWidth + gap;
+    };
+
+    prevBtn?.addEventListener('click', () => {
+      track.scrollBy({ left: -stepDistance(), behavior: 'smooth' });
+    });
+    nextBtn?.addEventListener('click', () => {
+      track.scrollBy({ left: stepDistance(), behavior: 'smooth' });
+    });
+
     /**
-     * Maus-Drag-to-Scroll. Touch nutzt weiter das native horizontale Scrollen,
-     * daher ignorieren wir Pointer-Events vom Typ "touch". Ab einem Schwellwert
-     * von 5 px wird ein echter Drag erkannt – darunter zählt der Klick als Klick,
-     * damit Links/Buttons in den Karten funktionieren.
+     * Maus-Drag-to-Scroll mit weichem Trägheits-Ausrollen (rAF-Animation
+     * mit exponentiellem Abklingen). Touch nutzt weiter das native
+     * horizontale Scrollen, daher ignorieren wir Pointer vom Typ "touch".
+     * Ab einem Schwellwert von 5 px wird ein echter Drag erkannt – darunter
+     * zählt der Klick als Klick, damit Links/Buttons in den Karten
+     * funktionieren.
      */
     const DRAG_THRESHOLD = 5;
     let pointerId: number | null = null;
@@ -284,9 +353,51 @@ import { testimonials, testimonialsSection } from '../../data/site';
     let lastTime = 0;
     let dragging = false;
 
+    // rAF-Momentum-Animation
+    let momentumRaf: number | null = null;
+    const cancelMomentum = () => {
+      if (momentumRaf !== null) {
+        cancelAnimationFrame(momentumRaf);
+        momentumRaf = null;
+      }
+    };
+
+    const startMomentum = (initialVelocity: number) => {
+      cancelMomentum();
+      // Skalierung: px/ms → wir animieren mit exponentiellem Abklingen und
+      // verlängern die "Ausrollphase" pro Frame um einen weichen Faktor.
+      let velocity = initialVelocity; // in px/ms
+      let lastFrame = performance.now();
+      // Nach ~500 ms sanft auf 0 abklingen; snap darf wieder greifen, sobald
+      // die Momentum-Phase beendet ist.
+      const friction = 0.94; // pro 16 ms Frame
+      const minVelocity = 0.02;
+
+      const step = (now: number) => {
+        const dt = Math.max(1, now - lastFrame);
+        lastFrame = now;
+        // Momentumrichtung: velocity positiv → Finger zog nach rechts →
+        // scrollLeft sinkt, also mit -velocity multiplizieren.
+        track.scrollLeft -= velocity * dt;
+        // Reibung, angepasst an dt (Zielrate 60 fps)
+        velocity *= Math.pow(friction, dt / 16);
+        if (Math.abs(velocity) < minVelocity) {
+          momentumRaf = null;
+          // Snap wieder aktiv – zum nächsten Snap-Punkt animieren
+          const step = stepDistance();
+          const target = Math.round(track.scrollLeft / step) * step;
+          track.scrollTo({ left: target, behavior: 'smooth' });
+          return;
+        }
+        momentumRaf = requestAnimationFrame(step);
+      };
+      momentumRaf = requestAnimationFrame(step);
+    };
+
     const onDown = (event: PointerEvent) => {
       if (event.pointerType === 'touch') return;
       if (event.button !== 0) return;
+      cancelMomentum();
       pointerId = event.pointerId;
       startX = event.clientX;
       startScroll = track.scrollLeft;
@@ -309,7 +420,9 @@ import { testimonials, testimonialsSection } from '../../data/site';
       const now = performance.now();
       const dt = now - lastTime;
       if (dt > 0) {
-        velocityX = (event.clientX - lastX) / dt;
+        // Gleitender Mittelwert für stabilere Velocity
+        const instantV = (event.clientX - lastX) / dt;
+        velocityX = velocityX * 0.6 + instantV * 0.4;
       }
       lastX = event.clientX;
       lastTime = now;
@@ -318,17 +431,19 @@ import { testimonials, testimonialsSection } from '../../data/site';
 
     const endDrag = (event: PointerEvent) => {
       if (pointerId === null || event.pointerId !== pointerId) return;
-      const wasDragging = dragging;
       if (dragging) {
         try { track.releasePointerCapture(pointerId); } catch {}
         track.classList.remove('is-dragging');
-        // Weiches Ausrollen im Stil eines Trägheit-Sliders
-        if (Math.abs(velocityX) > 0.1) {
-          const target = track.scrollLeft - velocityX * 180;
+        // Weiches Ausrollen mit Momentum-Animation
+        if (Math.abs(velocityX) > 0.05) {
+          startMomentum(velocityX);
+        } else {
+          // Kein nennenswerter Schwung – nur sanft zum nächsten Snap
+          const step = stepDistance();
+          const target = Math.round(track.scrollLeft / step) * step;
           track.scrollTo({ left: target, behavior: 'smooth' });
         }
-        // Klicks, die als Drag endeten, unterdrücken (verhindert versehentliche
-        // Klicks auf Links/Buttons in den Karten am Ende einer Bewegung)
+        // Klicks, die als Drag endeten, unterdrücken
         const suppress = (ev: Event) => {
           ev.stopPropagation();
           ev.preventDefault();
@@ -338,8 +453,6 @@ import { testimonials, testimonialsSection } from '../../data/site';
       }
       pointerId = null;
       dragging = false;
-      // Falls kein echter Drag: nichts weiter tun, Klick geht normal durch
-      void wasDragging;
     };
 
     track.addEventListener('pointerdown', onDown);
