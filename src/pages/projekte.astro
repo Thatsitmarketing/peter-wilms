@@ -1,0 +1,335 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Contact from '../components/sections/Contact.astro';
+import { projects } from '../data/site';
+
+const stats = [
+  { value: '850', label: 'Fertiggestellte Bauten' },
+  { value: '45', label: 'Jahre Erfahrung' },
+  { value: '2800', label: 'Zufriedene Auftraggeber' },
+];
+---
+
+<BaseLayout
+  title="Projekte – Peter Willms Bauunternehmung GmbH"
+  description="Referenzprojekte der Peter Willms Bauunternehmung GmbH: Brücken- und Bauwerksinstandsetzung in NRW."
+>
+  <!-- Hero-Slider -->
+  <section class="projekte-hero" aria-labelledby="projekte-hero-title">
+    <div class="container projekte-hero__grid">
+      <div class="projekte-hero__content" data-reveal>
+        <p class="projekte-hero__kicker">Projekte</p>
+        <h1 class="projekte-hero__title" id="projekte-hero-title">
+          Bauten, die bleiben und wirken
+        </h1>
+        <p class="projekte-hero__text">
+          Wir bauen nicht einfach Häuser. Wir schaffen Orte, an denen Menschen leben und arbeiten
+          möchten. Jedes Projekt ist eine Geschichte von Handwerk und Beständigkeit.
+        </p>
+        <div class="projekte-hero__actions">
+          <a class="btn btn--red" href="#projektliste">Entdecken</a>
+          <a class="btn btn--white" href="/kontakt">Kontakt</a>
+        </div>
+      </div>
+      <div class="projekte-hero__media photo-placeholder" role="img" aria-label="Referenzprojekt">
+        <div class="photo-placeholder__tag"><span>Foto: Referenzprojekt</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Zahlen -->
+  <section class="section stats" aria-labelledby="stats-title">
+    <div class="container">
+      <div class="stats__head">
+        <span class="section__kicker" data-reveal>Zahlen</span>
+        <h2 class="section__title" id="stats-title" data-reveal style="--reveal-delay: 0.06s">
+          Was wir erreicht haben
+        </h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.12s">
+          Projekte, die Bestand haben und Menschen prägen.
+        </p>
+      </div>
+
+      <dl class="stats__grid">
+        {stats.map((stat, index) => (
+          <div class="stat" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+            <dd>{stat.value}</dd>
+            <dt>{stat.label}</dt>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- Projektliste -->
+  <section class="section section--soft projektliste" id="projektliste" aria-labelledby="projektliste-title">
+    <div class="container">
+      <div class="projektliste__head">
+        <span class="section__kicker" data-reveal>Projekte</span>
+        <h2 class="section__title" id="projektliste-title" data-reveal style="--reveal-delay: 0.06s">
+          Unsere abgeschlossenen Bauten
+        </h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.12s">
+          Jedes Projekt erzählt von Qualität und Dauerhaftigkeit.
+        </p>
+      </div>
+
+      <ul class="projektliste__list">
+        {projects.map((project, index) => (
+          <li class="project" data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
+            <div class="project__body">
+              <h3 class="project__title">{project.title}</h3>
+              <p class="project__meta">{project.meta}</p>
+              <div class="project__tags">
+                <span>Instandsetzung</span>
+                <span>Sanierung</span>
+                <span>NRW</span>
+              </div>
+              <a class="project__link" href="/kontakt">Ansehen <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="project__media photo-placeholder" aria-hidden="true">
+              <div class="photo-placeholder__tag"><span>Foto: {project.title}</span></div>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div class="projektliste__more">
+        <a class="btn btn--red" href="/kontakt">Alle zeigen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bauen-CTA -->
+  <section class="section bauen-cta" aria-labelledby="bauen-cta-title">
+    <div class="container bauen-cta__inner">
+      <div class="bauen-cta__content" data-reveal>
+        <h2 class="bauen-cta__title" id="bauen-cta-title">Lassen Sie uns bauen</h2>
+        <p class="bauen-cta__text">
+          Ihr Projekt verdient Handwerk, das hält. Sprechen Sie mit uns über das, was Sie bauen möchten.
+        </p>
+        <div class="bauen-cta__actions">
+          <a class="btn btn--red" href="/kontakt">Kontakt</a>
+          <a class="btn btn--white" href="/kontakt#anfrage">Anfrage</a>
+        </div>
+      </div>
+      <div class="bauen-cta__media photo-placeholder" role="img" aria-label="Bauwerk">
+        <div class="photo-placeholder__tag"><span>Foto: Referenzobjekt</span></div>
+      </div>
+    </div>
+  </section>
+
+  <Contact />
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .projekte-hero {
+    padding-block: clamp(4rem, 8vw, 6rem);
+  }
+
+  .projekte-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .projekte-hero__kicker {
+    display: inline-block;
+    background: var(--color-red);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding: 0.35rem 0.9rem;
+    margin: 0 0 1.25rem;
+  }
+
+  .projekte-hero__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    margin: 0 0 1.25rem;
+    max-width: 20ch;
+  }
+
+  .projekte-hero__text {
+    max-width: 52ch;
+    color: var(--color-slate);
+    margin: 0 0 2rem;
+  }
+
+  .projekte-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+  }
+
+  .projekte-hero__media {
+    aspect-ratio: 4 / 3;
+  }
+
+  @media (max-width: 62rem) {
+    .projekte-hero__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Stats */
+  .stats__head {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: clamp(2rem, 4vw, 3.5rem);
+    margin: 0;
+  }
+
+  .stat dd {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    line-height: 1;
+    color: var(--color-ink);
+  }
+
+  .stat dt {
+    margin-top: 0.35rem;
+    color: var(--color-slate);
+    font-size: 0.95rem;
+  }
+
+  /* Projektliste */
+  .projektliste__head {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .projektliste__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.75rem, 3.5vw, 2.75rem);
+  }
+
+  .project {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: center;
+    padding-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .project:last-child {
+    border-bottom: 0;
+  }
+
+  .project__body {
+    order: 1;
+  }
+
+  .project__media {
+    aspect-ratio: 4 / 3;
+    order: 2;
+  }
+
+  .project__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
+    margin: 0 0 0.5rem;
+  }
+
+  .project__meta {
+    margin: 0 0 1rem;
+    color: var(--color-slate);
+  }
+
+  .project__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .project__tags span {
+    padding: 0.35rem 0.8rem;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .project__link {
+    color: var(--color-red);
+    text-decoration: none;
+    font-weight: 700;
+    font-family: var(--font-heading);
+  }
+
+  .projektliste__more {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    text-align: center;
+  }
+
+  @media (max-width: 62rem) {
+    .project {
+      grid-template-columns: 1fr;
+    }
+
+    .project__body {
+      order: 2;
+    }
+
+    .project__media {
+      order: 1;
+    }
+  }
+
+  /* Bauen CTA */
+  .bauen-cta {
+    background: var(--color-dark);
+    color: #fff;
+  }
+
+  .bauen-cta__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .bauen-cta__title {
+    color: #fff;
+    font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+    margin: 0 0 1rem;
+  }
+
+  .bauen-cta__text {
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 1.75rem;
+  }
+
+  .bauen-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+  }
+
+  .bauen-cta__media {
+    aspect-ratio: 4 / 3;
+  }
+
+  @media (max-width: 62rem) {
+    .bauen-cta__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

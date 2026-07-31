@@ -409,7 +409,10 @@ export const aboutPage = {
 
 export const navigation = [
   { label: 'Home', href: '/' },
+  { label: 'Projekte', href: '/projekte' },
+  { label: 'Jobs', href: '/jobs' },
   { label: 'Über Uns', href: '/ueber-uns' },
+  { label: 'Kontakt', href: '/kontakt' },
 ] as const;
 
 export const footerNav = {

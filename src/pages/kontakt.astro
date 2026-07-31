@@ -1,0 +1,303 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Contact from '../components/sections/Contact.astro';
+import { company } from '../data/site';
+
+const { contact, address } = company;
+---
+
+<BaseLayout
+  title="Kontakt – Peter Willms Bauunternehmung GmbH"
+  description="Kontakt zur Peter Willms Bauunternehmung GmbH. Direkte Ansprechpartner für Brücken- und Bauwerksinstandsetzung in ganz NRW."
+>
+  <!-- Hero -->
+  <section class="kontakt-hero" aria-labelledby="kontakt-hero-title">
+    <div class="container">
+      <p class="kontakt-hero__kicker" data-reveal>Kontakt</p>
+      <h1 class="kontakt-hero__title" id="kontakt-hero-title" data-reveal style="--reveal-delay: 0.08s">
+        Kontakt zur Peter Willms<br />Bauunternehmung GmbH
+      </h1>
+      <p class="kontakt-hero__subline" data-reveal style="--reveal-delay: 0.16s">
+        Wir sind für Ihre Fragen und Projekte da. Erreichen Sie uns schnell und unkompliziert.
+      </p>
+    </div>
+  </section>
+
+  <!-- Ansprechpartner -->
+  <section class="section section--soft ansprech" aria-labelledby="ansprech-title">
+    <div class="container">
+      <div class="ansprech__head">
+        <span class="section__kicker" data-reveal>Team</span>
+        <h2 class="section__title" id="ansprech-title" data-reveal style="--reveal-delay: 0.06s">
+          Ihre Ansprechpartner
+        </h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.12s">
+          Lernen Sie die Gesichter hinter der Peter Willms Bauunternehmung kennen. Jeder von uns
+          bringt Erfahrung und Zuverlässigkeit mit.
+        </p>
+      </div>
+
+      <div class="ansprech__grid">
+        <article class="ansprech-card" data-reveal>
+          <div class="ansprech-card__photo photo-placeholder" aria-hidden="true">
+            <div class="photo-placeholder__tag"><span>Foto: Geschäftsführung</span></div>
+          </div>
+          <div class="ansprech-card__body">
+            <p class="ansprech-card__role">Geschäftsführung</p>
+            <h3 class="ansprech-card__name">Peter Willms &amp; Verena Willms</h3>
+            <p class="ansprech-card__text">
+              Inhaber und Geschäftsführer. Ihre Ansprechpartner für strategische Fragen und Großprojekte.
+            </p>
+            <a class="ansprech-card__link" href={`tel:${contact.phoneCentral.replace(/\s/g, '')}`}>
+              Anrufen <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+
+        <article class="ansprech-card" data-reveal style="--reveal-delay: 0.08s">
+          <div class="ansprech-card__photo photo-placeholder" aria-hidden="true">
+            <div class="photo-placeholder__tag"><span>Foto: Bauleitung</span></div>
+          </div>
+          <div class="ansprech-card__body">
+            <p class="ansprech-card__role">Prokurist · Oberbauleitung</p>
+            <h3 class="ansprech-card__name">Dipl.-Ing. Marco Tankulic</h3>
+            <p class="ansprech-card__text">
+              Prokurist und Oberbauleitung. Verantwortlich für die technische Umsetzung Ihrer Projekte.
+            </p>
+            <a class="ansprech-card__link" href={`tel:${contact.siteManagement.replace(/\s/g, '')}`}>
+              Anrufen <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Direkte Kontaktwege -->
+  <section class="section direct" aria-labelledby="direct-title">
+    <div class="container direct__grid">
+      <div class="direct__head">
+        <span class="section__kicker" data-reveal>Erreichbar</span>
+        <h2 class="section__title" id="direct-title" data-reveal style="--reveal-delay: 0.06s">
+          Direkte Kontaktwege zu uns
+        </h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.12s">
+          Alle wichtigen Nummern und Adressen auf einen Blick. Wählen Sie den Weg, der für Sie passt.
+        </p>
+      </div>
+
+      <ul class="direct__list">
+        <li class="direct-card" data-reveal>
+          <div class="direct-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.86 19.86 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <h3>Rufen Sie uns an</h3>
+            <p>Montag bis Freitag von 8 bis 17 Uhr erreichbar. Wir nehmen uns Zeit für Ihre Fragen.</p>
+            <a href={`tel:${contact.phoneCentral.replace(/\s/g, '')}`}>{contact.phoneCentralDisplay}</a>
+          </div>
+        </li>
+
+        <li class="direct-card" data-reveal style="--reveal-delay: 0.06s">
+          <div class="direct-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
+          </div>
+          <div>
+            <h3>Schreiben Sie uns eine Nachricht</h3>
+            <p>Ihre Anfrage erreicht uns zuverlässig. Wir antworten innerhalb von 24 Stunden.</p>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </div>
+        </li>
+
+        <li class="direct-card" data-reveal style="--reveal-delay: 0.12s">
+          <div class="direct-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <h3>Besuchen Sie uns vor Ort</h3>
+            <p>{address.street}, {address.zip} {address.city}. Gerne zeigen wir Ihnen unsere Räume.</p>
+          </div>
+        </li>
+
+        <li class="direct-card" data-reveal style="--reveal-delay: 0.18s">
+          <div class="direct-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+          </div>
+          <div>
+            <h3>Mobil für Ihre Projekte</h3>
+            <p>Unsere Bauleiter sind vor Ort für Sie da. Direkter Kontakt zu den Verantwortlichen.</p>
+            <a href={`tel:${contact.mobile.replace(/\s/g, '')}`}>{contact.mobileDisplay}</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <Contact />
+</BaseLayout>
+
+<style>
+  .kontakt-hero {
+    background: var(--color-dark);
+    color: #fff;
+    padding-block: clamp(5rem, 10vw, 8rem);
+    text-align: center;
+  }
+
+  .kontakt-hero__kicker {
+    display: inline-block;
+    background: var(--color-red);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding: 0.35rem 0.9rem;
+    margin: 0 0 1.25rem;
+  }
+
+  .kontakt-hero__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.15;
+    color: #fff;
+    margin: 0 auto 1.25rem;
+    max-width: 24ch;
+  }
+
+  .kontakt-hero__subline {
+    max-width: 52ch;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Ansprechpartner */
+  .ansprech__head {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    text-align: center;
+  }
+
+  .ansprech__head .section__intro {
+    margin-inline: auto;
+  }
+
+  .ansprech__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .ansprech-card {
+    position: relative;
+    background: var(--color-dark);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 24rem;
+    overflow: hidden;
+  }
+
+  .ansprech-card__photo {
+    aspect-ratio: 4 / 3;
+    flex-shrink: 0;
+  }
+
+  .ansprech-card__body {
+    padding: clamp(1.25rem, 2vw, 1.75rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ansprech-card__role {
+    margin: 0;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .ansprech-card__name {
+    font-family: var(--font-heading);
+    font-size: clamp(1.25rem, 2.2vw, 1.55rem);
+    color: #fff;
+    margin: 0;
+  }
+
+  .ansprech-card__text {
+    margin: 0.5rem 0 0.75rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .ansprech-card__link {
+    color: var(--color-red);
+    text-decoration: none;
+    font-weight: 700;
+    font-family: var(--font-heading);
+  }
+
+  .ansprech-card__link:hover {
+    color: #fff;
+  }
+
+  /* Direkte Kontaktwege */
+  .direct__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .direct__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .direct-card {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1.25rem;
+    padding: clamp(1.25rem, 2vw, 1.75rem);
+    border: 1px solid var(--color-line);
+  }
+
+  .direct-card__icon {
+    display: grid;
+    place-items: center;
+    color: var(--color-red);
+  }
+
+  .direct-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .direct-card p {
+    margin: 0 0 0.5rem;
+    color: var(--color-slate);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .direct-card a {
+    color: var(--color-red);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .direct-card a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 62rem) {
+    .direct__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

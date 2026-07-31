@@ -1,0 +1,540 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Faq from '../components/sections/Faq.astro';
+import Contact from '../components/sections/Contact.astro';
+import { company, jobsSection } from '../data/site';
+
+const mailto = `mailto:${company.contact.email}?subject=${encodeURIComponent('Initiativbewerbung bei der Peter Willms Bauunternehmung GmbH')}`;
+
+const positions = [
+  {
+    title: 'Maurer mit Erfahrung',
+    kind: 'Vollzeit',
+    text: 'Wir suchen Verstärkung in der Region. Facharbeit im Brücken- und Bauwerksinstandsetzungsbau.',
+  },
+  {
+    title: 'Elektrotechniker für moderne Baustellen',
+    kind: 'Vollzeit',
+    text: 'Elektrische und schaltungstechnische Aufgaben auf modernen Baustellen der Ingenieurbaukunst.',
+  },
+  {
+    title: 'Projektmanager und kaufmännische Kraft',
+    kind: 'Vollzeit',
+    text: 'Kaufmännische Steuerung von Projekten und Unterstützung der Bauleitung im Büro.',
+  },
+];
+
+const values = [
+  {
+    title: 'Handwerkliches Können',
+    text: 'Mitarbeiten, die ihr Handwerk verstehen und aus Freude an der Sache handeln.',
+  },
+  {
+    title: 'Zuverlässigkeit',
+    text: 'Termintreue, saubere Ausführung und ein Team, auf das jeder zählen kann.',
+  },
+  {
+    title: 'Lernbereitschaft',
+    text: 'Wir fördern Weiterentwicklung und neue Methoden im modernen Ingenieurbau.',
+  },
+];
+
+const timeline = [
+  { tag: 'Tag 1', text: 'Bewerbung einreichen und erste Rückmeldung durch unser Team.' },
+  { tag: 'Tag 3', text: 'Telefonisches Vorabgespräch mit der Personalabteilung.' },
+  { tag: 'Tag 7', text: 'Persönliches Treffen mit den Verantwortlichen vor Ort.' },
+  { tag: 'Tag 14', text: 'Praktischer Test oder Arbeitsprobe je nach Position.' },
+];
+---
+
+<BaseLayout
+  title="Jobs – Peter Willms Bauunternehmung GmbH"
+  description="Werde Teil unseres Teams bei der Peter Willms Bauunternehmung GmbH. Offene Stellen für Handwerker, Bauleiter und kaufmännische Fachkräfte in NRW."
+>
+  <!-- Hero -->
+  <section class="jobs-hero" aria-labelledby="jobs-hero-title">
+    <div class="container jobs-hero__grid">
+      <div class="jobs-hero__content" data-reveal>
+        <p class="jobs-hero__kicker">Karriere</p>
+        <h1 class="jobs-hero__title" id="jobs-hero-title">Bauen Sie Ihre Karriere mit uns auf</h1>
+        <p class="jobs-hero__text">
+          Bei Peter Willms Bauunternehmung arbeiten Sie an Projekten, die Ihren Anlauf verdienen.
+          Wir suchen tatkräftige Menschen, die Verantwortung tragen wollen.
+        </p>
+        <div class="jobs-hero__actions">
+          <a class="btn btn--red" href="#offene-positionen">Bewerben</a>
+          <a class="btn btn--white" href="#einblicke">Einblicke</a>
+        </div>
+      </div>
+      <div class="jobs-hero__media photo-placeholder" role="img" aria-label="Team auf der Baustelle">
+        <div class="photo-placeholder__tag"><span>Foto: Team auf der Baustelle</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offene Positionen -->
+  <section class="section section--soft positions" id="offene-positionen" aria-labelledby="positions-title">
+    <div class="container">
+      <div class="positions__head">
+        <span class="section__kicker" data-reveal>Suchen</span>
+        <h2 class="section__title" id="positions-title" data-reveal style="--reveal-delay: 0.06s">
+          Polier und Bauleiter gesucht
+        </h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.12s">
+          Verstärkung für Baustellen und Teams
+        </p>
+      </div>
+
+      <ul class="positions__grid">
+        {positions.map((position, index) => (
+          <li class="position-card" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+            <div class="position-card__media photo-placeholder" aria-hidden="true">
+              <div class="photo-placeholder__tag"><span>Foto: {position.title}</span></div>
+            </div>
+            <div class="position-card__body">
+              <p class="position-card__kind">{position.kind}</p>
+              <h3 class="position-card__title">{position.title}</h3>
+              <p class="position-card__text">{position.text}</p>
+              <a class="position-card__link" href={mailto}>Bewerben <span aria-hidden="true">→</span></a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Wiederholter Jobs-CTA -->
+  <section class="jobs-cta" aria-labelledby="jobs-cta-title">
+    <div class="container jobs-cta__inner">
+      <h2 class="jobs-cta__title" id="jobs-cta-title" data-reveal>{jobsSection.title}</h2>
+      <p class="jobs-cta__text" data-reveal style="--reveal-delay: 0.06s">{jobsSection.text}</p>
+      <div class="jobs-cta__actions" data-reveal style="--reveal-delay: 0.12s">
+        <a class="btn btn--white" href={mailto}>Bewerben</a>
+        <a class="btn btn--red" href="#offene-positionen">Erfahren</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Werte -->
+  <section class="section values" aria-labelledby="values-title">
+    <div class="container">
+      <div class="values__head">
+        <span class="section__kicker" data-reveal>Kultur</span>
+        <h2 class="section__title" id="values-title" data-reveal style="--reveal-delay: 0.06s">
+          Das bringen Sie bei uns mit
+        </h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.12s">
+          Wir suchen Menschen, die ihre Handwerk verstehen und ihre Arbeit ernst nehmen.
+        </p>
+      </div>
+
+      <ul class="values__grid">
+        {values.map((value, index) => (
+          <li class="value-card" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+            <h3>{value.title}</h3>
+            <p>{value.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Ihr Weg zu Peter Willms -->
+  <section class="section section--soft roadmap" aria-labelledby="roadmap-title">
+    <div class="container roadmap__grid">
+      <div class="roadmap__head">
+        <span class="section__kicker" data-reveal>Prozess</span>
+        <h2 class="section__title" id="roadmap-title" data-reveal style="--reveal-delay: 0.06s">
+          Ihr Weg zu Peter Willms
+        </h2>
+      </div>
+
+      <ol class="roadmap__list">
+        {timeline.map((step, index) => (
+          <li class="roadmap-step" data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
+            <span class="roadmap-step__tag">{step.tag}</span>
+            <p class="roadmap-step__text">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Video-Sektion -->
+  <section class="section jobs-video" id="einblicke" aria-labelledby="jobs-video-title">
+    <div class="container">
+      <div class="jobs-video__frame" data-reveal>
+        <button type="button" class="jobs-video__play" aria-label="Video abspielen (Platzhalter)">
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true">
+            <path d="M8 5.5v13l11-6.5z" />
+          </svg>
+        </button>
+        <h2 class="jobs-video__title" id="jobs-video-title">Sehen Sie, wie wir arbeiten</h2>
+        <p class="jobs-video__meta">Einblick in unsere Baustellen und Büros</p>
+      </div>
+    </div>
+  </section>
+
+  <Faq />
+
+  <!-- Initiativbewerbung -->
+  <section class="section section--soft init" aria-labelledby="init-title">
+    <div class="container init__grid">
+      <div class="init__head" data-reveal>
+        <span class="section__kicker">Bewerbung</span>
+        <h2 class="section__title" id="init-title">Initiativbewerbung</h2>
+        <p class="section__intro">
+          Keine passende Stelle dabei? Schreiben Sie uns trotzdem – wir freuen uns über Ihre Nachricht.
+        </p>
+      </div>
+
+      <form class="init__form" data-reveal="right" data-init-form novalidate>
+        <div class="form-field">
+          <label for="if-name">Name *</label>
+          <input type="text" id="if-name" name="name" required autocomplete="name" />
+        </div>
+        <div class="form-field">
+          <label for="if-email">E-Mail *</label>
+          <input type="email" id="if-email" name="email" required autocomplete="email" />
+        </div>
+        <div class="form-field">
+          <label for="if-message">Nachricht</label>
+          <textarea id="if-message" name="message" rows="5"></textarea>
+        </div>
+        <div class="form-field form-field--consent">
+          <label>
+            <input type="checkbox" name="privacy" required />
+            <span>
+              Ich habe die <a href="/datenschutz">Datenschutzerklärung</a> zur Kenntnis genommen.
+            </span>
+          </label>
+        </div>
+        <a class="btn btn--red" href={mailto}>Senden</a>
+      </form>
+    </div>
+  </section>
+
+  <Contact />
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .jobs-hero {
+    padding-block: clamp(4rem, 8vw, 6rem);
+  }
+
+  .jobs-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .jobs-hero__kicker {
+    display: inline-block;
+    background: var(--color-red);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding: 0.35rem 0.9rem;
+    margin: 0 0 1.25rem;
+  }
+
+  .jobs-hero__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    line-height: 1.15;
+    margin: 0 0 1.25rem;
+    max-width: 22ch;
+  }
+
+  .jobs-hero__text {
+    max-width: 52ch;
+    color: var(--color-slate);
+    margin: 0 0 2rem;
+  }
+
+  .jobs-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+  }
+
+  .jobs-hero__media {
+    aspect-ratio: 4 / 3;
+  }
+
+  @media (max-width: 62rem) {
+    .jobs-hero__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Positions */
+  .positions__head {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    text-align: center;
+  }
+
+  .positions__head .section__intro {
+    margin-inline: auto;
+  }
+
+  .positions__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .position-card {
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .position-card__media {
+    aspect-ratio: 4 / 3;
+  }
+
+  .position-card__body {
+    padding: 1.5rem;
+  }
+
+  .position-card__kind {
+    margin: 0 0 0.35rem;
+    font-size: 0.85rem;
+    color: var(--color-red);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .position-card__title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    margin: 0 0 0.75rem;
+  }
+
+  .position-card__text {
+    margin: 0 0 1.25rem;
+    color: var(--color-slate);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .position-card__link {
+    color: var(--color-red);
+    text-decoration: none;
+    font-weight: 700;
+    font-family: var(--font-heading);
+  }
+
+  /* Jobs CTA (wiederholt) */
+  .jobs-cta {
+    background: var(--color-dark);
+    color: #fff;
+    padding-block: clamp(4rem, 8vw, 6rem);
+    text-align: center;
+  }
+
+  .jobs-cta__inner {
+    max-width: 44rem;
+    margin: 0 auto;
+  }
+
+  .jobs-cta__title {
+    color: #fff;
+    font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+    margin: 0 0 1rem;
+  }
+
+  .jobs-cta__text {
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 1.75rem;
+  }
+
+  .jobs-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    justify-content: center;
+  }
+
+  /* Values */
+  .values__head {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .values__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .value-card {
+    padding: 1.5rem;
+    border-top: 3px solid var(--color-red);
+  }
+
+  .value-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    margin: 0 0 0.6rem;
+  }
+
+  .value-card p {
+    margin: 0;
+    color: var(--color-slate);
+    line-height: 1.6;
+  }
+
+  /* Roadmap */
+  .roadmap__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .roadmap__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .roadmap-step {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 1.25rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .roadmap-step__tag {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-red);
+  }
+
+  .roadmap-step__text {
+    margin: 0;
+    color: var(--color-ink);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 62rem) {
+    .roadmap__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Jobs Video */
+  .jobs-video__frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 60vh;
+    background:
+      radial-gradient(40rem 18rem at 50% 60%, rgba(255, 255, 255, 0.05), transparent 70%),
+      var(--color-dark);
+    color: #fff;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .jobs-video__play {
+    display: grid;
+    place-items: center;
+    width: 5rem;
+    height: 5rem;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-red);
+    color: #fff;
+    cursor: pointer;
+    padding-left: 0.25rem;
+  }
+
+  .jobs-video__title {
+    color: #fff;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    margin: 0;
+  }
+
+  .jobs-video__meta {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  /* Initiativbewerbung */
+  .init__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .init__form {
+    background: #fff;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    box-shadow: var(--shadow-card);
+  }
+
+  .init__form .form-field {
+    margin-bottom: 1rem;
+  }
+
+  .init__form label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-slate);
+    margin-bottom: 0.35rem;
+  }
+
+  .init__form input,
+  .init__form textarea {
+    width: 100%;
+    padding: 0.55rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--color-line);
+    background: transparent;
+    color: var(--color-ink);
+    font: inherit;
+  }
+
+  .init__form input:focus,
+  .init__form textarea:focus {
+    outline: none;
+    border-color: var(--color-red);
+  }
+
+  .init__form .form-field--consent label {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.65rem;
+    align-items: start;
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 62rem) {
+    .init__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
