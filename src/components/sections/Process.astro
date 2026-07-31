@@ -67,12 +67,13 @@ import { processSection, processSteps } from '../../data/site';
   }
 
   /* Sticky-Viewport enthält den kompletten Sektions-Inhalt (Intro + Steps +
-     Controls) und klebt an der Navigation, während intern der Track
+     Controls) und klebt mittig im Bildschirm, während intern der Track
      horizontal durchgescrollt wird. Kompakte Höhe: Intro + 35 vh Kacheln +
      Controls sitzen dicht beieinander. */
   .process__viewport {
     position: sticky;
-    top: 5vh;
+    /* Mittig auf dem Screen: (100vh - 62vh) / 2 ≈ 19vh */
+    top: 18vh;
     height: 62vh;
     display: flex;
     flex-direction: column;
@@ -341,8 +342,10 @@ import { processSection, processSteps } from '../../data/site';
       update();
     };
 
-    // Sticky-Offset synchron zum CSS-Wert (viewport top: 5vh)
-    const stickyOffset = () => window.innerHeight * 0.05;
+    // Startet den horizontalen Scroll bereits, bevor die Sektion sticky pinnt
+    // (30 vh statt gleich mit dem CSS-Sticky-Wert 18 vh). Dadurch beginnt die
+    // Bewegung schon während die Sektion in die Bildschirmmitte scrollt.
+    const stickyOffset = () => window.innerHeight * 0.3;
 
     const update = () => {
       if (!isDesktop() || prefersReduced()) return;
