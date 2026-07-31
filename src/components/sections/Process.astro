@@ -51,9 +51,10 @@ import { processSection, processSteps } from '../../data/site';
 
 <style>
   .process {
-    padding-top: clamp(3rem, 6vw, 5rem);
-    /* 8 vh Abstand nach der Navigation, bevor der nächste Abschnitt beginnt */
-    padding-bottom: 8vh;
+    /* Zusätzliche 5 vh Luft über der Überschrift */
+    padding-top: calc(clamp(3rem, 6vw, 5rem) + 5vh);
+    /* 8 vh Grundabstand + 3 vh zusätzlich unter den Slider-Navigationsknöpfen */
+    padding-bottom: 11vh;
   }
 
   /* Stage bestimmt die vertikale Scroll-Distanz für den Sticky-Effekt.

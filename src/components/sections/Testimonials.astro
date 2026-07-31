@@ -3,7 +3,7 @@ import { testimonials, testimonialsSection } from '../../data/site';
 ---
 
 <section class="section section--soft testimonials" aria-labelledby="testimonials-title">
-  <div class="container">
+  <div class="testimonials__inner">
     <h2 class="section__title testimonials__title" id="testimonials-title" data-reveal>
       <span>Was Auftraggeber über die</span>
       <span>Zusammenarbeit sagen</span>
@@ -19,22 +19,22 @@ import { testimonials, testimonialsSection } from '../../data/site';
           </div>
           <div class="testimonial-card__body">
             <blockquote class="testimonial-card__quote">
-              <p>“{item.quote}”</p>
+              <p>»{item.quote}«</p>
             </blockquote>
             <figcaption class="testimonial-card__caption">
               <strong>{item.name}</strong>
               <span>{item.role}</span>
             </figcaption>
             <div class="testimonial-card__logo" role="img" aria-label={`Platzhalter – ${item.logoLabel}`}>
-              {item.logoLabel}
+              <span class="testimonial-card__logo-mark" aria-hidden="true"></span>
+              <span class="testimonial-card__logo-name">{item.logoLabel}</span>
             </div>
           </div>
         </figure>
       ))}
     </div>
 
-    <!-- Fortschrittsbalken wie in der Referenz -->
-    <div class="container">
+    <div class="testimonials__inner">
       <div class="testimonials__progress" aria-hidden="true">
         <span data-testimonials-progress></span>
       </div>
@@ -43,6 +43,18 @@ import { testimonials, testimonialsSection } from '../../data/site';
 </section>
 
 <style>
+  /* Nach dem Kögel-Muster: Titel und Karten sind links um 20 % vom Rand
+     eingerückt. Wir verwenden diesen Wert als eigene Sektions-Variable, damit
+     Titel, Karten und Fortschrittsbalken exakt bündig laufen. */
+  .testimonials {
+    --testimonials-inset: 20%;
+  }
+
+  .testimonials__inner {
+    width: 100%;
+    padding-inline: var(--testimonials-inset) var(--gutter);
+  }
+
   .testimonials__viewport {
     margin-top: 2.5rem;
   }
@@ -57,56 +69,77 @@ import { testimonials, testimonialsSection } from '../../data/site';
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    /* Karten sitzen rechts im Viewport – links entsteht luftiger Freiraum,
-       ähnlich wie in der Referenz. Rechts guckt die nächste Karte an. */
-    padding-inline: max(var(--gutter), calc(100vw - min(46rem, 88vw) - var(--gutter))) clamp(3rem, 8vw, 6rem);
-    padding-bottom: 0.5rem;
+    /* Karten starten links am 20 %-Rand und lassen rechts genug Luft,
+       damit die nächste Karte angeschnitten sichtbar bleibt. */
+    padding-inline: var(--testimonials-inset) clamp(3rem, 8vw, 6rem);
+    padding-block: 1.5rem 2rem;
   }
 
   .testimonials__track::-webkit-scrollbar {
     display: none;
   }
 
+  /* Karte im Sprechblasen-Stil: weißes Panel mit weichem Schatten und
+     einer Spitze unten links (wie in der Referenz). */
   .testimonial-card {
-    flex: 0 0 min(46rem, 88vw);
+    position: relative;
+    flex: 0 0 min(52rem, 88vw);
     scroll-snap-align: start;
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    gap: 2rem;
+    grid-template-columns: minmax(11rem, 16rem) minmax(0, 1fr);
+    gap: 2.5rem;
     margin: 0;
     background: #fff;
-    padding: 2.25rem 2.5rem;
-    box-shadow: var(--shadow-card);
+    padding: 2.5rem 3rem 2.75rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    align-items: stretch;
   }
 
+  /* Sprechblasen-Spitze unten links */
+  .testimonial-card::after {
+    content: '';
+    position: absolute;
+    left: 3.5rem;
+    bottom: -0.9rem;
+    width: 1.6rem;
+    height: 1rem;
+    background: #fff;
+    clip-path: polygon(0 0, 100% 0, 20% 100%);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Portrait ragt oben aus dem Panel heraus, so wie die Kögel-Referenz
+     die Person mit Kopf über den Kartenrand zeigt. */
   .testimonial-card__photo {
+    align-self: end;
+    margin-top: -3.5rem;
     aspect-ratio: 3 / 4;
-    align-self: stretch;
+    min-height: 18rem;
   }
 
   .testimonial-card__body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 1.25rem;
   }
 
   .testimonial-card__quote {
-    margin: 0 0 1.5rem;
+    margin: 0;
   }
 
   .testimonial-card__quote p {
     margin: 0;
     font-weight: 500;
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 1.05rem;
+    line-height: 1.65;
     color: var(--color-ink);
   }
 
   .testimonial-card__caption {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
-    margin-bottom: 1.5rem;
+    gap: 0.15rem;
   }
 
   .testimonial-card__caption strong {
@@ -119,21 +152,44 @@ import { testimonials, testimonialsSection } from '../../data/site';
     color: var(--color-slate);
   }
 
-  /* Logo prominenter, rechts unten mit Unterstrich – wie in der Referenz. */
+  /* Prominentes Logo unten mit Bildmarke + Wortmarke – vgl. „MERKUR GROUP". */
   .testimonial-card__logo {
-    margin-top: auto;
-    align-self: flex-start;
+    margin-top: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.03em;
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
     color: var(--color-ink);
-    padding: 0.5rem 0 0.55rem;
-    border-bottom: 2px solid var(--color-ink);
+    text-transform: uppercase;
+  }
+
+  .testimonial-card__logo-mark {
+    display: inline-block;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: repeating-conic-gradient(
+      var(--color-ink) 0deg 15deg,
+      transparent 15deg 30deg
+    );
+    mask: radial-gradient(circle at center, transparent 0 26%, #000 27% 100%);
+    -webkit-mask: radial-gradient(circle at center, transparent 0 26%, #000 27% 100%);
+    position: relative;
+  }
+
+  .testimonial-card__logo-mark::after {
+    content: '';
+    position: absolute;
+    inset: 26%;
+    border-radius: 50%;
+    background: var(--color-ink);
   }
 
   .testimonials__progress {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     height: 3px;
     background: #e0e0e0;
     position: relative;
@@ -148,13 +204,33 @@ import { testimonials, testimonialsSection } from '../../data/site';
     transition: width 0.2s ease, left 0.2s ease;
   }
 
-  @media (max-width: 40rem) {
+  /* Auf mittleren Viewports 20 % Einzug etwas reduzieren, damit Inhalt
+     nicht zu schmal wird. */
+  @media (max-width: 62rem) {
+    .testimonials {
+      --testimonials-inset: 12%;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .testimonials {
+      --testimonials-inset: var(--gutter);
+    }
+
     .testimonial-card {
       grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding: 2rem 1.75rem 2.25rem;
     }
 
     .testimonial-card__photo {
+      margin-top: -2.5rem;
       aspect-ratio: 16 / 10;
+      min-height: 0;
+    }
+
+    .testimonial-card::after {
+      left: 2rem;
     }
   }
 </style>
