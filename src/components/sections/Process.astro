@@ -31,6 +31,9 @@ import { processSection, processSteps } from '../../data/site';
             </div>
           </>
         ))}
+        <!-- Expliziter Spacer am Ende: schiebt Schritt 4 nach links, sodass
+             am Ende des Scrolls sichtbar Freiraum rechts bleibt. -->
+        <div class="process__end-spacer" aria-hidden="true"></div>
       </div>
 
       <div class="container process__controls">
@@ -104,11 +107,18 @@ import { processSection, processSteps } from '../../data/site';
     display: flex;
     gap: 1.25rem;
     /* Karten kleben NICHT am linken Rand: gleicher Einzug wie der Container.
-       Rechts genau 10 vw Puffer, damit am Ende des Scrolls Schritt 4
-       mittiger sitzt und 10 % Freifläche zum rechten Rand bleibt. */
-    padding-inline: var(--gutter) 10vw;
+       Rechts nur der reguläre Container-Einzug – der Puffer wird über den
+       expliziten Spacer am Ende gesetzt (garantiert im scrollWidth erfasst). */
+    padding-inline: var(--gutter);
     will-change: transform;
     transform: translate3d(0, 0, 0);
+  }
+
+  /* Spacer am Track-Ende: entspricht einem Slot (Foto + Gap) plus 10 vw
+     Freiraum – dadurch rutscht Schritt 4 mittiger und rechts bleibt sichtbar
+     Platz, bevor die Sektion vertikal weiter scrollt. */
+  .process__end-spacer {
+    flex: 0 0 calc(clamp(14rem, 22vw, 22rem) + 1.25rem + 10vw);
   }
 
   .process-card {
