@@ -1,0 +1,559 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Contact from '../../components/sections/Contact.astro';
+import { projects, company } from '../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { address } = company;
+
+const related = projects.filter((p) => p.slug !== project.slug);
+---
+
+<BaseLayout
+  title={`${project.title} – Peter Willms Bauunternehmung GmbH`}
+  description={project.summary}
+>
+  <!-- Projekt-Hero: Vollflächiges Bild mit Titel, Tags und Meta-Grid unten -->
+  <section class="project-hero photo-placeholder" aria-labelledby="project-hero-title">
+    <div class="project-hero__overlay" aria-hidden="true"></div>
+    <div class="photo-placeholder__tag">
+      <span>Foto: {project.title}</span>
+    </div>
+
+    <div class="container project-hero__inner">
+      <h1 class="project-hero__title" id="project-hero-title" data-reveal>
+        {project.title}
+      </h1>
+      <p class="project-hero__summary" data-reveal style="--reveal-delay: 0.08s">
+        {project.summary}
+      </p>
+
+      <div class="project-hero__tags" data-reveal style="--reveal-delay: 0.14s">
+        {project.tags.map((tag) => <span class="project-hero__tag">{tag}</span>)}
+      </div>
+
+      <dl class="project-hero__meta" data-reveal style="--reveal-delay: 0.2s">
+        <div>
+          <dt>Auftraggeber</dt>
+          <dd>{project.client}</dd>
+        </div>
+        <div>
+          <dt>Zeitraum</dt>
+          <dd>{project.date}</dd>
+        </div>
+        <div>
+          <dt>Rolle</dt>
+          <dd>{project.role}</dd>
+        </div>
+        <div>
+          <dt>Ort</dt>
+          <dd>Nordrhein-Westfalen</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Projektbeschreibung: Titel links, Fließtext rechts -->
+  <section class="section project-story" aria-labelledby="project-story-title">
+    <div class="container project-story__grid">
+      <h2 class="section__title" id="project-story-title" data-reveal>
+        Das Projekt entstand
+      </h2>
+      <div class="project-story__text" data-reveal style="--reveal-delay: 0.08s">
+        {project.intro.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Herausforderung mit Bulletliste und Bild -->
+  <section class="section section--soft project-challenge" aria-labelledby="project-challenge-title">
+    <div class="container project-challenge__grid">
+      <div class="project-challenge__body" data-reveal>
+        <p class="section__kicker">Herausforderung</p>
+        <h2 class="section__title" id="project-challenge-title">
+          {project.challenge.title}
+        </h2>
+        <p class="project-challenge__text">{project.challenge.text}</p>
+
+        <ul class="project-challenge__list">
+          {project.challenge.bullets.map((item) => (
+            <li>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="4 12 10 18 20 6" />
+              </svg>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="project-challenge__actions">
+          <a class="btn btn--red btn--small" href="/#kontakt">Jetzt anfragen</a>
+          <a class="btn btn--outline btn--small" href="#related">Mehr Projekte</a>
+        </div>
+      </div>
+
+      <div class="project-challenge__media photo-placeholder" data-reveal="right" aria-hidden="true">
+        <div class="photo-placeholder__tag"><span>Foto: Detail vor Ort</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bildergalerie – 4 Platzhalter-Kacheln -->
+  <section class="section project-gallery" aria-labelledby="project-gallery-title">
+    <div class="container">
+      <div class="project-gallery__head">
+        <h2 class="section__title" id="project-gallery-title" data-reveal>Bildergalerie</h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.08s">
+          Einblicke in die Entstehung und das fertige Projekt.
+        </p>
+      </div>
+
+      <div class="project-gallery__grid">
+        {[1, 2, 3, 4].map((index) => (
+          <div
+            class="project-gallery__item photo-placeholder"
+            data-reveal
+            style={`--reveal-delay: ${index * 0.06}s`}
+            aria-hidden="true"
+          >
+            <div class="photo-placeholder__tag"><span>Foto {index}</span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Weitere Projekte -->
+  <section class="section section--dark project-related" id="related" aria-labelledby="project-related-title">
+    <div class="container">
+      <div class="project-related__head">
+        <span class="section__kicker" data-reveal>Weitere</span>
+        <h2 class="section__title" id="project-related-title" data-reveal style="--reveal-delay: 0.06s">
+          Mehr Projekte entdecken
+        </h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.12s">
+          Schauen Sie sich unsere anderen Referenzen an.
+        </p>
+      </div>
+
+      <ul class="project-related__grid">
+        {related.map((rel, index) => (
+          <li class="related-card" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+            <div class="related-card__media photo-placeholder" aria-hidden="true">
+              <div class="photo-placeholder__tag"><span>Foto: {rel.title}</span></div>
+            </div>
+            <div class="related-card__body">
+              <h3 class="related-card__title">{rel.title}</h3>
+              <div class="related-card__tags">
+                {rel.tags.map((tag) => <span>{tag}</span>)}
+              </div>
+              <a class="btn btn--red btn--small" href={`/projekte/${rel.slug}`}>Zum Projekt</a>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div class="project-related__more">
+        <a class="btn btn--outline" href="/projekte">Alle anzeigen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kontakt-Kurzblock mit Kartenplatzhalter -->
+  <section class="section project-contact" aria-labelledby="project-contact-title">
+    <div class="container project-contact__grid">
+      <div class="project-contact__body" data-reveal>
+        <p class="section__kicker">Kontakt</p>
+        <h2 class="section__title" id="project-contact-title">Sprechen Sie mit uns</h2>
+        <p class="section__intro">
+          Wir freuen uns auf Ihre Anfrage und Ihre Projekte.
+        </p>
+
+        <dl class="project-contact__meta">
+          <div>
+            <dt>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
+              E-Mail
+            </dt>
+            <dd>
+              <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a>
+            </dd>
+          </div>
+
+          <div>
+            <dt>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.86 19.86 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg>
+              Telefon
+            </dt>
+            <dd>
+              <a href={`tel:${company.contact.phoneCentral.replace(/\s/g, '')}`}>{company.contact.phoneCentralDisplay}</a>
+            </dd>
+          </div>
+
+          <div>
+            <dt>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Büro
+            </dt>
+            <dd>
+              {address.street}, {address.zip} {address.city}<br />
+              <a href={address.mapsUrl} target="_blank" rel="noopener noreferrer">Route anzeigen</a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <a
+        class="project-contact__map photo-placeholder"
+        href={address.mapsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Adresse in Google Maps öffnen"
+        data-reveal="right"
+      >
+        <div class="project-contact__pin" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="photo-placeholder__tag"><span>Karte – in Google Maps öffnen</span></div>
+      </a>
+    </div>
+  </section>
+
+  <Contact />
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .project-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: min(36rem, 72svh);
+    color: #fff;
+    padding-block: clamp(5rem, 12vw, 8rem) clamp(2.5rem, 5vw, 4rem);
+    isolation: isolate;
+  }
+
+  .project-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.35) 0%,
+      rgba(0, 0, 0, 0.25) 45%,
+      rgba(0, 0, 0, 0.75) 100%
+    );
+  }
+
+  .project-hero__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .project-hero__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.2rem, 5vw, 3.75rem);
+    line-height: 1.1;
+    color: #fff;
+    margin: 0 0 1rem;
+    max-width: 22ch;
+  }
+
+  .project-hero__summary {
+    max-width: 60ch;
+    margin: 0 0 1.75rem;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.05rem;
+  }
+
+  .project-hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .project-hero__tag {
+    padding: 0.35rem 0.9rem;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #fff;
+  }
+
+  .project-hero__meta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+    margin: 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .project-hero__meta dt {
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.3rem;
+  }
+
+  .project-hero__meta dd {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #fff;
+  }
+
+  @media (max-width: 52rem) {
+    .project-hero__meta {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Story */
+  .project-story__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .project-story__text p {
+    margin: 0 0 1rem;
+    color: var(--color-slate);
+    line-height: 1.75;
+  }
+
+  @media (max-width: 56rem) {
+    .project-story__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Herausforderung */
+  .project-challenge__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .project-challenge__text {
+    color: var(--color-slate);
+    margin: 0 0 1.5rem;
+  }
+
+  .project-challenge__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .project-challenge__list li {
+    display: grid;
+    grid-template-columns: 1.2rem 1fr;
+    gap: 0.75rem;
+    align-items: flex-start;
+    color: var(--color-ink);
+  }
+
+  .project-challenge__list svg {
+    color: var(--color-red);
+    margin-top: 0.15rem;
+  }
+
+  .project-challenge__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+  }
+
+  .project-challenge__media {
+    aspect-ratio: 4 / 3;
+    min-height: 18rem;
+  }
+
+  @media (max-width: 56rem) {
+    .project-challenge__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Galerie */
+  .project-gallery__head {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .project-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .project-gallery__item {
+    aspect-ratio: 4 / 3;
+  }
+
+  @media (max-width: 62rem) {
+    .project-gallery__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Weitere Projekte */
+  .project-related__head {
+    text-align: center;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .project-related__head .section__title,
+  .project-related__head .section__intro {
+    margin-inline: auto;
+  }
+
+  .project-related__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1.5rem;
+  }
+
+  .related-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .related-card__media {
+    aspect-ratio: 4 / 3;
+  }
+
+  .related-card__body {
+    padding: 1.25rem 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    flex: 1;
+  }
+
+  .related-card__title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    color: #fff;
+    margin: 0;
+  }
+
+  .related-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .related-card__tags span {
+    padding: 0.25rem 0.7rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .related-card .btn {
+    align-self: flex-start;
+    margin-top: auto;
+  }
+
+  .project-related__more {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Kontakt-Kurzblock */
+  .project-contact__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .project-contact__meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1.5rem 2rem;
+    margin: 1.5rem 0 0;
+  }
+
+  .project-contact__meta dt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .project-contact__meta dt svg {
+    color: var(--color-red);
+  }
+
+  .project-contact__meta dd {
+    margin: 0;
+    color: var(--color-slate);
+    line-height: 1.55;
+  }
+
+  .project-contact__meta a {
+    color: var(--color-red);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .project-contact__meta a:hover {
+    text-decoration: underline;
+  }
+
+  .project-contact__map {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    display: block;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.9);
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  .project-contact__map:hover {
+    transform: translateY(-4px);
+  }
+
+  .project-contact__pin {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  @media (max-width: 62rem) {
+    .project-contact__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

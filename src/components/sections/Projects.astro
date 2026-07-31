@@ -21,10 +21,10 @@ import { projects, projectsSection } from '../../data/site';
     <ul class="projects__list">
       {projects.map((project, index) => (
         <li data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
-          <a class="project-row" href="#kontakt">
+          <a class="project-row" href={`/projekte/${project.slug}`}>
             <span class="project-row__text">
               <span class="project-row__title">{project.title}</span>
-              <span class="project-row__meta">{project.meta} · (Platzhalter – Projektdetails folgen)</span>
+              <span class="project-row__meta">{project.meta}</span>
             </span>
             <span class="project-row__arrow" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -35,6 +35,10 @@ import { projects, projectsSection } from '../../data/site';
         </li>
       ))}
     </ul>
+  </div>
+
+  <div class="container projects__more" data-reveal>
+    <a class="btn btn--red" href={projectsSection.ctaHref}>{projectsSection.ctaLabel}</a>
   </div>
 </section>
 
@@ -127,6 +131,12 @@ import { projects, projectsSection } from '../../data/site';
 
   .project-row:hover .project-row__arrow {
     transform: translate(4px, -4px);
+  }
+
+  .projects__more {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
   }
 
   @media (max-width: 56rem) {

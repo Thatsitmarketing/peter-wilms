@@ -18,9 +18,18 @@ const { address, contact } = company;
         <div class="contact__block">
           <dt>Unser Standort</dt>
           <dd>
-            {address.street}<br />
-            {address.zip} {address.city}<br />
-            {address.region}
+            <a href={address.mapsUrl} target="_blank" rel="noopener noreferrer" class="contact__address" aria-label={`Adresse ${address.street}, ${address.zip} ${address.city} in Google Maps öffnen`}>
+              {address.street}<br />
+              {address.zip} {address.city}<br />
+              {address.region}
+              <span class="contact__address-cta">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                In Google Maps öffnen
+              </span>
+            </a>
           </dd>
         </div>
 
@@ -222,6 +231,35 @@ const { address, contact } = company;
   }
 
   .contact__block a:hover {
+    border-color: #fff;
+  }
+
+  /* Adresslink ohne Unterstrich – wirkt dort wie ein Block-Link mit Icon-CTA. */
+  .contact__block .contact__address {
+    border-bottom: 0;
+    display: inline-block;
+  }
+
+  .contact__address-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+    padding: 0.3rem 0.7rem;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .contact__address:hover .contact__address-cta,
+  .contact__address:focus-visible .contact__address-cta {
+    background: rgba(255, 255, 255, 0.25);
     border-color: #fff;
   }
 
