@@ -7,6 +7,45 @@ const { address, contact } = company;
 <section class="contact" id="kontakt" aria-labelledby="contact-title">
   <div class="contact__bg" aria-hidden="true"></div>
 
+  <!-- Globus mit Markierung auf Ennigerloh-Westkirchen (NRW) -->
+  <div class="contact__globe" aria-hidden="true">
+    <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="contact-dots" width="3.4" height="3.4" patternUnits="userSpaceOnUse">
+          <circle cx="1.7" cy="1.7" r="0.55" fill="rgba(255,255,255,0.55)" />
+        </pattern>
+        <clipPath id="contact-globe-clip">
+          <circle cx="100" cy="100" r="92" />
+        </clipPath>
+      </defs>
+
+      <!-- Punktraster in Globusform -->
+      <g clip-path="url(#contact-globe-clip)">
+        <rect x="8" y="8" width="184" height="184" fill="url(#contact-dots)" />
+
+        <!-- Längen- und Breitengrade als dezente Bögen -->
+        <g fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="0.5">
+          <ellipse cx="100" cy="100" rx="92" ry="30" />
+          <ellipse cx="100" cy="100" rx="92" ry="60" />
+          <ellipse cx="100" cy="100" rx="30" ry="92" />
+          <ellipse cx="100" cy="100" rx="60" ry="92" />
+          <line x1="100" y1="8" x2="100" y2="192" />
+          <line x1="8" y1="100" x2="192" y2="100" />
+        </g>
+      </g>
+
+      <!-- Umrandung des Globus -->
+      <circle cx="100" cy="100" r="92" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="0.7" />
+
+      <!-- Markierung Ennigerloh-Westkirchen (leicht nach oben links – Position NRW auf dem Globus) -->
+      <g class="contact__marker">
+        <circle cx="92" cy="88" r="14" fill="none" stroke="#fff" stroke-width="0.6" opacity="0.35" />
+        <circle cx="92" cy="88" r="8" fill="none" stroke="#fff" stroke-width="0.8" opacity="0.6" />
+        <circle cx="92" cy="88" r="3" fill="#fff" />
+      </g>
+    </svg>
+  </div>
+
   <div class="container contact__grid">
     <!-- Linke Spalte: Ansprache, Adresse, Telefon, E-Mail, Öffnungszeiten -->
     <div class="contact__info" data-reveal>
@@ -113,38 +152,46 @@ const { address, contact } = company;
     isolation: isolate;
   }
 
-  /* Roter Hintergrund + dezente Weltkarten-Punkte (weiß, sehr transparent).
-     Die Karte ist als radialer Punkt-Raster im Hintergrund gebacken. */
+  /* Roter Hintergrund als vollflächige Basis. */
   .contact__bg {
     position: absolute;
     inset: 0;
-    z-index: -1;
+    z-index: -2;
     background:
-      /* Weltkarten-Punkte: gleichmäßiges Raster in Weiß mit sehr geringer Opazität */
-      radial-gradient(circle at center, rgba(255, 255, 255, 0.18) 1.1px, transparent 1.4px) 0 0/22px 22px,
-      radial-gradient(1200px 500px at 80% 30%, rgba(255, 255, 255, 0.08), transparent 60%),
-      radial-gradient(900px 500px at 15% 90%, rgba(0, 0, 0, 0.2), transparent 60%),
+      radial-gradient(1200px 500px at 80% 30%, rgba(255, 255, 255, 0.06), transparent 60%),
+      radial-gradient(900px 500px at 15% 90%, rgba(0, 0, 0, 0.22), transparent 60%),
       linear-gradient(135deg, #d61a1d 0%, var(--color-red) 45%, #b81417 100%);
-    /* Ovaler Kartenausschnitt: Punkte werden über Maske weich ausgeblendet an den Rändern */
-    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 55%, #000 40%, rgba(0,0,0,0.4) 75%, transparent 100%);
-            mask-image: radial-gradient(ellipse 80% 60% at 50% 55%, #000 40%, rgba(0,0,0,0.4) 75%, transparent 100%);
   }
 
-  /* Ein zweiter Layer sorgt dafür, dass das Rot ohne Maske voll deckt (die
-     Maske oben trifft nur den Punkte-Layer). */
-  .contact::before {
-    content: '';
+  /* Globus-Overlay – Close-up mit Markierung auf Ennigerloh-Westkirchen (NRW).
+     Nimmt die linke Bildhälfte ein und liegt hinter Text und Formular. */
+  .contact__globe {
     position: absolute;
     inset: 0;
-    z-index: -2;
-    background: linear-gradient(135deg, #d61a1d 0%, var(--color-red) 45%, #b81417 100%);
+    z-index: -1;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: clamp(-6rem, -4vw, -2rem);
+    opacity: 0.9;
+  }
+
+  .contact__globe svg {
+    width: clamp(30rem, 55vw, 52rem);
+    height: auto;
+    transform: translateX(-18%);
+  }
+
+  .contact__marker circle:last-child {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
   }
 
   .contact__grid {
     display: grid;
-    /* Linke Spalte deutlich breiter, rechte Formular-Spalte schmaler */
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.85fr);
-    gap: clamp(2.5rem, 6vw, 5rem);
+    /* Linke Spalte etwas schmaler halten, Formular direkt daneben statt versetzt */
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(1.75rem, 4vw, 3rem);
     align-items: start;
   }
 
@@ -205,27 +252,27 @@ const { address, contact } = company;
     border-color: #fff;
   }
 
-  /* --- Rechte Spalte: weißes Formular, schmaler und leicht nach links geführt --- */
+  /* --- Rechte Spalte: weißes Formular, nutzt die Zellenbreite vollständig
+       aus und rückt so näher an die Info-Spalte heran. --- */
   .contact__form {
     background: #fff;
     color: var(--color-ink);
-    padding: clamp(1.5rem, 3vw, 2.25rem);
+    padding: clamp(1.5rem, 2.6vw, 2rem);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
-    /* Etwas schmaler als die Grid-Zelle und leicht nach links versetzt */
-    max-width: 26rem;
-    margin-left: 0;
-    margin-right: auto;
+    width: 100%;
+    max-width: 28rem;
+    margin: 0;
   }
 
   .contact__form-title {
     font-family: var(--font-heading);
-    font-size: clamp(1.6rem, 2.8vw, 2rem);
-    margin: 0 0 1.5rem;
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    margin: 0 0 1.15rem;
     color: var(--color-ink);
   }
 
   .form-field {
-    margin-bottom: 1.15rem;
+    margin-bottom: 0.9rem;
   }
 
   .form-field label {
@@ -345,6 +392,18 @@ const { address, contact } = company;
 
     .contact__meta {
       grid-template-columns: 1fr;
+    }
+
+    .contact__globe {
+      opacity: 0.55;
+    }
+
+    .contact__globe svg {
+      transform: translateX(-30%);
+    }
+
+    .contact__form {
+      max-width: none;
     }
   }
 </style>

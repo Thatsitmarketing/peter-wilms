@@ -100,8 +100,11 @@ const stats = [
     </div>
   </section>
 
-  <!-- Bauen-CTA -->
-  <section class="section bauen-cta" aria-labelledby="bauen-cta-title">
+  <!-- Bauen-CTA – Vollbild-Hintergrund -->
+  <section class="section bauen-cta photo-placeholder" aria-labelledby="bauen-cta-title">
+    <div class="bauen-cta__overlay" aria-hidden="true"></div>
+    <div class="photo-placeholder__tag"><span>Bild-Platzhalter: Referenzobjekt (Vollbild-Hintergrund)</span></div>
+
     <div class="container bauen-cta__inner">
       <div class="bauen-cta__content" data-reveal>
         <h2 class="bauen-cta__title" id="bauen-cta-title">Lassen Sie uns bauen</h2>
@@ -112,9 +115,6 @@ const stats = [
           <a class="btn btn--red" href="/kontakt">Kontakt</a>
           <a class="btn btn--white" href="/kontakt#anfrage">Anfrage</a>
         </div>
-      </div>
-      <div class="bauen-cta__media photo-placeholder" role="img" aria-label="Bauwerk">
-        <div class="photo-placeholder__tag"><span>Foto: Referenzobjekt</span></div>
       </div>
     </div>
   </section>
@@ -294,27 +294,46 @@ const stats = [
     }
   }
 
-  /* Bauen CTA */
+  /* Bauen CTA – Vollbild-Hintergrund mit Overlay, Text darüber */
   .bauen-cta {
-    background: #fff;
-    color: var(--color-ink);
+    position: relative;
+    color: #fff;
+    padding-block: clamp(5rem, 12vw, 9rem);
+    min-height: min(30rem, 60svh);
+    display: flex;
+    align-items: center;
+    isolation: isolate;
+  }
+
+  .bauen-cta__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.65) 0%,
+      rgba(0, 0, 0, 0.4) 55%,
+      rgba(0, 0, 0, 0.25) 100%
+    );
   }
 
   .bauen-cta__inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .bauen-cta__content {
+    max-width: 40rem;
   }
 
   .bauen-cta__title {
-    color: var(--color-ink);
+    color: #fff;
     font-size: clamp(1.75rem, 3.4vw, 2.6rem);
     margin: 0 0 1rem;
   }
 
   .bauen-cta__text {
-    color: var(--color-slate);
+    color: rgba(255, 255, 255, 0.9);
     margin: 0 0 1.75rem;
   }
 
@@ -322,15 +341,5 @@ const stats = [
     display: flex;
     flex-wrap: wrap;
     gap: 0.9rem;
-  }
-
-  .bauen-cta__media {
-    aspect-ratio: 4 / 3;
-  }
-
-  @media (max-width: 62rem) {
-    .bauen-cta__inner {
-      grid-template-columns: 1fr;
-    }
   }
 </style>
