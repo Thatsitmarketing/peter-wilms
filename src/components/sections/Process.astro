@@ -106,7 +106,7 @@ import { processSection, processSteps } from '../../data/site';
   .process__track {
     flex: 1 1 auto;
     display: flex;
-    align-items: stretch;
+    align-items: center;
     gap: 1.25rem;
     padding-inline: var(--gutter);
     will-change: transform;
@@ -120,6 +120,7 @@ import { processSection, processSteps } from '../../data/site';
 
   .process-card {
     flex: 0 0 clamp(20rem, 34vw, 30rem);
+    height: 45vh;
     padding: clamp(1.5rem, 2.5vw, 2.5rem);
     display: flex;
     flex-direction: column;
@@ -127,6 +128,7 @@ import { processSection, processSteps } from '../../data/site';
 
   .process__photo {
     flex: 0 0 clamp(14rem, 22vw, 22rem);
+    height: 45vh;
   }
 
   .process-card--light {
