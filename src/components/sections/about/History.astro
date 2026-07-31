@@ -5,14 +5,16 @@ const { history } = aboutPage;
 ---
 
 <section class="section section--soft history" id="geschichte" aria-labelledby="history-title">
-  <div class="container">
-    <div class="history__head">
+  <div class="container history__grid">
+    <!-- Linke Spalte: Kicker + Titel (sticky, damit sie während des Scrollens sichtbar bleibt) -->
+    <aside class="history__head">
       <span class="section__kicker" data-reveal>{history.kicker}</span>
       <h2 class="section__title" id="history-title" data-reveal style="--reveal-delay: 0.06s">
         {history.title}
       </h2>
-    </div>
+    </aside>
 
+    <!-- Rechte Spalte: vertikal gestapelte Meilenstein-Karten -->
     <ol class="history__list">
       {history.milestones.map((item, index) => (
         <li
@@ -39,8 +41,22 @@ const { history } = aboutPage;
 </section>
 
 <style>
+  .history__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+
   .history__head {
-    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+    position: sticky;
+    top: 6rem;
+    align-self: start;
+  }
+
+  .history .section__title {
+    max-width: 18ch;
+    margin-bottom: 0;
   }
 
   .history__list {
@@ -54,19 +70,14 @@ const { history } = aboutPage;
 
   .milestone {
     position: relative;
-    max-width: 46rem;
-  }
-
-  /* Abwechselnd links / rechts einrücken, damit ein "gestapelter" Rhythmus entsteht */
-  .milestone:nth-child(even) {
-    margin-left: auto;
+    width: 100%;
   }
 
   /* Karte selbst */
   .milestone__card {
     position: relative;
     z-index: 2;
-    padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.75rem);
+    padding: clamp(1.4rem, 2.6vw, 2.25rem) clamp(1.5rem, 2.8vw, 2.5rem);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   }
 
@@ -91,7 +102,7 @@ const { history } = aboutPage;
   .milestone__year {
     font-family: var(--font-heading);
     font-weight: 800;
-    font-size: clamp(2.4rem, 5vw, 3.5rem);
+    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
     line-height: 0.95;
     letter-spacing: -0.01em;
   }
@@ -99,7 +110,7 @@ const { history } = aboutPage;
   .milestone__label {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+    font-size: clamp(1.25rem, 2.4vw, 1.75rem);
     line-height: 1.1;
   }
 
@@ -117,7 +128,7 @@ const { history } = aboutPage;
     color: var(--color-on-dark-soft);
   }
 
-  /* Schwarzer Schattenblock hinter der Karte */
+  /* Schwarzer Schattenblock hinter jeder Karte */
   .milestone__shadow {
     position: absolute;
     left: 1.25rem;
@@ -139,33 +150,24 @@ const { history } = aboutPage;
     z-index: 0;
   }
 
-  /* Bei gespiegelten Karten den Schatten/Streifen entgegengesetzt versetzen */
-  .milestone:nth-child(even) .milestone__shadow {
-    left: -1.25rem;
-    right: 1.25rem;
-  }
-
-  .milestone:nth-child(even) .milestone__accent {
-    left: -2.5rem;
-    right: 2.5rem;
-  }
-
-  @media (max-width: 56rem) {
-    .milestone,
-    .milestone:nth-child(even) {
-      margin-left: 0;
-      margin-right: 0;
-      max-width: 100%;
+  @media (max-width: 62rem) {
+    .history__grid {
+      grid-template-columns: 1fr;
     }
 
-    .milestone__shadow,
-    .milestone:nth-child(even) .milestone__shadow {
+    .history__head {
+      position: static;
+      margin-bottom: clamp(2rem, 4vw, 2.5rem);
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .milestone__shadow {
       left: 0.75rem;
       right: -0.75rem;
     }
 
-    .milestone__accent,
-    .milestone:nth-child(even) .milestone__accent {
+    .milestone__accent {
       left: 1.5rem;
       right: -1.5rem;
     }
