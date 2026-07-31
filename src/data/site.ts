@@ -293,34 +293,40 @@ export const aboutPage = {
     ],
   },
   qualifications: {
-    kicker: 'Qualifikation',
+    kicker: 'Qualifikationen',
     title: 'Zertifiziert für anspruchsvolle Anforderungen im Ingenieurbau.',
     intro:
-      'Öffentliche Ausschreibungen setzen Nachweise voraus. Die folgenden Qualifikationen sind bei uns Standard – nicht die Ausnahme für einzelne Projekte.',
+      'Betoninstandsetzung und Korrosionsschutz im öffentlichen Infrastrukturbereich stellen hohe Anforderungen an Qualifikation, Normkenntnis und Ausführungsqualität. Unsere Fachkräfte verfügen über die notwendigen Nachweise und werden regelmäßig geschult.',
     items: [
       {
         title: 'SIVV-Schein',
-        text: 'Schützen, Instandsetzen, Verbinden und Verstärken von Betonbauteilen – ausgeführt durch nach DAfStb qualifiziertes Personal.',
+        subtitle: 'Schützen, Instandsetzen, Verbinden, Verstärken',
+        text: 'Unsere Fachkräfte sind nach der DAfStb-Richtlinie qualifiziert und berechtigt, Betoninstandsetzungsarbeiten gemäß geltender Normen auszuführen.',
       },
       {
         title: 'KOR-Schein',
-        text: 'Korrosionsschutzarbeiten an Stahlbauteilen nach den einschlägigen Vorgaben und Beschichtungssystemen.',
+        subtitle: 'Korrosionsschutz nach Vorschrift',
+        text: 'Fachkundige Ausführung von Korrosionsschutzarbeiten an Stahlbauteilen und Bewehrungsanschlüssen durch zertifiziertes Personal.',
       },
       {
         title: 'RSA',
-        text: 'Baustellensicherung nach den Richtlinien für die Sicherung von Arbeitsstellen an Straßen.',
+        subtitle: 'Baustellenabsicherung nach Richtlinien',
+        text: 'Professionelle Absicherung von Arbeitsstellen an Straßen gemäß der Richtlinien für die Sicherung von Arbeitsstellen (RSA) — zuverlässig und regelkonform.',
       },
       {
         title: 'ZTV-ING / ZTV-SIB',
-        text: 'Ausführung nach den technischen Vertragsbedingungen für Ingenieurbauten und Bauwerkserhaltung im Bundesfernstraßenbau.',
+        subtitle: 'Regelwerke im Brücken- und Ingenieurbau',
+        text: 'Erfahrung in der Ausführung nach ZTV-ING und ZTV-SIB — die maßgebenden technischen Vorschriften für Instandsetzungsarbeiten an Bundesfernstraßen und Ingenieurbauwerken.',
       },
       {
         title: 'DIN EN 1504',
-        text: 'Normkonforme Betoninstandsetzung – von der Produktauswahl bis zur dokumentierten Ausführung.',
+        subtitle: 'Normkonforme Betoninstandsetzung',
+        text: 'Alle Instandsetzungsmaßnahmen werden nach DIN EN 1504 geplant und ausgeführt — von der Zustandserfassung bis zur abschließenden Qualitätssicherung.',
       },
       {
         title: 'VOB-Erfahrung',
-        text: 'Routinierte Abwicklung öffentlicher Vergabeverfahren und Bauverträge nach VOB/A, VOB/B und VOB/C.',
+        subtitle: 'Öffentliche Ausschreibungen und Vergabeverfahren',
+        text: 'Langjährige Erfahrung in der Abwicklung von Projekten nach VOB — von der Angebotsphase bis zur Abnahme und Dokumentation.',
       },
     ],
   },

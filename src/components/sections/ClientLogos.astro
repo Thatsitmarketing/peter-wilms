@@ -2,7 +2,7 @@
 import { clients } from '../../data/site';
 
 interface Props {
-  /** Überschrift über der Logoleiste */
+  /** Überschrift links neben dem Slider */
   title?: string;
   /** true = graue Hintergrundfläche statt Weiß */
   soft?: boolean;
@@ -12,26 +12,34 @@ const {
   title = 'Vertraut von öffentlichen Auftraggebern und Bauunternehmen',
   soft = false,
 } = Astro.props;
+
+/* Für ein nahtloses Endlos-Band die Liste doppelt einsetzen. */
+const marquee = [...clients, ...clients];
 ---
 
 <section class:list={['clients', { 'clients--soft': soft }]} aria-label="Auftraggeber">
-  <div class="container">
+  <div class="container clients__inner">
     <p class="clients__title" data-reveal>{title}</p>
-    <ul class="clients__list">
-      {clients.map((client, index) => (
-        <li class="clients__item" data-reveal style={`--reveal-delay: ${index * 0.05}s`}>
-          <img
-            class="clients__logo"
-            src={client.logo}
-            alt={`Logo ${client.name}`}
-            width="800"
-            height="500"
-            loading="lazy"
-            decoding="async"
-          />
-        </li>
-      ))}
-    </ul>
+
+    <div
+      class="clients__slider"
+      data-clients-slider
+      aria-label="Logos unserer Auftraggeber – automatisch rotierend"
+    >
+      <div class="clients__track" data-clients-track>
+        {marquee.map((client, index) => (
+          <div class="clients__item" aria-hidden={index >= clients.length ? 'true' : undefined}>
+            <img
+              class="clients__logo"
+              src={client.logo}
+              alt={index >= clients.length ? '' : `Logo ${client.name}`}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 </section>
 
@@ -45,54 +53,97 @@ const {
     background: var(--color-bg-soft);
   }
 
+  .clients__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+
   .clients__title {
-    text-align: center;
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 1.05rem;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
     color: var(--color-ink);
-    margin-bottom: 2.25rem;
-  }
-
-  /* Flex statt Grid: eine unvollständige letzte Reihe bleibt so zentriert */
-  .clients__list {
-    list-style: none;
     margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(1.25rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 3.5rem);
+    line-height: 1.3;
   }
 
-  /* Feste Spurbreite – ein „width: 100%“ auf auto-breiten Flex-Items kollabiert */
+  /* Slider – nahtlose Endlosschleife über zwei identische Tracks */
+  .clients__slider {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 6%,
+      #000 94%,
+      transparent 100%
+    );
+            mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 6%,
+      #000 94%,
+      transparent 100%
+    );
+  }
+
+  .clients__track {
+    display: flex;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    width: max-content;
+    animation: clients-marquee 32s linear infinite;
+  }
+
+  .clients__slider:hover .clients__track,
+  .clients__slider:focus-within .clients__track {
+    animation-play-state: paused;
+  }
+
   .clients__item {
+    flex: 0 0 auto;
     display: grid;
     place-items: center;
-    flex: 0 0 auto;
-    width: clamp(7.5rem, 11vw, 10.5rem);
+    width: clamp(6rem, 9vw, 8.5rem);
+    height: 3.5rem;
   }
 
-  /* Logos zurückhaltend in Graustufen, beim Hover in Originalfarbe */
   .clients__logo {
-    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
     height: auto;
     object-fit: contain;
     filter: grayscale(1);
     opacity: 0.72;
-    transition: filter 0.25s ease, opacity 0.25s ease, transform 0.25s var(--ease-out);
+    transition: filter 0.25s ease, opacity 0.25s ease;
   }
 
   .clients__item:hover .clients__logo {
     filter: grayscale(0);
     opacity: 1;
-    transform: translateY(-2px);
+  }
+
+  @keyframes clients-marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 56rem) {
+    .clients__inner {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .clients__title {
+      text-align: center;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .clients__item:hover .clients__logo {
-      transform: none;
+    .clients__track {
+      animation: none;
     }
   }
 </style>
