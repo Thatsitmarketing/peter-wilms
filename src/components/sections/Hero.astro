@@ -79,9 +79,11 @@ import { hero, stats } from '../../data/site';
     position: relative;
     min-height: 100svh;
     display: flex;
-    align-items: flex-end;
+    /* Inhalt vertikal zentriert – Content verteilt sich gleichmäßig
+       über die Bildschirmhöhe statt am unteren Rand zu kleben. */
+    align-items: center;
     color: #fff;
-    padding-block: 8rem 3.5rem;
+    padding-block: clamp(6rem, 12vh, 9rem) clamp(3rem, 6vh, 4.5rem);
   }
 
   .hero__overlay {
@@ -103,7 +105,7 @@ import { hero, stats } from '../../data/site';
     /* Linke Spalte bekommt spürbar mehr Raum, damit Titel + Kennzahlen
        großzügig verteilt sind und die Fläche genutzt wird. */
     grid-template-columns: minmax(0, 2.35fr) minmax(auto, 22rem);
-    align-items: end;
+    align-items: center;
     gap: clamp(1.5rem, 3vw, 3rem);
   }
 
