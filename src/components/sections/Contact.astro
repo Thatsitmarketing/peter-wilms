@@ -113,15 +113,31 @@ const { address, contact } = company;
     isolation: isolate;
   }
 
-  /* Roter Hintergrund mit dezenten Weltkarten-Punkten in weiß */
+  /* Roter Hintergrund + dezente Weltkarten-Punkte (weiß, sehr transparent).
+     Die Karte ist als radialer Punkt-Raster im Hintergrund gebacken. */
   .contact__bg {
     position: absolute;
     inset: 0;
     z-index: -1;
     background:
+      /* Weltkarten-Punkte: gleichmäßiges Raster in Weiß mit sehr geringer Opazität */
+      radial-gradient(circle at center, rgba(255, 255, 255, 0.18) 1.1px, transparent 1.4px) 0 0/22px 22px,
       radial-gradient(1200px 500px at 80% 30%, rgba(255, 255, 255, 0.08), transparent 60%),
       radial-gradient(900px 500px at 15% 90%, rgba(0, 0, 0, 0.2), transparent 60%),
       linear-gradient(135deg, #d61a1d 0%, var(--color-red) 45%, #b81417 100%);
+    /* Ovaler Kartenausschnitt: Punkte werden über Maske weich ausgeblendet an den Rändern */
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 55%, #000 40%, rgba(0,0,0,0.4) 75%, transparent 100%);
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 55%, #000 40%, rgba(0,0,0,0.4) 75%, transparent 100%);
+  }
+
+  /* Ein zweiter Layer sorgt dafür, dass das Rot ohne Maske voll deckt (die
+     Maske oben trifft nur den Punkte-Layer). */
+  .contact::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: linear-gradient(135deg, #d61a1d 0%, var(--color-red) 45%, #b81417 100%);
   }
 
   /* Weltkarten-Overlay aus feinen weißen Punkten */
@@ -147,10 +163,9 @@ const { address, contact } = company;
 
   .contact__grid {
     display: grid;
-    /* Formular schmaler und weiter links: mehr Raum für die linke Spalte,
-       kompakte, an den Container-Rand gerückte Karte rechts. */
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
-    gap: clamp(2rem, 4vw, 3.25rem);
+    /* Linke Spalte deutlich breiter, rechte Formular-Spalte schmaler */
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.85fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
     align-items: start;
   }
 
@@ -211,16 +226,16 @@ const { address, contact } = company;
     border-color: #fff;
   }
 
-  /* --- Rechte Spalte: schmales weißes Formular --- */
+  /* --- Rechte Spalte: weißes Formular, schmaler und leicht nach links geführt --- */
   .contact__form {
     background: #fff;
     color: var(--color-ink);
-    padding: clamp(1.5rem, 2.6vw, 2.25rem);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
-    /* Kompakter halten, damit das Panel nach links wandert */
+    /* Etwas schmaler als die Grid-Zelle und leicht nach links versetzt */
     max-width: 26rem;
-    width: 100%;
-    justify-self: end;
+    margin-left: 0;
+    margin-right: auto;
   }
 
   .contact__form-title {
