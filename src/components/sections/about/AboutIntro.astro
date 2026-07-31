@@ -11,6 +11,15 @@ const { intro, facts } = aboutPage;
       <h2 class="section__title" id="about-intro-title" data-reveal style="--reveal-delay: 0.06s">
         {intro.title}
       </h2>
+
+      <dl class="about-intro__facts" data-reveal style="--reveal-delay: 0.18s">
+        {facts.map((fact) => (
+          <div class="about-intro__fact">
+            <dd>{fact.value}</dd>
+            <dt>{fact.label}</dt>
+          </div>
+        ))}
+      </dl>
     </div>
 
     <div class="about-intro__body">
@@ -19,15 +28,6 @@ const { intro, facts } = aboutPage;
           {text}
         </p>
       ))}
-
-      <dl class="about-intro__facts" data-reveal style="--reveal-delay: 0.24s">
-        {facts.map((fact) => (
-          <div class="about-intro__fact">
-            <dd>{fact.value}</dd>
-            <dt>{fact.label}</dt>
-          </div>
-        ))}
-      </dl>
     </div>
   </div>
 </section>
@@ -55,11 +55,11 @@ const { intro, facts } = aboutPage;
     font-size: 1.1rem;
   }
 
-  /* Eckdaten als roter Balken unter dem Fließtext */
+  /* Eckdaten links unter der Überschrift, mit rotem Trennbalken oberhalb */
   .about-intro__facts {
     display: flex;
     flex-wrap: wrap;
-    gap: clamp(1.5rem, 4vw, 3.5rem);
+    gap: clamp(1.5rem, 3.5vw, 2.75rem);
     margin: 2.25rem 0 0;
     padding-top: 1.75rem;
     border-top: 3px solid var(--color-red);
