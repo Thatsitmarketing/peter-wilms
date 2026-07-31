@@ -18,27 +18,29 @@ import { projects, projectsSection } from '../../data/site';
       </div>
     </div>
 
-    <ul class="projects__list">
-      {projects.map((project, index) => (
-        <li data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
-          <a class="project-row" href={`/projekte/${project.slug}`}>
-            <span class="project-row__text">
-              <span class="project-row__title">{project.title}</span>
-              <span class="project-row__meta">{project.meta}</span>
-            </span>
-            <span class="project-row__arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M7 17 17 7M9 7h8v8" />
-              </svg>
-            </span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </div>
+    <div class="projects__col">
+      <ul class="projects__list">
+        {projects.map((project, index) => (
+          <li data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+            <a class="project-row" href={`/projekte/${project.slug}`}>
+              <span class="project-row__text">
+                <span class="project-row__title">{project.title}</span>
+                <span class="project-row__meta">{project.meta}</span>
+              </span>
+              <span class="project-row__arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 17 17 7M9 7h8v8" />
+                </svg>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
 
-  <div class="container projects__more" data-reveal>
-    <a class="btn btn--red" href={projectsSection.ctaHref}>{projectsSection.ctaLabel}</a>
+      <div class="projects__more" data-reveal>
+        <a class="btn btn--red" href={projectsSection.ctaHref}>{projectsSection.ctaLabel}</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -133,10 +135,23 @@ import { projects, projectsSection } from '../../data/site';
     transform: translate(4px, -4px);
   }
 
+  /* Der CTA lebt jetzt in der rechten Spalte unter der Projektliste,
+     bleibt also parallel zum Bild links. */
+  .projects__col {
+    display: flex;
+    flex-direction: column;
+  }
+
   .projects__more {
     display: flex;
-    justify-content: center;
-    margin-top: clamp(2.5rem, 5vw, 4rem);
+    justify-content: flex-end;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  @media (max-width: 56rem) {
+    .projects__more {
+      justify-content: flex-start;
+    }
   }
 
   @media (max-width: 56rem) {
