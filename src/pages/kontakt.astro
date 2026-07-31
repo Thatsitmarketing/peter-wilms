@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Contact from '../components/sections/Contact.astro';
 import Team from '../components/sections/about/Team.astro';
+import JobsCta from '../components/sections/JobsCta.astro';
 import { company } from '../data/site';
 
 const { contact, address } = company;
@@ -29,10 +30,7 @@ const { contact, address } = company;
     </div>
   </section>
 
-  <!-- Ansprechpartner (übernommen aus Über uns) -->
-  <Team />
-
-  <!-- Direkte Kontaktwege -->
+  <!-- Direkte Kontaktwege (Erreichbarkeit) -->
   <section class="section direct" aria-labelledby="direct-title">
     <div class="container direct__grid">
       <div class="direct__head">
@@ -92,7 +90,14 @@ const { contact, address } = company;
     </div>
   </section>
 
+  <!-- Kontaktblock mit Formular -->
   <Contact />
+
+  <!-- Ansprechpartner (übernommen aus Über uns) -->
+  <Team />
+
+  <!-- Karriere-CTA -->
+  <JobsCta />
 </BaseLayout>
 
 <style>
