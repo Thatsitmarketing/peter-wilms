@@ -2,14 +2,29 @@
 import { aboutSection } from '../../data/site';
 ---
 
-<section class="section about" id="ueber-uns" aria-labelledby="about-title">
+<section class="section about" id="ueber-uns" aria-labelledby="about-title" data-about>
+  <!-- Riesiges „Über Uns"-Wasserzeichen im Hintergrund -->
+  <p class="about__watermark" aria-hidden="true">Über Uns</p>
+
   <div class="container about__grid">
-    <div class="about__media" data-reveal="left">
-      <div class="about__photo photo-placeholder">
-        <div class="photo-placeholder__tag">
-          <span>Bild-Platzhalter: Brückenbauwerk (freigestellt)</span>
-        </div>
-      </div>
+    <!-- Brücken-Crossfade: kaputte Brücke vorne, saniert dahinter.
+         Kommt von links herein und ragt unten aus der Sektion heraus,
+         damit die Brücke sauber in den nächsten Abschnitt übergeht. -->
+    <div class="about__bridge" aria-hidden="true">
+      <img
+        class="about__bridge-img about__bridge-img--after"
+        src="/bridges/bruecke-gepflegt.png"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+      <img
+        class="about__bridge-img about__bridge-img--before"
+        src="/bridges/bruecke-schaden.png"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
     </div>
 
     <div class="about__content">
@@ -31,22 +46,56 @@ import { aboutSection } from '../../data/site';
 </section>
 
 <style>
+  .about {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    /* Kein Padding unten, damit die Brücke nahtlos in den nächsten Abschnitt läuft. */
+    padding-bottom: 0;
+  }
+
+  /* Wasserzeichen „Über Uns" – riesig, sehr blass */
+  .about__watermark {
+    position: absolute;
+    top: clamp(2rem, 5vw, 4rem);
+    left: -1vw;
+    right: -1vw;
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.85;
+    font-size: clamp(6rem, 20vw, 20rem);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(15, 15, 15, 0.12);
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+    z-index: 0;
+  }
+
   .about__grid {
+    position: relative;
+    z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    /* Brücke links, Text rechts */
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     gap: clamp(2.5rem, 6vw, 5rem);
-    align-items: center;
+    align-items: end;
   }
 
-  .about__photo {
-    aspect-ratio: 4 / 5;
+  .about__content {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
   }
 
+  /* Rote Zwischenüberschriften wie in der Referenz */
   .about__block {
     margin-top: 1.75rem;
   }
 
-  /* Rote Zwischenüberschriften wie in der Referenz */
   .about__block-title {
     font-size: 1.45rem;
     color: var(--color-red);
@@ -63,13 +112,90 @@ import { aboutSection } from '../../data/site';
     margin-top: 2rem;
   }
 
+  /* Brücken-Bühne links – kommt aus dem Container heraus und läuft nach unten weiter */
+  .about__bridge {
+    position: relative;
+    min-height: clamp(24rem, 55vh, 38rem);
+    margin-left: calc(var(--gutter, 1.5rem) * -1);
+    align-self: stretch;
+  }
+
+  .about__bridge-img {
+    position: absolute;
+    left: -6%;
+    bottom: -12%;
+    width: 115%;
+    max-width: none;
+    height: auto;
+    object-fit: contain;
+    object-position: left bottom;
+    filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.18));
+    will-change: opacity;
+  }
+
+  .about__bridge-img--after {
+    z-index: 1;
+  }
+
+  .about__bridge-img--before {
+    z-index: 2;
+    opacity: calc(1 - var(--bridge-progress, 0));
+    transition: opacity 0.2s linear;
+  }
+
   @media (max-width: 56rem) {
     .about__grid {
       grid-template-columns: 1fr;
+      gap: 2rem;
     }
 
-    .about__photo {
-      aspect-ratio: 16 / 10;
+    .about__bridge {
+      min-height: 20rem;
+      margin-left: 0;
+      margin-inline: calc(var(--gutter, 1.5rem) * -1);
+      order: 2;
+    }
+
+    .about__bridge-img {
+      left: 0;
+      bottom: -8%;
+      width: 100%;
+    }
+
+    .about__content {
+      padding-block: 0;
+      order: 1;
+    }
+
+    .about__watermark {
+      font-size: clamp(4.5rem, 22vw, 12rem);
     }
   }
 </style>
+
+<script>
+  /**
+   * Scroll-Crossfade zwischen kaputter und sanierter Brücke im Über-uns-Abschnitt.
+   * Fortschritt wird als CSS Custom Property --bridge-progress gesetzt.
+   * Kurzer Übergang: schon bei wenig Scroll wird die Brücke saniert.
+   */
+  const section = document.querySelector<HTMLElement>('[data-about]');
+  if (section) {
+    const clamp = (v: number) => Math.min(1, Math.max(0, v));
+
+    const update = () => {
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const total = rect.height + vh;
+      const scrolled = vh - rect.top;
+      const progress = clamp(scrolled / total);
+      // Schneller Crossfade: startet bei ~10% Sichtbarkeit, komplett saniert bei ~35%.
+      const eased = clamp((progress - 0.1) / 0.25);
+      section.style.setProperty('--bridge-progress', eased.toFixed(3));
+    };
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+</script>
