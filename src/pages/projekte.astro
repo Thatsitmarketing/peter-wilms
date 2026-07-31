@@ -123,9 +123,10 @@ const stats = [
 </BaseLayout>
 
 <style>
-  /* Hero */
+  /* Hero – unten schlanker, damit die Zahlen-Sektion direkt anschließt
+     und beide Blöcke visuell zusammenlaufen. */
   .projekte-hero {
-    padding-block: clamp(4rem, 8vw, 6rem);
+    padding-block: clamp(4rem, 8vw, 6rem) 0;
   }
 
   .projekte-hero__grid {
@@ -178,7 +179,13 @@ const stats = [
     }
   }
 
-  /* Stats */
+  /* Stats – oben schlank, damit die Sektion direkt auf den Hero folgt;
+     unten +2 vw zusätzlicher Abstand, bevor die dunkle Projektliste startet. */
+  .stats {
+    padding-top: clamp(1.25rem, 2.5vw, 2rem);
+    padding-bottom: calc(clamp(4rem, 9vw, 7rem) + 2vw);
+  }
+
   .stats__head {
     margin-bottom: clamp(2rem, 4vw, 3rem);
   }
