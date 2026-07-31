@@ -11,16 +11,76 @@ const positions = [
     title: 'Maurer mit Erfahrung',
     kind: 'Vollzeit',
     text: 'Wir suchen Verstärkung in der Region. Facharbeit im Brücken- und Bauwerksinstandsetzungsbau.',
+    details: {
+      tasks: [
+        'Instandsetzungsarbeiten an Brücken- und Betonbauwerken',
+        'Reprofilierung und Rissverpressung nach DAfStb-Richtlinie',
+        'Zusammenarbeit im festen Kolonnenteam',
+      ],
+      qualifications: [
+        'Abgeschlossene Ausbildung als Maurer/-in oder Beton- und Stahlbetonbauer/-in',
+        'Erfahrung im Ingenieurbau von Vorteil',
+        'Führerschein Klasse B, idealerweise BE',
+      ],
+      pay: 'Nach Bau-Tarif zzgl. Zulagen (Details im Gespräch)',
+      benefits: [
+        'Unbefristete Anstellung in einem etablierten Fachbetrieb',
+        'Moderne Ausrüstung und hochwertige Arbeitskleidung',
+        'Weiterbildung zum SIVV- bzw. KOR-Schein möglich',
+      ],
+      start: 'Ab sofort',
+      location: 'Ennigerloh-Westkirchen · Einsatzgebiet NRW',
+    },
   },
   {
     title: 'Elektrotechniker für moderne Baustellen',
     kind: 'Vollzeit',
     text: 'Elektrische und schaltungstechnische Aufgaben auf modernen Baustellen der Ingenieurbaukunst.',
+    details: {
+      tasks: [
+        'Installation und Instandhaltung baustellenseitiger Elektrik',
+        'Betreuung der Verkehrssicherungssysteme nach RSA',
+        'Zusammenarbeit mit Bauleitung und Fachpartnern',
+      ],
+      qualifications: [
+        'Abgeschlossene Ausbildung im Elektrohandwerk',
+        'Kenntnisse in Nieder-/Mittelspannungstechnik',
+        'Selbstständige, strukturierte Arbeitsweise',
+      ],
+      pay: 'Attraktives Gehalt nach Qualifikation (Details im Gespräch)',
+      benefits: [
+        '30 Tage Urlaub',
+        'Firmenwagen zur beruflichen Nutzung',
+        'Weiterbildungsbudget für Zertifizierungen',
+      ],
+      start: 'Ab sofort',
+      location: 'Ennigerloh-Westkirchen · Einsatzgebiet NRW',
+    },
   },
   {
     title: 'Projektmanager und kaufmännische Kraft',
     kind: 'Vollzeit',
     text: 'Kaufmännische Steuerung von Projekten und Unterstützung der Bauleitung im Büro.',
+    details: {
+      tasks: [
+        'Angebotserstellung und Kalkulation nach VOB',
+        'Auftragsabwicklung und Abrechnung öffentlicher Bauvorhaben',
+        'Schnittstelle zwischen Auftraggeber, Bauleitung und Buchhaltung',
+      ],
+      qualifications: [
+        'Kaufmännische Ausbildung oder Studium (Bau-/Wirtschaftsingenieurwesen)',
+        'Erfahrung mit VOB und öffentlichen Ausschreibungen wünschenswert',
+        'Sicherer Umgang mit MS Office und Bau-Software',
+      ],
+      pay: 'Leistungsorientierte Vergütung (Details im Gespräch)',
+      benefits: [
+        'Modernes Büro am Standort Ennigerloh-Westkirchen',
+        'Flexible Arbeitszeiten, teilweise mobiles Arbeiten möglich',
+        'Kurze Entscheidungswege in einem inhabergeführten Betrieb',
+      ],
+      start: 'Ab sofort',
+      location: 'Ennigerloh-Westkirchen',
+    },
   },
 ];
 
@@ -88,14 +148,79 @@ const timeline = [
       <ul class="positions__grid">
         {positions.map((position, index) => (
           <li class="position-card" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
-            <div class="position-card__media photo-placeholder" aria-hidden="true">
-              <div class="photo-placeholder__tag"><span>Foto: {position.title}</span></div>
-            </div>
-            <div class="position-card__body">
-              <p class="position-card__kind">{position.kind}</p>
-              <h3 class="position-card__title">{position.title}</h3>
-              <p class="position-card__text">{position.text}</p>
-              <a class="position-card__link" href={mailto}>Bewerben <span aria-hidden="true">→</span></a>
+            <div class="position-card__flip" data-flip-card>
+              <!-- Vorderseite -->
+              <div class="position-card__face position-card__face--front">
+                <div class="position-card__media photo-placeholder" aria-hidden="true">
+                  <div class="photo-placeholder__tag"><span>Foto: {position.title}</span></div>
+                </div>
+                <div class="position-card__body">
+                  <p class="position-card__kind">{position.kind}</p>
+                  <h3 class="position-card__title">{position.title}</h3>
+                  <p class="position-card__text">{position.text}</p>
+                  <div class="position-card__actions">
+                    <a class="btn btn--red btn--small" href={mailto}>Bewerben</a>
+                    <button type="button" class="btn btn--outline btn--small" data-flip-open aria-expanded="false">
+                      Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rückseite -->
+              <div class="position-card__face position-card__face--back" aria-hidden="true">
+                <div class="position-card__body position-card__body--back">
+                  <div class="position-card__back-head">
+                    <div>
+                      <p class="position-card__kind">{position.kind}</p>
+                      <h3 class="position-card__title">{position.title}</h3>
+                    </div>
+                    <button type="button" class="position-card__close" data-flip-close aria-label="Details schließen">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <dl class="position-card__meta">
+                    <div>
+                      <dt>Start</dt>
+                      <dd>{position.details.start}</dd>
+                    </div>
+                    <div>
+                      <dt>Einsatzort</dt>
+                      <dd>{position.details.location}</dd>
+                    </div>
+                    <div>
+                      <dt>Vergütung</dt>
+                      <dd>{position.details.pay}</dd>
+                    </div>
+                  </dl>
+
+                  <div class="position-card__section">
+                    <h4>Ihre Aufgaben</h4>
+                    <ul>
+                      {position.details.tasks.map((task) => <li>{task}</li>)}
+                    </ul>
+                  </div>
+
+                  <div class="position-card__section">
+                    <h4>Qualifikationen</h4>
+                    <ul>
+                      {position.details.qualifications.map((qual) => <li>{qual}</li>)}
+                    </ul>
+                  </div>
+
+                  <div class="position-card__section">
+                    <h4>Benefits</h4>
+                    <ul>
+                      {position.details.benefits.map((benefit) => <li>{benefit}</li>)}
+                    </ul>
+                  </div>
+
+                  <a class="btn btn--red position-card__apply" href={mailto}>Jetzt bewerben</a>
+                </div>
+              </div>
             </div>
           </li>
         ))}
@@ -281,11 +406,47 @@ const timeline = [
   }
 
   .position-card {
+    perspective: 1600px;
+    display: block;
+  }
+
+  /* Flip-Container – hält Vorder- und Rückseite, dreht sich um Y-Achse. */
+  .position-card__flip {
+    position: relative;
+    width: 100%;
+    min-height: 30rem;
+    transform-style: preserve-3d;
+    transition: transform 0.7s var(--ease-out);
+  }
+
+  .position-card__flip.is-flipped {
+    transform: rotateY(180deg);
+  }
+
+  .position-card__face {
+    position: absolute;
+    inset: 0;
     background: #fff;
     box-shadow: var(--shadow-card);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .position-card__face--back {
+    transform: rotateY(180deg);
+    overflow-y: auto;
+  }
+
+  /* Wenn geflippt, die Rückseite anfassbar machen und die Vorderseite deaktivieren */
+  .position-card__flip.is-flipped .position-card__face--front {
+    pointer-events: none;
+  }
+
+  .position-card__flip.is-flipped .position-card__face--back {
+    pointer-events: auto;
   }
 
   .position-card__media {
@@ -294,6 +455,39 @@ const timeline = [
 
   .position-card__body {
     padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .position-card__body--back {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .position-card__back-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .position-card__close {
+    background: none;
+    border: 1px solid var(--color-line);
+    color: var(--color-ink);
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .position-card__close:hover {
+    background: var(--color-ink);
+    color: #fff;
+    border-color: var(--color-ink);
   }
 
   .position-card__kind {
@@ -318,11 +512,87 @@ const timeline = [
     line-height: 1.6;
   }
 
-  .position-card__link {
-    color: var(--color-red);
-    text-decoration: none;
-    font-weight: 700;
+  .position-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: auto;
+  }
+
+  .position-card__meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0.75rem 1rem;
+    background: var(--color-bg-soft);
+    border-left: 3px solid var(--color-red);
+  }
+
+  .position-card__meta dt {
     font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-slate);
+    margin: 0 0 0.15rem;
+  }
+
+  .position-card__meta dd {
+    margin: 0;
+    color: var(--color-ink);
+    font-size: 0.85rem;
+    line-height: 1.35;
+  }
+
+  .position-card__section h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-ink);
+    margin: 0 0 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .position-card__section ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .position-card__section li {
+    position: relative;
+    padding-left: 1.1rem;
+    font-size: 0.88rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+  }
+
+  .position-card__section li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 0.4rem;
+    height: 0.4rem;
+    background: var(--color-red);
+    border-radius: 50%;
+  }
+
+  .position-card__apply {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .position-card__flip {
+      transition: none;
+    }
   }
 
   /* Values */
@@ -504,3 +774,36 @@ const timeline = [
     }
   }
 </style>
+
+<script>
+  /**
+   * Job-Karten: Klick auf "Details" flippt die Karte, Klick auf das X (oder
+   * Escape) flippt zurück. Beim Flip wird aria-hidden auf die jeweilige
+   * Seite gesetzt, damit Screenreader den passenden Inhalt lesen.
+   */
+  const cards = document.querySelectorAll<HTMLElement>('[data-flip-card]');
+
+  cards.forEach((card) => {
+    const openBtn = card.querySelector<HTMLButtonElement>('[data-flip-open]');
+    const closeBtn = card.querySelector<HTMLButtonElement>('[data-flip-close]');
+    const front = card.querySelector<HTMLElement>('.position-card__face--front');
+    const back = card.querySelector<HTMLElement>('.position-card__face--back');
+
+    const setState = (flipped: boolean) => {
+      card.classList.toggle('is-flipped', flipped);
+      openBtn?.setAttribute('aria-expanded', String(flipped));
+      front?.setAttribute('aria-hidden', String(flipped));
+      back?.setAttribute('aria-hidden', String(!flipped));
+    };
+
+    openBtn?.addEventListener('click', () => setState(true));
+    closeBtn?.addEventListener('click', () => setState(false));
+
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && card.classList.contains('is-flipped')) {
+        setState(false);
+        closeBtn?.focus();
+      }
+    });
+  });
+</script>
