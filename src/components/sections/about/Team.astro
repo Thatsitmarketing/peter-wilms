@@ -158,10 +158,12 @@ const contact = company.contact;
     flex-direction: column;
     width: 100%;
     background: #fff;
+    /* Dunkle Schrift explizit setzen – sonst erbt die Karte die weiße
+       Textfarbe der dunklen Sektion und die Namen wirken zu blass. */
+    color: var(--color-ink);
     box-shadow: var(--shadow-card);
     text-align: left;
     font: inherit;
-    color: inherit;
     border: 0;
     padding: 0;
     cursor: pointer;
@@ -205,6 +207,7 @@ const contact = company.contact;
     font-size: 1.35rem;
     line-height: 1.2;
     margin: 0 0 0.35rem;
+    color: var(--color-ink);
   }
 
   .team-card__qualification {

@@ -191,9 +191,9 @@ import { aboutSection } from '../../data/site';
       const total = rect.height + vh;
       const scrolled = vh - rect.top;
       const progress = clamp(scrolled / total);
-      // Effekt startet erst wenn die Sektion nahe der Bildschirmmitte ist (~40%),
-      // damit der Übergang wirklich sichtbar in der Mitte des Sichtbereichs stattfindet.
-      const eased = clamp((progress - 0.4) / 0.25);
+      // Früher starten (~25 %) und schon bei ~55 % komplett saniert –
+      // so ist die Brücke bis zum Ende der Sektion sicher heil.
+      const eased = clamp((progress - 0.25) / 0.3);
       section.style.setProperty('--bridge-progress', eased.toFixed(3));
     };
 

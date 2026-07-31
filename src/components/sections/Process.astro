@@ -303,8 +303,10 @@ import { processSection, processSteps } from '../../data/site';
       // Wie weit muss sich der Track bewegen können?
       maxScroll = track.scrollWidth - viewport.clientWidth;
       if (maxScroll < 0) maxScroll = 0;
-      // Höhe der Stage = Viewport + horizontale Distanz (1:1 Übersetzung fühlt sich sanft an)
-      stage.style.height = `${viewport.clientHeight + maxScroll}px`;
+      // Extra Haltezeit nach Ende des horizontalen Scrolls, damit der 10 vw-
+      // Puffer rechts von Schritt 4 sichtbar bleibt, bevor die Sektion entlässt.
+      const holdPx = viewport.clientHeight * 0.35;
+      stage.style.height = `${viewport.clientHeight + maxScroll + holdPx}px`;
       update();
     };
 

@@ -2,7 +2,7 @@
 import { videoSection } from '../../data/site';
 ---
 
-<section class="section section--dark video" aria-labelledby="video-title">
+<section class="section--dark video" aria-labelledby="video-title">
   <div class="container">
     <!-- Video-Platzhalter: noch keine echte Einbindung.
          Bei Livegang durch <video> oder Zwei-Klick-Einbindung
@@ -20,13 +20,18 @@ import { videoSection } from '../../data/site';
 </section>
 
 <style>
+  /* Sektion: Video-Rahmen ist 80 vh hoch, 10 vh Rand oben und unten */
+  .video {
+    padding-block: 10vh;
+  }
+
   .video__frame {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    min-height: clamp(20rem, 45vw, 28rem);
+    min-height: 80vh;
     border: 1px dashed rgba(255, 255, 255, 0.3);
     text-align: center;
     padding: 2rem;
