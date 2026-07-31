@@ -42,14 +42,14 @@ const { address, contact } = company;
         <div class="contact__block">
           <dt>Öffnungszeiten</dt>
           <dd>
-            <strong>Montag bis Freitag:</strong> 08:00 – 17:00 Uhr<br />
-            <strong>Samstag &amp; Sonntag:</strong> Geschlossen
+            <strong>Mo–Fr:</strong> 08:00 – 17:00 Uhr<br />
+            <strong>Sa &amp; So:</strong> Geschlossen
           </dd>
         </div>
       </dl>
     </div>
 
-    <!-- Rechte Spalte: weißes Formular-Panel -->
+    <!-- Mittlere Spalte: weißes Formular-Panel -->
     <form class="contact__form" data-contact-form novalidate data-reveal="right">
       <h3 class="contact__form-title">Kontakt</h3>
 
@@ -70,7 +70,7 @@ const { address, contact } = company;
 
       <div class="form-field">
         <label for="cf-message">Nachricht</label>
-        <textarea id="cf-message" name="message" rows="5"></textarea>
+        <textarea id="cf-message" name="message" rows="2"></textarea>
       </div>
 
       <!-- Honeypot gegen Spam-Bots: für Menschen unsichtbar, bleibt leer -->
@@ -101,13 +101,23 @@ const { address, contact } = company;
 
       <p class="form-status" data-form-status role="status" aria-live="polite"></p>
     </form>
+
+    <!-- Rechte Spalte: Bild-Platzhalter neben dem Formular -->
+    <div class="contact__photo photo-placeholder" role="img" aria-label="Platzhalter – Kontaktbild" data-reveal="right" style="--reveal-delay: 0.1s">
+      <div class="photo-placeholder__tag"><span>Foto: Kontakt</span></div>
+    </div>
   </div>
 </section>
 
 <style>
   .contact {
     position: relative;
-    padding-block: clamp(4rem, 8vw, 6.5rem);
+    /* Section soll auf Desktop ca. 60 vh hoch sein – vertikale Polster
+       schlanker als die anderen Sektionen. */
+    padding-block: clamp(1.5rem, 2.5vw, 2.25rem);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
     color: #fff;
     overflow: hidden;
     isolation: isolate;
@@ -138,56 +148,62 @@ const { address, contact } = company;
 
   .contact__grid {
     display: grid;
-    /* Linke Spalte breiter, rechte Formular-Spalte schmaler */
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.75fr);
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: start;
+    /* Info links, Formular in der Mitte weiter links gerückt, Bild rechts.
+       Formular-Spalte etwas breiter, damit der Consent-Text nicht so stark
+       umbricht – das drückt die Gesamthöhe der Section. */
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.05fr) minmax(0, 0.85fr);
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+    align-items: stretch;
+    width: 100%;
   }
 
   /* --- Linke Spalte --- */
   .contact__kicker {
-    margin: 0 0 1rem;
+    margin: 0 0 0.6rem;
     font-family: var(--font-heading);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.9);
   }
 
   .contact__title {
     font-family: var(--font-heading);
-    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
     line-height: 1.1;
     color: #fff;
-    margin: 0 0 1.25rem;
+    margin: 0 0 0.85rem;
   }
 
   .contact__lead {
-    max-width: 42rem;
+    max-width: 32rem;
     color: rgba(255, 255, 255, 0.9);
-    margin: 0 0 clamp(2rem, 4vw, 3rem);
-    line-height: 1.7;
+    margin: 0 0 clamp(1.25rem, 2vw, 1.75rem);
+    line-height: 1.55;
+    font-size: 0.95rem;
   }
 
+  /* Meta kompakt: die vier Blöcke rücken näher aneinander, damit
+     Telefon und Öffnungszeiten dicht bei Standort und E-Mail sitzen. */
   .contact__meta {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(1.75rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3rem);
+    gap: 0.9rem 1.5rem;
     margin: 0;
   }
 
   .contact__block dt {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 1.05rem;
+    font-size: 0.95rem;
     color: #fff;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.3rem;
   }
 
   .contact__block dd {
     margin: 0;
-    line-height: 1.7;
+    line-height: 1.5;
     color: rgba(255, 255, 255, 0.9);
-    font-size: 0.95rem;
+    font-size: 0.88rem;
   }
 
   .contact__block a {
@@ -195,46 +211,62 @@ const { address, contact } = company;
     text-decoration: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.35);
     transition: border-color 0.2s ease;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* E-Mail-Block darf sich über beide Spalten strecken, damit lange
+     Adressen nicht in die Öffnungszeiten-Spalte laufen. */
+  .contact__block--wide {
+    grid-column: 1 / -1;
   }
 
   .contact__block a:hover {
     border-color: #fff;
   }
 
-  /* --- Rechte Spalte: kompaktes weißes Formular --- */
+  /* --- Mittlere Spalte: kompaktes weißes Formular --- */
   .contact__form {
     background: #fff;
     color: var(--color-ink);
-    padding: clamp(1.25rem, 2.2vw, 1.75rem);
+    padding: clamp(1rem, 1.6vw, 1.4rem) clamp(1.1rem, 1.8vw, 1.5rem);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
     width: 100%;
-    max-width: 22rem;
     margin: 0;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* --- Rechte Spalte: Bild-Platzhalter --- */
+  .contact__photo {
+    align-self: stretch;
+    min-height: 100%;
   }
 
   .contact__form-title {
     font-family: var(--font-heading);
-    font-size: clamp(1.4rem, 2vw, 1.7rem);
-    margin: 0 0 1rem;
+    font-size: clamp(1.2rem, 1.6vw, 1.45rem);
+    margin: 0 0 0.6rem;
     color: var(--color-ink);
   }
 
   .form-field {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.4rem;
   }
 
   .form-field label {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--color-slate);
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.2rem;
   }
 
   .form-field input[type='text'],
   .form-field input[type='email'],
   .form-field textarea {
     width: 100%;
-    padding: 0.55rem 0;
+    padding: 0.4rem 0;
     border: 0;
     border-bottom: 1px solid var(--color-line);
     background: transparent;
@@ -251,7 +283,8 @@ const { address, contact } = company;
 
   .form-field textarea {
     resize: vertical;
-    min-height: 4rem;
+    min-height: 2.25rem;
+    max-height: 6rem;
   }
 
   .form-field--hp {
@@ -261,24 +294,24 @@ const { address, contact } = company;
   }
 
   .form-field--consent {
-    margin-top: 0.5rem;
+    margin-top: 0.35rem;
   }
 
   .form-field__consent-label {
-    margin: 0 0 0.4rem;
-    font-size: 0.85rem;
+    margin: 0 0 0.25rem;
+    font-size: 0.78rem;
     color: var(--color-slate);
   }
 
   .form-field--consent > label {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.65rem;
+    gap: 0.55rem;
     align-items: start;
     margin: 0;
     color: var(--color-slate);
-    font-size: 0.82rem;
-    line-height: 1.5;
+    font-size: 0.72rem;
+    line-height: 1.4;
   }
 
   .form-field--consent input {
@@ -296,7 +329,8 @@ const { address, contact } = company;
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-    margin-top: 1.1rem;
+    margin-top: 0.75rem;
+    align-self: flex-start;
     padding: 0;
     background: none;
     border: 0;
@@ -333,17 +367,40 @@ const { address, contact } = company;
     color: #b81417;
   }
 
+  @media (max-width: 78rem) {
+    .contact__grid {
+      /* Auf mittleren Viewports Info + Formular oben, Bild darunter. */
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+    }
+
+    .contact__photo {
+      grid-column: 1 / -1;
+      min-height: 14rem;
+    }
+  }
+
   @media (max-width: 62rem) {
+    .contact {
+      min-height: 0;
+      display: block;
+    }
+
     .contact__grid {
       grid-template-columns: 1fr;
     }
 
     .contact__meta {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .contact__form {
       max-width: none;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .contact__meta {
+      grid-template-columns: 1fr;
     }
   }
 </style>
