@@ -68,11 +68,29 @@ import { testimonials, testimonialsSection } from '../../data/site';
     gap: 1.5rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    /* Snap richtet die Karten am 20 %-Einzug aus, nicht an der Viewport-Kante */
+    scroll-padding-inline-start: var(--testimonials-inset);
     scrollbar-width: none;
     /* Karten starten links am 20 %-Rand und lassen rechts genug Luft,
        damit die nächste Karte angeschnitten sichtbar bleibt. */
     padding-inline: var(--testimonials-inset) clamp(3rem, 8vw, 6rem);
     padding-block: 1.5rem 2rem;
+    /* Maus-Drag über die Karten hinweg */
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y;
+  }
+
+  .testimonials__track.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+
+  /* Während des Ziehens keine unerwünschten Interaktionen mit Karten-Inhalten */
+  .testimonials__track.is-dragging * {
+    pointer-events: none;
   }
 
   .testimonials__track::-webkit-scrollbar {
@@ -250,5 +268,89 @@ import { testimonials, testimonialsSection } from '../../data/site';
     update();
     track.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
+
+    /**
+     * Maus-Drag-to-Scroll. Touch nutzt weiter das native horizontale Scrollen,
+     * daher ignorieren wir Pointer-Events vom Typ "touch". Ab einem Schwellwert
+     * von 5 px wird ein echter Drag erkannt – darunter zählt der Klick als Klick,
+     * damit Links/Buttons in den Karten funktionieren.
+     */
+    const DRAG_THRESHOLD = 5;
+    let pointerId: number | null = null;
+    let startX = 0;
+    let startScroll = 0;
+    let velocityX = 0;
+    let lastX = 0;
+    let lastTime = 0;
+    let dragging = false;
+
+    const onDown = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+      if (event.button !== 0) return;
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      startScroll = track.scrollLeft;
+      lastX = event.clientX;
+      lastTime = performance.now();
+      velocityX = 0;
+      dragging = false;
+    };
+
+    const onMove = (event: PointerEvent) => {
+      if (pointerId === null || event.pointerId !== pointerId) return;
+      const dx = event.clientX - startX;
+      if (!dragging) {
+        if (Math.abs(dx) < DRAG_THRESHOLD) return;
+        dragging = true;
+        track.classList.add('is-dragging');
+        track.setPointerCapture(pointerId);
+      }
+      track.scrollLeft = startScroll - dx;
+      const now = performance.now();
+      const dt = now - lastTime;
+      if (dt > 0) {
+        velocityX = (event.clientX - lastX) / dt;
+      }
+      lastX = event.clientX;
+      lastTime = now;
+      event.preventDefault();
+    };
+
+    const endDrag = (event: PointerEvent) => {
+      if (pointerId === null || event.pointerId !== pointerId) return;
+      const wasDragging = dragging;
+      if (dragging) {
+        try { track.releasePointerCapture(pointerId); } catch {}
+        track.classList.remove('is-dragging');
+        // Weiches Ausrollen im Stil eines Trägheit-Sliders
+        if (Math.abs(velocityX) > 0.1) {
+          const target = track.scrollLeft - velocityX * 180;
+          track.scrollTo({ left: target, behavior: 'smooth' });
+        }
+        // Klicks, die als Drag endeten, unterdrücken (verhindert versehentliche
+        // Klicks auf Links/Buttons in den Karten am Ende einer Bewegung)
+        const suppress = (ev: Event) => {
+          ev.stopPropagation();
+          ev.preventDefault();
+          track.removeEventListener('click', suppress, true);
+        };
+        track.addEventListener('click', suppress, true);
+      }
+      pointerId = null;
+      dragging = false;
+      // Falls kein echter Drag: nichts weiter tun, Klick geht normal durch
+      void wasDragging;
+    };
+
+    track.addEventListener('pointerdown', onDown);
+    track.addEventListener('pointermove', onMove);
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+
+    // Bildern das native Drag-Verhalten wegnehmen, damit der Slider-Drag greift
+    track.querySelectorAll('img').forEach((img) => {
+      img.setAttribute('draggable', 'false');
+    });
+    track.addEventListener('dragstart', (e) => e.preventDefault());
   }
 </script>
