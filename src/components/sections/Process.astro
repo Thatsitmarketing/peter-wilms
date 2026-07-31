@@ -52,11 +52,12 @@ import { processSection, processSteps } from '../../data/site';
 
 <style>
   .process {
-    padding-block: clamp(4rem, 7vw, 6rem) 0;
+    /* Mehr Luft nach oben – weniger nach unten (Steps sitzen dichter am Intro) */
+    padding-block: clamp(6rem, 10vw, 9rem) 0;
   }
 
   .process__intro {
-    margin-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
+    margin-bottom: 0;
   }
 
   /* Titel füllt ca. drei Viertel der Row (unter 62 rem = volle Breite) */
@@ -83,16 +84,17 @@ import { processSection, processSteps } from '../../data/site';
   }
 
   /* Sticky-Viewport hält den Track auf Bildschirmhöhe, während vertikal gescrollt wird.
-     Pin liegt bei ~10 vh vom Oberrand, sodass der Effekt schon in der oberen Bildschirmhälfte
-     einsetzt (statt erst wenn die Sektion oben andockt) und Controls direkt unter dem Track sitzen. */
+     justify-content: flex-start – die Karten sitzen dicht am Intro statt zentriert
+     mit viel Leerraum darüber; Pin liegt bei ~6 vh vom Oberrand. */
   .process__viewport {
     position: sticky;
-    top: 10vh;
-    height: 80vh;
+    top: 6vh;
+    height: 88vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 1.25rem;
+    padding-top: 1.5rem;
     overflow: hidden;
     background: var(--color-bg);
   }
@@ -320,14 +322,15 @@ import { processSection, processSteps } from '../../data/site';
       maxScroll = track.scrollWidth - viewport.clientWidth;
       if (maxScroll < 0) maxScroll = 0;
       // Extra Haltezeit nach Ende des horizontalen Scrolls, damit der 10 vw-
-      // Puffer rechts von Schritt 4 sichtbar bleibt, bevor die Sektion entlässt.
-      const holdPx = viewport.clientHeight * 0.35;
+      // Puffer rechts von Schritt 4 deutlich sichtbar bleibt, bevor die
+      // Sektion vertikal weiterlässt.
+      const holdPx = viewport.clientHeight * 0.5;
       stage.style.height = `${viewport.clientHeight + maxScroll + holdPx}px`;
       update();
     };
 
-    // Sticky-Offset synchron zum CSS-Wert (viewport top: 10vh)
-    const stickyOffset = () => window.innerHeight * 0.10;
+    // Sticky-Offset synchron zum CSS-Wert (viewport top: 6vh)
+    const stickyOffset = () => window.innerHeight * 0.06;
 
     const update = () => {
       if (!isDesktop() || prefersReduced()) return;
