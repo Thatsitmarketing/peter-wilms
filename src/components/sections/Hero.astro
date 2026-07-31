@@ -77,11 +77,13 @@ import { hero, stats } from '../../data/site';
 <style>
   .hero {
     position: relative;
-    min-height: 100svh;
+    /* Statt komplette Viewporthöhe: kompaktere, zentrierte Bühne,
+       damit Inhalt und Auszeichnungen mittig zusammen wirken. */
+    min-height: min(80svh, 46rem);
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     color: #fff;
-    padding-block: 8rem 3.5rem;
+    padding-block: clamp(5rem, 10vh, 7rem) clamp(3rem, 6vh, 4.5rem);
   }
 
   .hero__overlay {
@@ -101,7 +103,7 @@ import { hero, stats } from '../../data/site';
     width: 100%;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
+    align-items: center;
     gap: clamp(1.5rem, 3vw, 3rem);
   }
 
@@ -140,7 +142,7 @@ import { hero, stats } from '../../data/site';
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-bottom: 2.25rem;
+    margin-bottom: 1.75rem;
   }
 
   .hero__stats {
