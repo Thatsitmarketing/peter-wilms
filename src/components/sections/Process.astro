@@ -84,17 +84,18 @@ import { processSection, processSteps } from '../../data/site';
   }
 
   /* Sticky-Viewport hält den Track auf Bildschirmhöhe, während vertikal gescrollt wird.
-     justify-content: flex-start – die Karten sitzen dicht am Intro statt zentriert
-     mit viel Leerraum darüber; Pin liegt bei ~6 vh vom Oberrand. */
+     Sticky greift schon bei ~25 vh vom Oberrand – der horizontale Scroll setzt
+     bereits ein, sobald die Karten in die untere Hälfte des Viewports gescrollt
+     sind (statt erst wenn sie oben ankommen). */
   .process__viewport {
     position: sticky;
-    top: 6vh;
-    height: 88vh;
+    top: 25vh;
+    height: 70vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 1.25rem;
-    padding-top: 1.5rem;
+    padding-top: 1rem;
     overflow: hidden;
     background: var(--color-bg);
   }
@@ -103,9 +104,9 @@ import { processSection, processSteps } from '../../data/site';
     display: flex;
     gap: 1.25rem;
     /* Karten kleben NICHT am linken Rand: gleicher Einzug wie der Container.
-       Rechts zusätzlich ~10 vw Puffer, damit am Ende des Scrolls noch Luft
-       zwischen der letzten Kachel und dem rechten Bildschirmrand bleibt. */
-    padding-inline: var(--gutter) calc(var(--gutter) + 10vw);
+       Rechts genau 10 vw Puffer, damit am Ende des Scrolls Schritt 4
+       mittiger sitzt und 10 % Freifläche zum rechten Rand bleibt. */
+    padding-inline: var(--gutter) 10vw;
     will-change: transform;
     transform: translate3d(0, 0, 0);
   }
@@ -329,8 +330,8 @@ import { processSection, processSteps } from '../../data/site';
       update();
     };
 
-    // Sticky-Offset synchron zum CSS-Wert (viewport top: 6vh)
-    const stickyOffset = () => window.innerHeight * 0.06;
+    // Sticky-Offset synchron zum CSS-Wert (viewport top: 25vh)
+    const stickyOffset = () => window.innerHeight * 0.25;
 
     const update = () => {
       if (!isDesktop() || prefersReduced()) return;
