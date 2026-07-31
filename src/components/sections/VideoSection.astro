@@ -1,0 +1,69 @@
+---
+import { videoSection } from '../../data/site';
+---
+
+<section class="section section--dark video" aria-labelledby="video-title">
+  <div class="container">
+    <!-- Video-Platzhalter: noch keine echte Einbindung.
+         Bei Livegang durch <video> oder Zwei-Klick-Einbindung
+         (Kategorie „Darstellung & Funktion") ersetzen. -->
+    <div class="video__frame" data-reveal>
+      <button type="button" class="video__play" aria-label="Video abspielen (Platzhalter, noch ohne Funktion)">
+        <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true">
+          <path d="M8 5.5v13l11-6.5z" />
+        </svg>
+      </button>
+      <h2 class="video__title" id="video-title">{videoSection.title}</h2>
+      <p class="video__meta">{videoSection.duration} · {videoSection.note}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .video__frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    min-height: clamp(20rem, 45vw, 28rem);
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+    text-align: center;
+    padding: 2rem;
+    /* dezente „Filmstill"-Anmutung */
+    background:
+      radial-gradient(40rem 18rem at 50% 60%, rgba(255, 255, 255, 0.05), transparent 70%),
+      rgba(0, 0, 0, 0.18);
+  }
+
+  .video__play {
+    display: grid;
+    place-items: center;
+    width: 5rem;
+    height: 5rem;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-red);
+    color: #fff;
+    cursor: pointer;
+    padding-left: 0.25rem;
+    transition: transform 0.3s var(--ease-out), background-color 0.25s ease;
+  }
+
+  .video__play:hover {
+    transform: scale(1.08);
+    background: var(--color-red-dark);
+  }
+
+  .video__title {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    color: #fff;
+    margin: 0;
+  }
+
+  .video__meta {
+    margin: 0;
+    color: var(--color-on-dark-soft);
+    font-size: 0.95rem;
+  }
+</style>

@@ -1,4 +1,7 @@
 ---
+import '@fontsource/syne/700.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/600.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -8,11 +11,14 @@ import { company } from '../data/site';
 interface Props {
   title: string;
   description?: string;
+  /** true = Header liegt transparent über dem Hero (nur Startseite) */
+  transparentHeader?: boolean;
 }
 
 const {
   title,
-  description = `${company.name} – Ihr Spezialist für Brücken- und Bauwerksinstandsetzung in NRW. Betoninstandsetzung, Rissverpressung, Korrosionsschutz und mehr.`,
+  description = `${company.name} – Brücken- und Bauwerksinstandsetzung für öffentliche und gewerbliche Auftraggeber in ganz NRW.`,
+  transparentHeader = false,
 } = Astro.props;
 ---
 
@@ -24,7 +30,7 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#16212c" />
+    <meta name="theme-color" content="#333333" />
     <script is:inline>
       // Kennzeichnet früh, dass JS verfügbar ist (steuert Reveal-Fallback in CSS)
       document.documentElement.classList.remove('no-js');
@@ -32,7 +38,7 @@ const {
   </head>
   <body>
     <a class="skip-link" href="#main">Zum Inhalt springen</a>
-    <Header />
+    <Header transparent={transparentHeader} />
     <main id="main">
       <slot />
     </main>
@@ -50,10 +56,9 @@ const {
     top: -100%;
     left: 1rem;
     z-index: 200;
-    background: var(--color-ink);
+    background: var(--color-dark);
     color: #fff;
     padding: 0.6rem 1rem;
-    border-radius: 0 0 var(--radius) var(--radius);
   }
 
   .skip-link:focus {

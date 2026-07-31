@@ -50,10 +50,10 @@ const categories = [
       </p>
     </div>
     <div class="consent-banner__actions">
-      <button type="button" class="btn btn--primary" data-consent-accept-all>
+      <button type="button" class="btn btn--red btn--small" data-consent-accept-all>
         Alle akzeptieren
       </button>
-      <button type="button" class="btn btn--ghost-dark" data-consent-necessary-only>
+      <button type="button" class="btn btn--outline btn--small" data-consent-necessary-only>
         Nur notwendige
       </button>
       <button type="button" class="consent-banner__settings" data-consent-show-settings>
@@ -94,10 +94,10 @@ const categories = [
     </div>
 
     <div class="consent-dialog__actions">
-      <button type="button" class="btn btn--primary" data-consent-accept-all>
+      <button type="button" class="btn btn--red btn--small" data-consent-accept-all>
         Alle akzeptieren
       </button>
-      <button type="submit" class="btn btn--ghost-dark" value="save">
+      <button type="submit" class="btn btn--outline btn--small" value="save">
         Auswahl speichern
       </button>
     </div>
@@ -110,13 +110,25 @@ const categories = [
 </dialog>
 
 <style>
+  /* Dunkler Outline-Button nur für die Consent-UI */
+  .btn--outline {
+    background: transparent;
+    color: var(--color-ink);
+    box-shadow: inset 0 0 0 2px var(--color-ink);
+  }
+
+  .btn--outline:hover {
+    background: var(--color-ink);
+    color: #fff;
+  }
+
   .consent-banner {
     position: fixed;
     inset-inline: 0;
     bottom: 0;
     z-index: 150;
     background: #fff;
-    border-top: 3px solid var(--color-accent);
+    border-top: 3px solid var(--color-red);
     box-shadow: 0 -12px 40px rgba(22, 33, 44, 0.18);
     animation: consent-slide-up 0.45s var(--ease-out);
   }
@@ -177,7 +189,7 @@ const categories = [
 
   .consent-dialog {
     border: none;
-    border-radius: var(--radius);
+    border-radius: 0;
     padding: 0;
     max-width: 34rem;
     width: calc(100vw - 2.5rem);
@@ -214,7 +226,7 @@ const categories = [
 
   .consent-category {
     border: 1px solid var(--color-line);
-    border-radius: var(--radius);
+    border-radius: 0;
     padding: 1rem 1.15rem;
   }
 
@@ -279,11 +291,11 @@ const categories = [
   }
 
   .consent-switch input:checked + .consent-switch__track {
-    background: var(--color-accent);
+    background: var(--color-red);
   }
 
   .consent-switch input:disabled + .consent-switch__track {
-    background: var(--color-ink-soft);
+    background: var(--color-dark);
     opacity: 0.5;
   }
 
@@ -292,7 +304,7 @@ const categories = [
   }
 
   .consent-switch input:focus-visible + .consent-switch__track {
-    outline: 2px solid var(--color-accent-dark);
+    outline: 2px solid var(--color-red-dark);
     outline-offset: 2px;
   }
 

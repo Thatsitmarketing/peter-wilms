@@ -1,0 +1,165 @@
+---
+import { testimonials, testimonialsSection } from '../../data/site';
+---
+
+<section class="section section--soft testimonials" aria-labelledby="testimonials-title">
+  <div class="container">
+    <h2 class="section__title" id="testimonials-title" data-reveal>
+      {testimonialsSection.title}
+    </h2>
+  </div>
+
+  <div class="testimonials__viewport" data-reveal style="--reveal-delay: 0.1s">
+    <div class="testimonials__track" data-testimonials-track tabindex="0" aria-label="Kundenstimmen – horizontal scrollbar">
+      {testimonials.map((item) => (
+        <figure class="testimonial-card">
+          <div class="testimonial-card__photo photo-placeholder" role="img" aria-label={`Platzhalter – Porträtfoto ${item.name}`}>
+            <div class="photo-placeholder__tag"><span>Porträt</span></div>
+          </div>
+          <div class="testimonial-card__body">
+            <blockquote class="testimonial-card__quote">
+              <p>“{item.quote}”</p>
+            </blockquote>
+            <figcaption class="testimonial-card__caption">
+              <strong>{item.name}</strong>
+              <span>{item.role}</span>
+            </figcaption>
+            <div class="testimonial-card__logo" role="img" aria-label={`Platzhalter – ${item.logoLabel}`}>
+              {item.logoLabel}
+            </div>
+          </div>
+        </figure>
+      ))}
+    </div>
+
+    <!-- Fortschrittsbalken wie in der Referenz -->
+    <div class="container">
+      <div class="testimonials__progress" aria-hidden="true">
+        <span data-testimonials-progress></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials__viewport {
+    margin-top: 2.5rem;
+  }
+
+  .testimonials__track {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-inline: max(calc((100vw - var(--container)) / 2 + 1.25rem), 1.25rem);
+    padding-bottom: 0.5rem;
+  }
+
+  .testimonials__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonial-card {
+    flex: 0 0 min(38rem, 86vw);
+    scroll-snap-align: start;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 1.75rem;
+    margin: 0;
+    background: #fff;
+    padding: 2rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  .testimonial-card__photo {
+    aspect-ratio: 3 / 4;
+  }
+
+  .testimonial-card__body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .testimonial-card__quote {
+    margin: 0 0 1.25rem;
+  }
+
+  .testimonial-card__quote p {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .testimonial-card__caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .testimonial-card__caption strong {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+  }
+
+  .testimonial-card__caption span {
+    font-size: 0.85rem;
+    color: var(--color-slate);
+  }
+
+  .testimonial-card__logo {
+    margin-top: auto;
+    align-self: flex-start;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #9a9a9a;
+    border: 1px dashed #c4c4c4;
+    padding: 0.5rem 1rem;
+  }
+
+  .testimonials__progress {
+    margin-top: 2rem;
+    height: 3px;
+    background: #e0e0e0;
+    position: relative;
+  }
+
+  .testimonials__progress span {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 25%;
+    background: var(--color-dark);
+    transition: width 0.2s ease, left 0.2s ease;
+  }
+
+  @media (max-width: 40rem) {
+    .testimonial-card {
+      grid-template-columns: 1fr;
+    }
+
+    .testimonial-card__photo {
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>
+
+<script>
+  const track = document.querySelector<HTMLElement>('[data-testimonials-track]');
+  const bar = document.querySelector<HTMLElement>('[data-testimonials-progress]');
+
+  if (track && bar) {
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      const ratio = track.clientWidth / track.scrollWidth;
+      const pos = max > 0 ? track.scrollLeft / max : 0;
+      bar.style.width = `${Math.max(ratio * 100, 8)}%`;
+      bar.style.left = `${pos * (100 - Math.max(ratio * 100, 8))}%`;
+    };
+    update();
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+  }
+</script>

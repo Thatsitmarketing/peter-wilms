@@ -21,6 +21,18 @@ npm run preview   # Build lokal testen
 4. Das Verzeichnis `functions/` wird von Cloudflare Pages automatisch als
    Pages Functions deployt (Formular-Endpoint `POST /api/contact`)
 
+## Design
+
+Umsetzung nach der abgestimmten Design-Referenz:
+
+- **Farben:** Rot `#E51E21`, Dunkelgrau `#333333`, Weiß/`#FAFAFA`, Footer Schwarz
+- **Schriften:** Syne 700 (Headlines) und Inter 400/600 (Fließtext) – selbst
+  gehostet über `@fontsource` (kein Google-Fonts-CDN → DSGVO-unkritisch)
+- **Section-Reihenfolge (Startseite):** Vollbild-Hero mit Kennzahlen →
+  Auftraggeber-Logoleiste → Leistungen (dunkle Bildkacheln) → Über uns →
+  Videobereich → Ablauf (horizontaler Kartenstrang 01–04) → Unsere Projekte →
+  Kundenstimmen → Job-CTA → FAQ → Kontaktformular
+
 ## Projektstruktur
 
 ```
@@ -30,16 +42,16 @@ src/
   components/
     Header.astro / Footer.astro
     CookieConsent.astro      ← Consent-UI (Banner + Einstellungs-Dialog)
-    MediaPlaceholder.astro   ← Platzhalter für Bilder/Videos
-    ServiceIcon.astro        ← Inline-SVG-Icons der Leistungskacheln
     sections/                ← Eine Datei pro Section, einzeln austauschbar
+      Hero / ClientLogos / Services / About / VideoSection / Process /
+      Projects / Testimonials / JobsCta / Faq / Contact
   pages/
     index.astro              ← Startseite (Reihenfolge der Sections)
     impressum.astro          ← Platzhalter, Texte final abstimmen!
     datenschutz.astro        ← Platzhalter, Texte final abstimmen!
   scripts/
     consent.ts               ← Consent-Logik (siehe unten)
-    animations.ts            ← Scroll-Reveal, Zähler, Prozess-Hervorhebung
+    animations.ts            ← Scroll-Reveal + Kennzahlen-Zähler
 functions/
   api/contact.ts             ← Cloudflare Pages Function (Formular-Stub)
 ```
@@ -49,10 +61,12 @@ Section-Reihenfolge ändern → `src/pages/index.astro`.
 
 ## Medien-Platzhalter
 
-Alle Bilder/Videos sind bewusst als klar erkennbare Platzhalter
-(`MediaPlaceholder.astro`, schraffierte Boxen mit Beschriftung) umgesetzt.
-Beim Einpflegen echter Medien die jeweilige `<MediaPlaceholder …/>`-Instanz
-durch `<img>`/`<Image>` bzw. eine echte Videoeinbindung ersetzen.
+Alle Bilder/Videos sind bewusst als klar erkennbare Platzhalter umgesetzt:
+schraffierte Flächen (`.photo-placeholder`) mit Beschriftungs-Tag bzw. eine
+Videobox mit Play-Symbol. Beim Einpflegen echter Medien die jeweilige
+Platzhalterfläche durch `<img>`/`<Image>` (als `object-fit: cover`-Hintergrund)
+bzw. eine echte Videoeinbindung ersetzen – die Beschriftung nennt jeweils das
+vorgesehene Motiv.
 
 ## Cookie Consent / DSGVO
 
@@ -60,8 +74,10 @@ durch `<img>`/`<Image>` bzw. eine echte Videoeinbindung ersetzen.
 - **Blockierung:** Nicht notwendige Skripte werden als
   `<script type="text/plain" data-consent-category="statistics" data-src="…">`
   eingebunden und erst nach Einwilligung aktiviert
-- **Zwei-Klick-Inhalte:** Google Maps lädt erst nach Klick + Einwilligung
-  (Kategorie „Darstellung & Funktion"), vorher fließen keine Daten an Google
+- **Zwei-Klick-Inhalte:** Mechanismus für externe Inhalte (z. B. Google Maps,
+  YouTube) über `data-consent-placeholder` vorbereitet – aktuell ist kein
+  externer Dienst eingebunden; bei Einbindung erst nach Klick + Einwilligung
+  laden (Kategorie „Darstellung & Funktion")
 - **Wiederöffnen:** Footer-Link „Cookie-Einstellungen" (`data-open-consent`)
 - **Speicherung:** `localStorage` (`willms-consent`), versioniert – bei
   Kategorie-Änderungen `CONSENT_VERSION` in `src/scripts/consent.ts` erhöhen,

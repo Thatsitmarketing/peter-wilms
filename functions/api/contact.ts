@@ -10,9 +10,8 @@
 
 interface ContactPayload {
   name?: string;
-  company?: string;
   email?: string;
-  phone?: string;
+  subject?: string;
   message?: string;
   privacy?: string;
   website?: string; // Honeypot-Feld
@@ -40,9 +39,9 @@ export const onRequestPost = async (context: PagesContext): Promise<Response> =>
 
   const name = payload.name?.trim();
   const email = payload.email?.trim();
-  const message = payload.message?.trim();
+  const subject = payload.subject?.trim();
 
-  if (!name || !email || !message || !payload.privacy) {
+  if (!name || !email || !subject || !payload.privacy) {
     return json({ error: 'Bitte füllen Sie alle Pflichtfelder aus.' }, 422);
   }
 
