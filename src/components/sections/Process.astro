@@ -326,7 +326,12 @@ import { processSection, processSteps } from '../../data/site';
         maxScroll = 0;
         return;
       }
-      maxScroll = track.scrollWidth - viewport.clientWidth;
+      // Chromium liefert scrollWidth ohne padding-right, wenn die Flex-Kinder
+      // den Container überlaufen. Ohne diese Korrektur endet die letzte Kachel
+      // bündig am rechten Bildschirmrand statt am rechten Container-Gutter.
+      const trackStyles = getComputedStyle(track);
+      const paddingRight = parseFloat(trackStyles.paddingRight) || 0;
+      maxScroll = track.scrollWidth + paddingRight - viewport.clientWidth;
       if (maxScroll < 0) maxScroll = 0;
       // Kleine Puffer-Halte-Zeit, damit der Endzustand ruhig „steht"
       // bevor die Sektion vertikal weiter scrollt.
