@@ -48,7 +48,9 @@ const themes = ['light', 'dark', 'red'] as const;
 
   .history__head {
     position: sticky;
-    top: 6rem;
+    /* Sticky-Punkt weiter unten, damit oben noch Luft bleibt und
+       Kopf + Karten mittig statt am Rand kleben. */
+    top: 22vh;
     align-self: start;
   }
 
@@ -71,8 +73,9 @@ const themes = ['light', 'dark', 'red'] as const;
 
   .milestone {
     position: sticky;
-    /* Jede Karte klebt etwas tiefer als die vorherige → sichtbarer Stapel-Effekt */
-    top: calc(6.5rem + var(--i, 0) * 1rem);
+    /* Sticky-Basis mittig im Viewport; jede Karte klebt etwas tiefer
+       als die vorherige → sichtbarer Stapel-Effekt */
+    top: calc(22vh + var(--i, 0) * 0.9rem);
     width: 100%;
   }
 
