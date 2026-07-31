@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Faq from '../components/sections/Faq.astro';
 import Contact from '../components/sections/Contact.astro';
-import { company, jobsSection } from '../data/site';
+import { company } from '../data/site';
 
 const mailto = `mailto:${company.contact.email}?subject=${encodeURIComponent('Initiativbewerbung bei der Peter Willms Bauunternehmung GmbH')}`;
 
@@ -103,20 +103,8 @@ const timeline = [
     </div>
   </section>
 
-  <!-- Wiederholter Jobs-CTA -->
-  <section class="jobs-cta" aria-labelledby="jobs-cta-title">
-    <div class="container jobs-cta__inner">
-      <h2 class="jobs-cta__title" id="jobs-cta-title" data-reveal>{jobsSection.title}</h2>
-      <p class="jobs-cta__text" data-reveal style="--reveal-delay: 0.06s">{jobsSection.text}</p>
-      <div class="jobs-cta__actions" data-reveal style="--reveal-delay: 0.12s">
-        <a class="btn btn--white" href={mailto}>Bewerben</a>
-        <a class="btn btn--red" href="#offene-positionen">Erfahren</a>
-      </div>
-    </div>
-  </section>
-
   <!-- Werte -->
-  <section class="section values" aria-labelledby="values-title">
+  <section class="section section--dark values" aria-labelledby="values-title">
     <div class="container">
       <div class="values__head">
         <span class="section__kicker" data-reveal>Kultur</span>
@@ -178,7 +166,7 @@ const timeline = [
   <Faq />
 
   <!-- Initiativbewerbung -->
-  <section class="section section--soft init" aria-labelledby="init-title">
+  <section class="section section--dark init" aria-labelledby="init-title">
     <div class="container init__grid">
       <div class="init__head" data-reveal>
         <span class="section__kicker">Bewerbung</span>
@@ -337,38 +325,11 @@ const timeline = [
     font-family: var(--font-heading);
   }
 
-  /* Jobs CTA (wiederholt) */
-  .jobs-cta {
-    background: var(--color-dark);
-    color: #fff;
-    padding-block: clamp(4rem, 8vw, 6rem);
-    text-align: center;
-  }
-
-  .jobs-cta__inner {
-    max-width: 44rem;
-    margin: 0 auto;
-  }
-
-  .jobs-cta__title {
-    color: #fff;
-    font-size: clamp(1.75rem, 3.4vw, 2.6rem);
-    margin: 0 0 1rem;
-  }
-
-  .jobs-cta__text {
-    color: rgba(255, 255, 255, 0.85);
-    margin: 0 0 1.75rem;
-  }
-
-  .jobs-cta__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.9rem;
-    justify-content: center;
-  }
-
   /* Values */
+  .values .section__title {
+    color: #fff;
+  }
+
   .values__head {
     margin-bottom: clamp(2rem, 4vw, 3rem);
   }
@@ -391,11 +352,12 @@ const timeline = [
     font-family: var(--font-heading);
     font-size: 1.15rem;
     margin: 0 0 0.6rem;
+    color: #fff;
   }
 
   .value-card p {
     margin: 0;
-    color: var(--color-slate);
+    color: rgba(255, 255, 255, 0.8);
     line-height: 1.6;
   }
 
@@ -483,6 +445,10 @@ const timeline = [
   }
 
   /* Initiativbewerbung */
+  .init .section__title {
+    color: #fff;
+  }
+
   .init__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
