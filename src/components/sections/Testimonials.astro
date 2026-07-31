@@ -4,8 +4,9 @@ import { testimonials, testimonialsSection } from '../../data/site';
 
 <section class="section section--soft testimonials" aria-labelledby="testimonials-title">
   <div class="container">
-    <h2 class="section__title" id="testimonials-title" data-reveal>
-      {testimonialsSection.title}
+    <h2 class="section__title testimonials__title" id="testimonials-title" data-reveal>
+      <span>Was Auftraggeber über die</span>
+      <span>Zusammenarbeit sagen</span>
     </h2>
   </div>
 
@@ -46,13 +47,19 @@ import { testimonials, testimonialsSection } from '../../data/site';
     margin-top: 2.5rem;
   }
 
+  .testimonials__title span {
+    display: block;
+  }
+
   .testimonials__track {
     display: flex;
     gap: 1.5rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    padding-inline: var(--gutter);
+    /* Erste Karte sitzt rechtsbündig im Viewport: großes Left-Padding schiebt
+       den Slider nach rechts, Nutzer scrollt nach links (bzw. wischt) weiter. */
+    padding-inline: max(var(--gutter), calc(100vw - min(38rem, 86vw) - var(--gutter))) var(--gutter);
     padding-bottom: 0.5rem;
   }
 

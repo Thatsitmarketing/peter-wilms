@@ -4,12 +4,16 @@ import { company, jobsSection } from '../../data/site';
 const mailto = `mailto:${company.contact.email}?subject=${encodeURIComponent('Bewerbung bei der Peter Willms Bauunternehmung GmbH')}`;
 ---
 
-<section class="jobs photo-placeholder" aria-labelledby="jobs-title">
-  <div class="photo-placeholder__tag">
-    <span>Bild-Platzhalter: Team auf der Baustelle (Vollbild-Hintergrund)</span>
+<section class="jobs" aria-labelledby="jobs-title">
+  <!-- Hintergrund-Foto etwas gedämpfter im Hintergrund -->
+  <div class="jobs__backdrop photo-placeholder" aria-hidden="true">
+    <div class="photo-placeholder__tag">
+      <span>Bild-Platzhalter: Team auf der Baustelle</span>
+    </div>
+    <div class="jobs__scrim" aria-hidden="true"></div>
   </div>
 
-  <div class="container">
+  <div class="container jobs__inner">
     <div class="jobs__panel" data-reveal="left">
       <h2 class="jobs__title" id="jobs-title">{jobsSection.title}</h2>
       <p class="jobs__text">{jobsSection.text}</p>
@@ -21,14 +25,39 @@ const mailto = `mailto:${company.contact.email}?subject=${encodeURIComponent('Be
 <style>
   .jobs {
     position: relative;
-    padding-block: clamp(4rem, 9vw, 7rem);
+    /* Kürzere Bühne, damit der Abschnitt kompakt bleibt */
+    min-height: 65vh;
+    display: flex;
+    align-items: center;
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Hintergrundfoto in den Hintergrund treten lassen (leicht abgedimmt) */
+  .jobs__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    filter: brightness(0.75);
+  }
+
+  .jobs__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 55%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  .jobs__inner {
+    width: 100%;
   }
 
   .jobs__panel {
     position: relative;
-    max-width: 26rem;
-    padding: clamp(2rem, 4vw, 3rem);
-    /* Rotes Overlay-Panel wie in der Referenz */
+    /* Weiter nach links geholt: sitzt bündig an der linken Container-Kante */
+    max-width: min(30rem, 100%);
+    margin-left: 0;
+    padding: clamp(2rem, 3.5vw, 3rem);
     background: linear-gradient(135deg, rgba(229, 30, 33, 0.96), rgba(180, 16, 19, 0.9));
     color: #fff;
   }

@@ -1,25 +1,65 @@
 ---
-import { contactSection } from '../../data/site';
+import { contactSection, company } from '../../data/site';
+
+const { address, contact } = company;
 ---
 
-<section class="contact photo-placeholder" id="kontakt" aria-labelledby="contact-title">
-  <div class="contact__tint" aria-hidden="true"></div>
-  <div class="photo-placeholder__tag">
-    <span>Bild-Platzhalter: Baustellenfoto mit rotem Overlay (Vollbild-Hintergrund)</span>
-  </div>
+<section class="contact" id="kontakt" aria-labelledby="contact-title">
+  <div class="contact__bg" aria-hidden="true"></div>
 
-  <div class="container">
-    <form class="contact__panel" data-contact-form novalidate data-reveal="left">
-      <h2 class="contact__title" id="contact-title">{contactSection.title}</h2>
-      <p class="contact__text">{contactSection.text}</p>
+  <div class="container contact__grid">
+    <!-- Linke Spalte: Ansprache, Adresse, Telefon, E-Mail, Öffnungszeiten -->
+    <div class="contact__info" data-reveal>
+      <p class="contact__kicker">Kontaktieren Sie uns</p>
+      <h2 class="contact__title" id="contact-title">Wir sind für Sie da</h2>
+      <p class="contact__lead">{contactSection.text}</p>
+
+      <dl class="contact__meta">
+        <div class="contact__block">
+          <dt>Unser Standort</dt>
+          <dd>
+            {address.street}<br />
+            {address.zip} {address.city}<br />
+            {address.region}
+          </dd>
+        </div>
+
+        <div class="contact__block">
+          <dt>Telefon</dt>
+          <dd>
+            <a href={`tel:${contact.phoneCentral.replace(/\s/g, '')}`}>{contact.phoneCentralDisplay}</a><br />
+            <a href={`tel:${contact.mobile.replace(/\s/g, '')}`}>{contact.mobileDisplay}</a>
+          </dd>
+        </div>
+
+        <div class="contact__block">
+          <dt>E-Mail</dt>
+          <dd>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </dd>
+        </div>
+
+        <div class="contact__block">
+          <dt>Öffnungszeiten</dt>
+          <dd>
+            <strong>Montag bis Freitag:</strong> 08:00 – 17:00 Uhr<br />
+            <strong>Samstag &amp; Sonntag:</strong> Geschlossen
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Rechte Spalte: weißes Formular-Panel -->
+    <form class="contact__form" data-contact-form novalidate data-reveal="right">
+      <h3 class="contact__form-title">Kontakt</h3>
 
       <div class="form-field">
-        <label for="cf-name">Dein Name *</label>
+        <label for="cf-name">Vor &amp; Nachname *</label>
         <input type="text" id="cf-name" name="name" required autocomplete="name" />
       </div>
 
       <div class="form-field">
-        <label for="cf-email">Deine E-Mail-Adresse *</label>
+        <label for="cf-email">E-Mail *</label>
         <input type="email" id="cf-email" name="email" required autocomplete="email" />
       </div>
 
@@ -29,8 +69,8 @@ import { contactSection } from '../../data/site';
       </div>
 
       <div class="form-field">
-        <label for="cf-message">Deine Nachricht (optional)</label>
-        <textarea id="cf-message" name="message" rows="6"></textarea>
+        <label for="cf-message">Nachricht</label>
+        <textarea id="cf-message" name="message" rows="5"></textarea>
       </div>
 
       <!-- Honeypot gegen Spam-Bots: für Menschen unsichtbar, bleibt leer -->
@@ -40,19 +80,24 @@ import { contactSection } from '../../data/site';
       </div>
 
       <div class="form-field form-field--consent">
-        <input type="checkbox" id="cf-privacy" name="privacy" required />
-        <label for="cf-privacy">
-          Ich habe die <a href="/datenschutz">Datenschutzerklärung</a> zur Kenntnis genommen
-          und bin damit einverstanden, dass meine Angaben zur Bearbeitung der Anfrage
-          gespeichert werden. *
+        <p class="form-field__consent-label">Einverständniserklärung *</p>
+        <label>
+          <input type="checkbox" id="cf-privacy" name="privacy" required />
+          <span>
+            Ich stimme zu, dass meine Angaben und Daten zur Beantwortung meiner Anfrage
+            gemäß der <a href="/datenschutz">Datenschutzerklärung</a> verarbeitet werden.
+            Meine Einwilligung kann ich jederzeit per E-Mail an
+            <a href={`mailto:${contact.email}`}>{contact.email}</a> widerrufen.
+          </span>
         </label>
       </div>
 
-      <p class="form-note">
-        * Pflichtfelder. Ihre Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet.
-      </p>
-
-      <button type="submit" class="btn btn--red">Senden</button>
+      <button type="submit" class="contact__submit">
+        <span>Absenden</span>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </button>
 
       <p class="form-status" data-form-status role="status" aria-live="polite"></p>
     </form>
@@ -63,35 +108,99 @@ import { contactSection } from '../../data/site';
   .contact {
     position: relative;
     padding-block: clamp(4rem, 8vw, 6.5rem);
+    color: #fff;
+    overflow: hidden;
+    isolation: isolate;
   }
 
-  /* Rotes Overlay über dem Hintergrundfoto – wie in der Referenz */
-  .contact__tint {
+  /* Roter Hintergrund mit dezenten Weltkarten-Punkten */
+  .contact__bg {
     position: absolute;
     inset: 0;
-    background: linear-gradient(120deg, rgba(229, 30, 33, 0.85), rgba(190, 18, 21, 0.82));
-    mix-blend-mode: normal;
+    z-index: -1;
+    background:
+      radial-gradient(1200px 500px at 80% 30%, rgba(255, 255, 255, 0.08), transparent 60%),
+      radial-gradient(900px 500px at 15% 90%, rgba(0, 0, 0, 0.2), transparent 60%),
+      linear-gradient(135deg, #d61a1d 0%, var(--color-red) 45%, #b81417 100%);
   }
 
-  .contact__panel {
-    position: relative;
-    z-index: 2;
-    max-width: 34rem;
-    background: var(--color-dark);
-    color: var(--color-on-dark);
-    padding: clamp(1.75rem, 4vw, 2.75rem);
+  .contact__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  /* --- Linke Spalte --- */
+  .contact__kicker {
+    margin: 0 0 1rem;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
   }
 
   .contact__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    line-height: 1.1;
     color: #fff;
-    font-size: clamp(1.6rem, 3vw, 2.1rem);
-    margin-bottom: 0.5rem;
+    margin: 0 0 1.25rem;
   }
 
-  .contact__text {
-    color: var(--color-on-dark-soft);
+  .contact__lead {
+    max-width: 42rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 clamp(2rem, 4vw, 3rem);
+    line-height: 1.7;
+  }
+
+  .contact__meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.75rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3rem);
+    margin: 0;
+  }
+
+  .contact__block dt {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #fff;
+    margin-bottom: 0.6rem;
+  }
+
+  .contact__block dd {
+    margin: 0;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.9);
     font-size: 0.95rem;
-    margin-bottom: 1.75rem;
+  }
+
+  .contact__block a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+    transition: border-color 0.2s ease;
+  }
+
+  .contact__block a:hover {
+    border-color: #fff;
+  }
+
+  /* --- Rechte Spalte: weißes Formular --- */
+  .contact__form {
+    background: #fff;
+    color: var(--color-ink);
+    padding: clamp(1.75rem, 3.5vw, 2.75rem);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  }
+
+  .contact__form-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 2.8vw, 2rem);
+    margin: 0 0 1.5rem;
+    color: var(--color-ink);
   }
 
   .form-field {
@@ -100,37 +209,35 @@ import { contactSection } from '../../data/site';
 
   .form-field label {
     display: block;
-    font-weight: 600;
-    font-size: 0.95rem;
-    margin-bottom: 0.4rem;
-    color: #fff;
+    font-size: 0.85rem;
+    color: var(--color-slate);
+    margin-bottom: 0.35rem;
   }
 
   .form-field input[type='text'],
   .form-field input[type='email'],
   .form-field textarea {
     width: 100%;
-    padding: 0.75rem 0.9rem;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    font: inherit;
+    padding: 0.55rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--color-line);
+    background: transparent;
     color: var(--color-ink);
-    background: #fff;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    font: inherit;
+    transition: border-color 0.2s ease;
   }
 
   .form-field input:focus,
   .form-field textarea:focus {
     outline: none;
     border-color: var(--color-red);
-    box-shadow: 0 0 0 3px rgba(229, 30, 33, 0.35);
   }
 
   .form-field textarea {
     resize: vertical;
+    min-height: 5rem;
   }
 
-  /* Honeypot unsichtbar positionieren (nicht display:none – Bots erkennen das) */
   .form-field--hp {
     position: absolute;
     left: -9999px;
@@ -138,49 +245,86 @@ import { contactSection } from '../../data/site';
   }
 
   .form-field--consent {
+    margin-top: 0.5rem;
+  }
+
+  .form-field__consent-label {
+    margin: 0 0 0.4rem;
+    font-size: 0.85rem;
+    color: var(--color-slate);
+  }
+
+  .form-field--consent > label {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 0.65rem;
     align-items: start;
+    margin: 0;
+    color: var(--color-slate);
+    font-size: 0.82rem;
+    line-height: 1.5;
   }
 
   .form-field--consent input {
-    margin-top: 0.3rem;
-    width: 1.05rem;
-    height: 1.05rem;
+    margin-top: 0.15rem;
+    width: 1rem;
+    height: 1rem;
     accent-color: var(--color-red);
   }
 
-  .form-field--consent label {
-    font-weight: 400;
-    font-size: 0.83rem;
-    color: var(--color-on-dark-soft);
-    margin: 0;
-  }
-
   .form-field--consent a {
-    color: #fff;
+    color: var(--color-red);
   }
 
-  .form-note {
-    font-size: 0.75rem;
-    color: var(--color-on-dark-soft);
-    margin-bottom: 1.4rem;
+  .contact__submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--color-red);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-red);
+    padding-bottom: 0.35rem;
+    transition: color 0.2s ease, border-color 0.2s ease, gap 0.2s ease;
+  }
+
+  .contact__submit:hover {
+    color: var(--color-red-dark, #b81417);
+    gap: 0.9rem;
   }
 
   .form-status {
     margin: 1rem 0 0;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     font-weight: 600;
     min-height: 1.4em;
+    color: var(--color-slate);
   }
 
   .form-status.is-success {
-    color: #7ede9c;
+    color: #157a3a;
   }
 
   .form-status.is-error {
-    color: #ffb3b4;
+    color: #b81417;
+  }
+
+  @media (max-width: 62rem) {
+    .contact__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .contact__meta {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 

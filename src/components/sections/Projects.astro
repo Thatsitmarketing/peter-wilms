@@ -2,8 +2,9 @@
 import { projects, projectsSection } from '../../data/site';
 ---
 
-<section class="section projects" id="projekte" aria-labelledby="projects-title">
-  <!-- Überbreite Riesen-Headline wie in der Referenz -->
+<section class="section projects" id="projekte" aria-labelledby="projects-title" data-projects>
+  <!-- Überbreite Riesen-Headline wie in der Referenz.
+       Farbe wird per Scroll-Progress von hellgrau nach dunkel interpoliert. -->
   <h2 class="projects__giant" id="projects-title" aria-label={projectsSection.title} data-reveal>
     {projectsSection.title}
   </h2>
@@ -45,7 +46,14 @@ import { projects, projectsSection } from '../../data/site';
   .projects__giant {
     font-size: clamp(3.5rem, 12vw, 11rem);
     line-height: 0.95;
-    color: #d9d9d9;
+    /* Wird vom Scroll-Progress verdunkelt: 0 = sehr blass, 1 = ink */
+    --heading-dark: 0;
+    color: rgb(
+      calc(220 - (220 - 15) * var(--heading-dark)),
+      calc(220 - (220 - 15) * var(--heading-dark)),
+      calc(220 - (220 - 15) * var(--heading-dark))
+    );
+    transition: color 0.2s linear;
     white-space: nowrap;
     margin: 0 0 clamp(2rem, 4vw, 3.5rem);
     padding-inline: var(--gutter);
@@ -125,3 +133,27 @@ import { projects, projectsSection } from '../../data/site';
     }
   }
 </style>
+
+<script>
+  /**
+   * Projekt-Überschrift verdunkelt sich, je weiter die Sektion in den Viewport
+   * gescrollt wird. Wir setzen eine Custom Property auf der Headline.
+   */
+  const section = document.querySelector<HTMLElement>('[data-projects]');
+  const heading = section?.querySelector<HTMLElement>('.projects__giant');
+  if (section && heading) {
+    const clamp = (v: number) => Math.min(1, Math.max(0, v));
+    const update = () => {
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      // 0 = Sektion tritt gerade ein, 1 = Sektion nahezu durchgescrollt
+      const progress = clamp((vh - rect.top) / (rect.height + vh));
+      // Effekt startet ab ~10 % und ist bei 45 % komplett dunkel
+      const dark = clamp((progress - 0.1) / 0.35);
+      heading.style.setProperty('--heading-dark', dark.toFixed(3));
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+</script>
