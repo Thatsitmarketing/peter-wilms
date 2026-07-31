@@ -186,15 +186,16 @@ import { hero, stats } from '../../data/site';
     align-items: stretch;
     gap: 0.75rem;
     flex-shrink: 0;
-    /* Etwas nach innen versetzt, damit die Widgets nicht ganz außen kleben */
-    margin-inline-end: clamp(0.5rem, 3vw, 2.5rem);
+    /* Deutlich weiter nach innen gezogen – die Widgets stehen jetzt
+       zentraler im Hero statt am rechten Bildrand zu kleben. */
+    margin-inline-end: clamp(4rem, 12vw, 11rem);
   }
 
   .hero__ral {
     display: block;
     width: auto;
-    /* Auf die gleiche Höhe wie das Bewertungs-Widget skalieren */
-    height: 11rem;
+    /* Größer und auf der gleichen Höhe wie das Bewertungs-Widget */
+    height: clamp(10rem, 15vh, 14rem);
     object-fit: contain;
     filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.18));
   }
@@ -223,8 +224,9 @@ import { hero, stats } from '../../data/site';
   }
 
   .award-card--rating {
-    width: 9.5rem;
-    min-height: 11rem;
+    width: 8rem;
+    height: clamp(10rem, 15vh, 14rem);
+    padding: 0.65rem 0.5rem;
     gap: 0.15rem;
   }
 
@@ -286,8 +288,8 @@ import { hero, stats } from '../../data/site';
 
   @media (max-width: 40rem) {
     .award-card--rating {
-      width: 8.5rem;
-      min-height: 10rem;
+      width: 7.5rem;
+      height: 10rem;
     }
 
     .hero__ral {
