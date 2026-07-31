@@ -63,7 +63,7 @@ const marquee = [...clients, ...clients];
   .clients__title {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    font-size: clamp(1.15rem, 1.7vw, 1.4rem);
     color: var(--color-ink);
     margin: 0;
     line-height: 1.3;
@@ -106,8 +106,11 @@ const marquee = [...clients, ...clients];
     flex: 0 0 auto;
     display: grid;
     place-items: center;
-    width: clamp(7rem, 10vw, 10rem);
-    height: 4rem;
+    /* Höhe deutlich vergrößert, damit hochformatige Logos (z. B. Wappen)
+       nicht optisch abgeschnitten wirken. Alle Kacheln teilen jetzt die
+       Höhe des größten Logos. */
+    width: clamp(8rem, 12vw, 12rem);
+    height: 7rem;
     padding-inline: 0.5rem;
   }
 
