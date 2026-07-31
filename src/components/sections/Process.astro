@@ -2,79 +2,102 @@
 import { processSection, processSteps } from '../../data/site';
 ---
 
-<section class="section process" id="ablauf" aria-labelledby="process-title">
-  <div class="container">
+<section class="process" id="ablauf" aria-labelledby="process-title">
+  <!-- Kopfbereich -->
+  <div class="container process__intro">
     <h2 class="section__title" id="process-title" data-reveal>{processSection.title}</h2>
     <p class="section__intro" data-reveal style="--reveal-delay: 0.1s">{processSection.intro}</p>
   </div>
 
-  <!-- Horizontaler Kartenstrang wie in der Referenz:
-       große Nummern, wechselnde Farbwelten, Fotos dazwischen -->
-  <div class="process__viewport" data-reveal style="--reveal-delay: 0.15s">
-    <div class="process__track" data-process-track tabindex="0" aria-label="Ablauf in vier Schritten – horizontal scrollbar">
-      {processSteps.map((step, index) => (
-        <>
-          <article class:list={['process-card', `process-card--${step.theme}`]} data-process-card>
-            <p class="process-card__number" aria-hidden="true">
-              {String(index + 1).padStart(2, '0')}
-            </p>
-            <p class="process-card__chip">{step.chip}</p>
-            <h3 class="process-card__subtitle">{step.subtitle}</h3>
-            <p class="process-card__text">{step.text}</p>
-          </article>
-          <div class="process__photo photo-placeholder" role="img" aria-label={`Platzhalter – ${step.photoLabel}`}>
-            <div class="photo-placeholder__tag"><span>{step.photoLabel}</span></div>
-          </div>
-        </>
-      ))}
-    </div>
+  <!-- Pinned Horizontal-Scroll:
+       Vertikales Scrollen im Sticky-Viewport wird per Transform
+       in horizontale Bewegung übersetzt.
+       Cards starten mit Innenabstand (nicht am linken Rand). -->
+  <div class="process__stage" data-process-stage>
+    <div class="process__viewport" data-process-viewport>
+      <div class="process__track" data-process-track>
+        {processSteps.map((step, index) => (
+          <>
+            <article class:list={['process-card', `process-card--${step.theme}`]} data-process-card>
+              <p class="process-card__number" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </p>
+              <p class="process-card__chip">{step.chip}</p>
+              <h3 class="process-card__subtitle">{step.subtitle}</h3>
+              <p class="process-card__text">{step.text}</p>
+            </article>
+            <div class="process__photo photo-placeholder" role="img" aria-label={`Platzhalter – ${step.photoLabel}`}>
+              <div class="photo-placeholder__tag"><span>{step.photoLabel}</span></div>
+            </div>
+          </>
+        ))}
+      </div>
 
-    <div class="container process__controls">
-      <button type="button" class="process__arrow" data-process-prev aria-label="Vorherige Schritte">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
-      </button>
-      <button type="button" class="process__arrow" data-process-next aria-label="Nächste Schritte">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-      </button>
+      <div class="container process__controls">
+        <div class="process__progress" aria-hidden="true">
+          <span class="process__progress-bar" data-process-progress></span>
+        </div>
+        <div class="process__buttons">
+          <button type="button" class="process__arrow" data-process-prev aria-label="Vorherige Schritte">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+          </button>
+          <button type="button" class="process__arrow" data-process-next aria-label="Nächste Schritte">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
   .process {
-    padding-bottom: clamp(3rem, 6vw, 5rem);
+    padding-block: clamp(3rem, 6vw, 5rem) 0;
   }
 
+  .process__intro {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  /* Stage bestimmt die Scroll-Distanz: höher = mehr horizontale Fläche */
+  .process__stage {
+    position: relative;
+    /* Wird per JS gesetzt (Fallback: eine Viewporthöhe pro sichtbarer Karte) */
+    height: 300vh;
+  }
+
+  /* Sticky-Viewport hält den Track auf Bildschirmhöhe, während vertikal gescrollt wird */
   .process__viewport {
-    margin-top: 2.5rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--color-bg);
   }
 
   .process__track {
     display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    /* linker Einzug wie Container */
+    gap: 1.25rem;
+    /* Karten kleben NICHT am linken Rand: gleicher Einzug wie der Container */
     padding-inline: var(--gutter);
-    gap: 0;
-  }
-
-  .process__track::-webkit-scrollbar {
-    display: none;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
   }
 
   .process-card {
-    flex: 0 0 clamp(20rem, 38vw, 34rem);
-    scroll-snap-align: start;
+    flex: 0 0 clamp(20rem, 34vw, 30rem);
     padding: clamp(1.75rem, 3vw, 3rem);
-    min-height: clamp(26rem, 48vw, 30rem);
+    min-height: clamp(26rem, 60vh, 34rem);
     display: flex;
     flex-direction: column;
   }
 
   .process__photo {
-    flex: 0 0 clamp(10rem, 22vw, 19rem);
-    min-height: clamp(26rem, 48vw, 30rem);
+    flex: 0 0 clamp(14rem, 22vw, 22rem);
+    min-height: clamp(26rem, 60vh, 34rem);
   }
 
   /* Farbwelten der Karten (Referenz: hell → dunkel → rot → hell) */
@@ -140,11 +163,34 @@ import { processSection, processSteps } from '../../data/site';
     color: var(--color-on-dark-soft);
   }
 
+  /* Steuerung + Fortschrittsanzeige unterhalb des Tracks */
   .process__controls {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: auto;
+    padding-block: 1.25rem 1.75rem;
+  }
+
+  .process__progress {
+    flex: 1;
+    height: 3px;
+    background: var(--color-line);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .process__progress-bar {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 12%;
+    background: var(--color-red);
+    transition: width 0.15s linear;
+  }
+
+  .process__buttons {
+    display: flex;
     gap: 0.6rem;
-    margin-top: 1.5rem;
   }
 
   .process__arrow {
@@ -170,27 +216,127 @@ import { processSection, processSteps } from '../../data/site';
     cursor: default;
     pointer-events: none;
   }
+
+  /* Mobile: horizontaler Swipe statt Pin-Scroll */
+  @media (max-width: 56rem) {
+    .process__stage {
+      height: auto;
+    }
+
+    .process__viewport {
+      position: static;
+      height: auto;
+      overflow: visible;
+    }
+
+    .process__track {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding-block: 0.5rem 1.5rem;
+    }
+
+    .process__track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .process-card,
+    .process__photo {
+      scroll-snap-align: start;
+      min-height: clamp(24rem, 70vw, 30rem);
+    }
+
+    .process__controls {
+      padding-inline: var(--gutter);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .process__stage {
+      height: auto;
+    }
+    .process__viewport {
+      position: static;
+      height: auto;
+      overflow-x: auto;
+    }
+    .process__track {
+      transform: none !important;
+    }
+  }
 </style>
 
 <script>
+  /**
+   * Pinned Horizontal-Scroll:
+   *  - Die Stage ist deutlich höher als der Viewport.
+   *  - Sobald die Stage im Sichtbereich ist, wird der Track anhand
+   *    des Scroll-Fortschritts nach links verschoben.
+   *  - Auf Mobilgeräten (< 56rem) wird stattdessen der native
+   *    Overflow-Scroll des Tracks verwendet.
+   */
+  const isDesktop = () => window.matchMedia('(min-width: 56rem)').matches;
+  const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const stage = document.querySelector<HTMLElement>('[data-process-stage]');
+  const viewport = document.querySelector<HTMLElement>('[data-process-viewport]');
   const track = document.querySelector<HTMLElement>('[data-process-track]');
+  const progress = document.querySelector<HTMLElement>('[data-process-progress]');
   const prev = document.querySelector<HTMLButtonElement>('[data-process-prev]');
   const next = document.querySelector<HTMLButtonElement>('[data-process-next]');
 
-  if (track && prev && next) {
-    const cardWidth = () =>
-      track.querySelector<HTMLElement>('[data-process-card]')?.offsetWidth ?? 480;
+  if (stage && viewport && track) {
+    let maxScroll = 0;
 
-    prev.addEventListener('click', () => track.scrollBy({ left: -cardWidth(), behavior: 'smooth' }));
-    next.addEventListener('click', () => track.scrollBy({ left: cardWidth(), behavior: 'smooth' }));
-
-    const updateArrows = () => {
-      const max = track.scrollWidth - track.clientWidth - 4;
-      prev.disabled = track.scrollLeft <= 4;
-      next.disabled = track.scrollLeft >= max;
+    const measure = () => {
+      if (!isDesktop() || prefersReduced()) {
+        stage.style.height = 'auto';
+        track.style.transform = 'translate3d(0,0,0)';
+        maxScroll = 0;
+        return;
+      }
+      // Wie weit muss sich der Track bewegen können?
+      maxScroll = track.scrollWidth - viewport.clientWidth;
+      if (maxScroll < 0) maxScroll = 0;
+      // Höhe der Stage = Viewport + horizontale Distanz (1:1 Übersetzung fühlt sich sanft an)
+      stage.style.height = `${viewport.clientHeight + maxScroll}px`;
+      update();
     };
-    updateArrows();
-    track.addEventListener('scroll', updateArrows, { passive: true });
-    window.addEventListener('resize', updateArrows);
+
+    const update = () => {
+      if (!isDesktop() || prefersReduced()) return;
+      const rect = stage.getBoundingClientRect();
+      const scrolled = Math.min(Math.max(-rect.top, 0), maxScroll);
+      track.style.transform = `translate3d(${-scrolled}px, 0, 0)`;
+      const ratio = maxScroll === 0 ? 1 : scrolled / maxScroll;
+      if (progress) progress.style.width = `${Math.max(12, Math.round(ratio * 100))}%`;
+      if (prev) prev.disabled = ratio <= 0.001;
+      if (next) next.disabled = ratio >= 0.999;
+    };
+
+    // Buttons scrollen die Stage vertikal weiter (weil der Effekt an vertical scroll gekoppelt ist)
+    const stepDistance = () => {
+      const card = track.querySelector<HTMLElement>('[data-process-card]');
+      return (card?.offsetWidth ?? 480) + 20;
+    };
+
+    prev?.addEventListener('click', () => {
+      window.scrollBy({ top: -stepDistance(), behavior: 'smooth' });
+    });
+    next?.addEventListener('click', () => {
+      window.scrollBy({ top: stepDistance(), behavior: 'smooth' });
+    });
+
+    // Mobile Ansicht: native Scroll-Buttons für den Track
+    const mobilePrev = () => track.scrollBy({ left: -stepDistance(), behavior: 'smooth' });
+    const mobileNext = () => track.scrollBy({ left: stepDistance(), behavior: 'smooth' });
+    prev?.addEventListener('click', () => { if (!isDesktop()) mobilePrev(); });
+    next?.addEventListener('click', () => { if (!isDesktop()) mobileNext(); });
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', measure);
+    // Bilder / Fonts können Layout ändern → nachmessen
+    window.addEventListener('load', measure);
+    measure();
   }
 </script>
