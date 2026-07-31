@@ -9,17 +9,10 @@ const { hero } = aboutPage;
   <p class="about-hero__watermark" aria-hidden="true">Über Uns</p>
 
   <div class="container about-hero__grid">
-    <div class="about-hero__content">
-      <span class="about-hero__kicker" data-reveal>{hero.kicker}</span>
-      <h1 class="about-hero__title" id="about-hero-title" data-reveal style="--reveal-delay: 0.08s">
-        {hero.title}
-      </h1>
-      <p class="about-hero__subline" data-reveal style="--reveal-delay: 0.16s">{hero.subline}</p>
-    </div>
-
     <!-- Brücken-Crossfade: die kaputte Brücke liegt vorne und wird beim Scrollen
-         zur sanierten Brücke überblendet. Beide Bilder ragen bewusst über die
-         Sektion hinaus, damit die Brücke sauber in den nächsten Abschnitt übergeht. -->
+         zur sanierten Brücke überblendet. Sie kommt von links herein und ragt
+         bewusst unten aus der Sektion heraus, sodass die Brücke ohne sichtbare
+         Kante in den nächsten Abschnitt übergeht. -->
     <div class="about-hero__bridge" aria-hidden="true">
       <img
         class="about-hero__bridge-img about-hero__bridge-img--after"
@@ -35,6 +28,14 @@ const { hero } = aboutPage;
         loading="eager"
         decoding="async"
       />
+    </div>
+
+    <div class="about-hero__content">
+      <span class="about-hero__kicker" data-reveal>{hero.kicker}</span>
+      <h1 class="about-hero__title" id="about-hero-title" data-reveal style="--reveal-delay: 0.08s">
+        {hero.title}
+      </h1>
+      <p class="about-hero__subline" data-reveal style="--reveal-delay: 0.16s">{hero.subline}</p>
     </div>
   </div>
 </section>
@@ -77,7 +78,8 @@ const { hero } = aboutPage;
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    /* Brücke links, Text rechts */
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     align-items: end;
     gap: clamp(1.5rem, 4vw, 4rem);
     min-height: inherit;
@@ -119,18 +121,18 @@ const { hero } = aboutPage;
     line-height: 1.6;
   }
 
-  /* Rechte Spalte – Brücken-Ausschnitt kommt von rechts und läuft unten aus dem Container heraus */
+  /* Linke Spalte – Brücken-Ausschnitt kommt von links und läuft unten aus dem Container heraus */
   .about-hero__bridge {
     position: relative;
     height: 100%;
     min-height: clamp(24rem, 55vh, 38rem);
-    margin-right: calc(var(--gutter, 1.5rem) * -1);
+    margin-left: calc(var(--gutter, 1.5rem) * -1);
     align-self: stretch;
   }
 
   .about-hero__bridge-img {
     position: absolute;
-    right: -6%;
+    left: -6%;
     /* Nach unten aus der Sektion hinausragen, sodass die Brücke ohne
        sichtbare Kante in den nächsten Abschnitt übergeht. */
     bottom: -12%;
@@ -138,7 +140,7 @@ const { hero } = aboutPage;
     max-width: none;
     height: auto;
     object-fit: contain;
-    object-position: right bottom;
+    object-position: left bottom;
     filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.18));
     will-change: opacity;
   }
@@ -175,12 +177,12 @@ const { hero } = aboutPage;
 
     .about-hero__bridge {
       min-height: 22rem;
-      margin-right: 0;
+      margin-left: 0;
       margin-inline: calc(var(--gutter, 1.5rem) * -1);
     }
 
     .about-hero__bridge-img {
-      right: 0;
+      left: 0;
       bottom: -8%;
       width: 100%;
     }
@@ -208,8 +210,9 @@ const { hero } = aboutPage;
       const total = rect.height + vh;
       const scrolled = vh - rect.top;
       const progress = clamp(scrolled / total);
-      // Erst nach ca. 20% Sichtbarkeit fange an zu blenden, bis 90% abschließen
-      const eased = clamp((progress - 0.2) / 0.7);
+      // Schneller Crossfade: bereits nach ca. 10% Sichtbarkeit starten
+      // und schon bei ~35% Fortschritt komplett saniert sein.
+      const eased = clamp((progress - 0.1) / 0.25);
       section.style.setProperty('--bridge-progress', eased.toFixed(3));
     };
 

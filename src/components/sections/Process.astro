@@ -84,8 +84,10 @@ import { processSection, processSteps } from '../../data/site';
   .process__track {
     display: flex;
     gap: 1.25rem;
-    /* Karten kleben NICHT am linken Rand: gleicher Einzug wie der Container */
-    padding-inline: var(--gutter);
+    /* Karten kleben NICHT am linken Rand: gleicher Einzug wie der Container.
+       Rechts zusätzlich ~10 vw Puffer, damit am Ende des Scrolls noch Luft
+       zwischen der letzten Kachel und dem rechten Bildschirmrand bleibt. */
+    padding-inline: var(--gutter) calc(var(--gutter) + 10vw);
     will-change: transform;
     transform: translate3d(0, 0, 0);
   }
