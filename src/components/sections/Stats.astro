@@ -1,0 +1,72 @@
+---
+import { stats } from '../../data/site';
+---
+
+<section class="stats" aria-label="Kennzahlen">
+  <div class="container">
+    <dl class="stats__grid">
+      {stats.map((stat, index) => (
+        <div class="stats__item" data-reveal style={`--reveal-delay: ${index * 0.12}s`}>
+          <dt class="stats__label">{stat.label}</dt>
+          <dd class="stats__value">
+            <span data-counter data-target={stat.value}>0</span>{stat.suffix}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .stats {
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0;
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .stats__item {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    text-align: center;
+    gap: 0.35rem;
+    padding-inline: 1rem;
+  }
+
+  .stats__item + .stats__item {
+    border-left: 1px solid var(--color-line);
+  }
+
+  .stats__value {
+    margin: 0;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    color: var(--color-ink);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stats__label {
+    font-size: 0.95rem;
+    color: var(--color-slate);
+  }
+
+  @media (max-width: 40rem) {
+    .stats__grid {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+
+    .stats__item + .stats__item {
+      border-left: none;
+      border-top: 1px solid var(--color-line);
+      padding-top: 1.75rem;
+    }
+  }
+</style>

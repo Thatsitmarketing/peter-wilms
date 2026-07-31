@@ -1,0 +1,92 @@
+---
+/**
+ * Klar erkennbarer Platzhalter für Bilder und Videos.
+ * Später einfach durch <Image>/<img> bzw. eine echte Videoeinbindung ersetzen.
+ *
+ * Verwendung:
+ *   <MediaPlaceholder label="Foto: Brückenuntersicht" ratio="16/9" />
+ *   <MediaPlaceholder type="video" label="Imagefilm" ratio="16/9" />
+ */
+
+interface Props {
+  label: string;
+  type?: 'image' | 'video';
+  ratio?: string;
+  class?: string;
+}
+
+const { label, type = 'image', ratio = '16/9', class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={['media-placeholder', className]}
+  style={`aspect-ratio: ${ratio};`}
+  role="img"
+  aria-label={`Platzhalter – ${label}`}
+>
+  {type === 'video' ? (
+    <span class="media-placeholder__play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+        <path d="M8 5.5v13l11-6.5z" />
+      </svg>
+    </span>
+  ) : (
+    <span class="media-placeholder__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <circle cx="8.5" cy="10" r="1.5" />
+        <path d="m3 17 5-4 3 2.5L16 11l5 5" />
+      </svg>
+    </span>
+  )}
+  <span class="media-placeholder__label">
+    {type === 'video' ? 'Video-Platzhalter' : 'Bild-Platzhalter'}: {label}
+  </span>
+</div>
+
+<style>
+  .media-placeholder {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px dashed #9aa7b4;
+    color: #6b7885;
+    overflow: hidden;
+    text-align: center;
+    padding: 1rem;
+    /* Diagonale Schraffur → als Platzhalter sofort erkennbar */
+    background: repeating-linear-gradient(
+        -45deg,
+        rgba(22, 33, 44, 0.04),
+        rgba(22, 33, 44, 0.04) 12px,
+        rgba(22, 33, 44, 0.09) 12px,
+        rgba(22, 33, 44, 0.09) 24px
+      ),
+      #e9edf1;
+  }
+
+  .media-placeholder__play {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: var(--color-ink);
+    color: #fff;
+    padding-left: 0.2rem;
+    box-shadow: 0 8px 24px rgba(22, 33, 44, 0.3);
+  }
+
+  .media-placeholder__label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    max-width: 30ch;
+    line-height: 1.4;
+  }
+</style>

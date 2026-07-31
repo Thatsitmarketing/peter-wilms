@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { company } from '../data/site';
+---
+
+<BaseLayout title={`Datenschutzerklärung – ${company.name}`} description="Datenschutzerklärung der Peter Willms Bauunternehmung GmbH">
+  <section class="section">
+    <div class="container legal">
+      <h1>Datenschutzerklärung</h1>
+
+      <div class="legal__notice" role="note">
+        <strong>Platzhalter:</strong> Diese Datenschutzerklärung ist eine strukturelle
+        Vorlage und muss vor dem Livegang final juristisch geprüft und auf die
+        tatsächlich eingesetzten Dienste abgestimmt werden.
+      </div>
+
+      <h2>1. Verantwortlicher</h2>
+      <p>
+        {company.name}<br />
+        {company.address.street}<br />
+        {company.address.zip} {company.address.city}<br />
+        E-Mail: <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a>
+      </p>
+
+      <h2>2. Hosting</h2>
+      <p>
+        Diese Website wird bei Cloudflare (Cloudflare, Inc.) gehostet. Beim Aufruf der
+        Website verarbeitet Cloudflare technisch notwendige Daten (z.&nbsp;B. IP-Adresse,
+        Datum und Uhrzeit des Zugriffs) zur Auslieferung und Absicherung der Website.
+        [Platzhalter: Details zum Auftragsverarbeitungsvertrag und zu
+        Standardvertragsklauseln ergänzen.]
+      </p>
+
+      <h2>3. Cookies und Einwilligung</h2>
+      <p>
+        Diese Website verwendet ausschließlich technisch notwendige Speicherung
+        (Speicherung Ihrer Cookie-Einstellungen im lokalen Speicher des Browsers).
+        Nicht notwendige Dienste und Inhalte werden erst nach Ihrer ausdrücklichen
+        Einwilligung geladen. Ihre Einwilligung können Sie jederzeit über den Link
+        „Cookie-Einstellungen" im Footer anpassen oder widerrufen.
+      </p>
+
+      <h2>4. Kontaktformular</h2>
+      <p>
+        Wenn Sie uns über das Kontaktformular eine Anfrage senden, verarbeiten wir die
+        von Ihnen angegebenen Daten (Name, E-Mail-Adresse, ggf. Firma und Telefonnummer
+        sowie Ihre Nachricht) ausschließlich zur Bearbeitung Ihrer Anfrage.
+        Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO (vorvertragliche
+        Maßnahmen) bzw. Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes
+        Interesse an der Beantwortung). [Platzhalter: Speicherdauer und ggf.
+        eingesetzten E-Mail-/Formular-Dienstleister ergänzen.]
+      </p>
+
+      <h2>5. Google Maps (Zwei-Klick-Lösung)</h2>
+      <p>
+        Auf dieser Website ist eine Karte von Google Maps vorgesehen. Die Karte wird
+        erst geladen, nachdem Sie ihr Laden aktiv angestoßen und in die Kategorie
+        „Darstellung &amp; Funktion" eingewilligt haben. Erst dann werden Daten
+        (u.&nbsp;a. Ihre IP-Adresse) an Google übertragen. Rechtsgrundlage ist
+        Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;a DSGVO (Einwilligung). [Platzhalter:
+        vollständige Google-Maps-Klausel ergänzen.]
+      </p>
+
+      <h2>6. Ihre Rechte</h2>
+      <p>
+        Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der
+        Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die Verarbeitung
+        Ihrer personenbezogenen Daten. Außerdem besteht ein Beschwerderecht bei einer
+        Datenschutzaufsichtsbehörde. [Platzhalter: zuständige Aufsichtsbehörde für NRW
+        ergänzen – Landesbeauftragte für Datenschutz und Informationsfreiheit NRW.]
+      </p>
+
+      <h2>7. Externe Schriften und Skripte</h2>
+      <p>
+        Diese Website verwendet keine externen Schriftarten (z.&nbsp;B. Google Fonts)
+        und lädt keine Skripte von Drittservern ohne Ihre Einwilligung.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal {
+    max-width: 46rem;
+  }
+
+  .legal h1 {
+    font-size: 2rem;
+  }
+
+  .legal h2 {
+    font-size: 1.15rem;
+    margin-top: 2rem;
+  }
+
+  .legal__notice {
+    background: #fef3e6;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-block: 1.5rem;
+    font-size: 0.92rem;
+  }
+</style>

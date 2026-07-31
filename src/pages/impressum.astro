@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { company } from '../data/site';
+---
+
+<BaseLayout title={`Impressum – ${company.name}`} description="Impressum der Peter Willms Bauunternehmung GmbH">
+  <section class="section">
+    <div class="container legal">
+      <h1>Impressum</h1>
+
+      <div class="legal__notice" role="note">
+        <strong>Platzhalter:</strong> Die Inhalte dieser Seite müssen vor dem Livegang
+        final juristisch geprüft und abgestimmt werden (u.&nbsp;a. Handelsregister,
+        Geschäftsführung, USt-IdNr., Aufsichtsbehörde/Kammer).
+      </div>
+
+      <h2>Angaben gemäß § 5 DDG</h2>
+      <p>
+        {company.name}<br />
+        {company.address.street}<br />
+        {company.address.zip} {company.address.city}
+      </p>
+
+      <h2>Vertreten durch</h2>
+      <p>[Platzhalter: Geschäftsführer:in eintragen]</p>
+
+      <h2>Kontakt</h2>
+      <p>
+        Telefon: {company.contact.phoneCentralDisplay}<br />
+        Telefax: {company.contact.fax}<br />
+        E-Mail: <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a>
+      </p>
+
+      <h2>Registereintrag</h2>
+      <p>
+        [Platzhalter: Registergericht und Handelsregisternummer eintragen]
+      </p>
+
+      <h2>Umsatzsteuer-ID</h2>
+      <p>
+        [Platzhalter: Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG eintragen]
+      </p>
+
+      <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+      <p>[Platzhalter: Name und Anschrift der verantwortlichen Person eintragen]</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal {
+    max-width: 46rem;
+  }
+
+  .legal h1 {
+    font-size: 2rem;
+  }
+
+  .legal h2 {
+    font-size: 1.15rem;
+    margin-top: 2rem;
+  }
+
+  .legal__notice {
+    background: #fef3e6;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-block: 1.5rem;
+    font-size: 0.92rem;
+  }
+</style>
