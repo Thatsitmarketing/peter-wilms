@@ -31,8 +31,8 @@ export const company = {
 
 export const hero = {
   badge: 'Spezialisiert seit 2006',
-  /* weiches Trennzeichen, damit das Kompositum sauber umbricht */
-  title: 'Brücken- und Bauwerks­instandsetzung',
+  /* Zeilenumbruch ohne sichtbaren Bindestrich – wird per set:html gerendert */
+  title: 'Brücken- und Bauwerks<br>instandsetzung',
   subline:
     'Fachgerechte Sanierung und Instandsetzung für öffentliche und gewerbliche Auftraggeber in ganz NRW',
   ctaPrimary: { label: 'Projekt anfragen', href: '#kontakt' },
