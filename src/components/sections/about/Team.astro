@@ -1,0 +1,105 @@
+---
+import { aboutPage } from '../../../data/site';
+
+const { team } = aboutPage;
+---
+
+<section class="section team" id="team" aria-labelledby="team-title">
+  <div class="container">
+    <div class="team__head">
+      <span class="section__kicker" data-reveal>{team.kicker}</span>
+      <h2 class="section__title" id="team-title" data-reveal style="--reveal-delay: 0.06s">
+        {team.title}
+      </h2>
+      <p class="section__intro" data-reveal style="--reveal-delay: 0.12s">{team.intro}</p>
+    </div>
+
+    <ul class="team__list">
+      {team.members.map((member, index) => (
+        <li class="team-card" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+          <img
+            class="team-card__photo"
+            src={member.photo}
+            alt={`${member.name} – ${member.role}`}
+            width="1080"
+            height="1400"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="team-card__body">
+            <h3 class="team-card__name">{member.name}</h3>
+            <p class="team-card__role">{member.role}</p>
+            <p class="team-card__qualification">{member.qualification}</p>
+            <p class="team-card__text">{member.text}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .team__head {
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .team__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .team-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+  }
+
+  .team-card__photo {
+    width: 100%;
+    /* height muss gesetzt werden, sonst gewinnt das height-Attribut über aspect-ratio */
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: top center;
+    filter: grayscale(1);
+    transition: filter 0.35s ease;
+  }
+
+  .team-card:hover .team-card__photo {
+    filter: grayscale(0);
+  }
+
+  .team-card__body {
+    padding: 1.75rem;
+  }
+
+  .team-card__name {
+    font-size: 1.35rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .team-card__role {
+    margin: 0 0 0.15rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--color-red);
+  }
+
+  .team-card__qualification {
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    color: var(--color-slate);
+  }
+
+  .team-card__text {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-slate);
+  }
+</style>

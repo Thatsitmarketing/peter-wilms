@@ -24,8 +24,8 @@
   --font-heading: 'Syne', 'Arial Black', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
 
-  /* Layout */
-  --container: 78rem;
+  /* Layout – volle Breite mit 10 % Innenabstand links/rechts */
+  --gutter: 10%;
   --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.05), 0 12px 32px rgba(0, 0, 0, 0.09);
 
   /* Animation */
@@ -70,6 +70,10 @@ h4 {
   line-height: 1.15;
   margin: 0 0 0.75em;
   letter-spacing: 0.01em;
+  /* Lange deutsche Komposita sollen umbrechen statt das Layout zu sprengen.
+     `anywhere` (nicht `break-word`) senkt auch die min-content-Breite. */
+  hyphens: auto;
+  overflow-wrap: anywhere;
 }
 
 p {
@@ -83,9 +87,16 @@ a {
 /* ---------- Wiederkehrende Bausteine ---------- */
 
 .container {
-  max-width: var(--container);
+  width: 100%;
   margin-inline: auto;
-  padding-inline: clamp(1.25rem, 4vw, 2rem);
+  padding-inline: var(--gutter);
+}
+
+/* Auf schmalen Viewports wären 10 % zu wenig Platz für den Textfluss */
+@media (max-width: 48rem) {
+  :root {
+    --gutter: 1.5rem;
+  }
 }
 
 .section {

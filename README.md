@@ -28,10 +28,17 @@ Umsetzung nach der abgestimmten Design-Referenz:
 - **Farben:** Rot `#E51E21`, Dunkelgrau `#333333`, Weiß/`#FAFAFA`, Footer Schwarz
 - **Schriften:** Syne 700 (Headlines) und Inter 400/600 (Fließtext) – selbst
   gehostet über `@fontsource` (kein Google-Fonts-CDN → DSGVO-unkritisch)
+- **Layout:** volle Seitenbreite mit 10 % Innenabstand links und rechts
+  (`--gutter` in `src/styles/global.css`, unter 48 rem auf `1.5rem` reduziert,
+  weil 10 % auf Mobilgeräten zu wenig Textbreite lassen). Alle Sections nutzen
+  dafür `.container`.
 - **Section-Reihenfolge (Startseite):** Vollbild-Hero mit Kennzahlen →
   Auftraggeber-Logoleiste → Leistungen (dunkle Bildkacheln) → Über uns →
   Videobereich → Ablauf (horizontaler Kartenstrang 01–04) → Unsere Projekte →
   Kundenstimmen → Job-CTA → FAQ → Kontaktformular
+- **Section-Reihenfolge (Über Uns):** Hero → Wer wir sind (inkl. Eckdaten) →
+  Qualifikationen → Firmengeschichte (Zeitstrahl) → Ansprechpartner →
+  Auftraggeber-Logoleiste → FAQ → Kontaktformular
 
 ## Projektstruktur
 
@@ -45,13 +52,20 @@ src/
     sections/                ← Eine Datei pro Section, einzeln austauschbar
       Hero / ClientLogos / Services / About / VideoSection / Process /
       Projects / Testimonials / JobsCta / Faq / Contact
+      about/                 ← nur für /ueber-uns
+        AboutHero / AboutIntro / Qualifications / History / Team
   pages/
     index.astro              ← Startseite (Reihenfolge der Sections)
+    ueber-uns.astro          ← Seite „Über Uns"
     impressum.astro          ← Platzhalter, Texte final abstimmen!
     datenschutz.astro        ← Platzhalter, Texte final abstimmen!
   scripts/
     consent.ts               ← Consent-Logik (siehe unten)
     animations.ts            ← Scroll-Reveal + Kennzahlen-Zähler
+public/
+  logo/                      ← Firmenlogo farbig + weiß (für dunkle Flächen)
+  logos/                     ← Auftraggeber-/Partnerlogos der Logoleiste
+  team/                      ← Porträts der Ansprechpartner
 functions/
   api/contact.ts             ← Cloudflare Pages Function (Formular-Stub)
 ```
@@ -59,9 +73,22 @@ functions/
 Inhalte ändern → fast immer nur `src/data/site.ts` anfassen.
 Section-Reihenfolge ändern → `src/pages/index.astro`.
 
+## Medien
+
+Bereits eingepflegt (in `public/`):
+
+- **Firmenlogo** in zwei Fassungen – farbig für helle Flächen, weiß für dunkle.
+  Der Header blendet über dem Hero automatisch auf die weiße Fassung um.
+- **Auftraggeber-/Partnerlogos** in der Logoleiste (`ClientLogos.astro`),
+  standardmäßig in Graustufen, beim Hover in Originalfarbe.
+- **Porträts** der drei Ansprechpartner auf der Seite „Über Uns".
+
+Gepflegt werden diese Pfade in `src/data/site.ts` (`brandLogo`, `clients`,
+`aboutPage.team`).
+
 ## Medien-Platzhalter
 
-Alle Bilder/Videos sind bewusst als klar erkennbare Platzhalter umgesetzt:
+Die übrigen Bilder/Videos sind bewusst als klar erkennbare Platzhalter umgesetzt:
 schraffierte Flächen (`.photo-placeholder`) mit Beschriftungs-Tag bzw. eine
 Videobox mit Play-Symbol. Beim Einpflegen echter Medien die jeweilige
 Platzhalterfläche durch `<img>`/`<Image>` (als `object-fit: cover`-Hintergrund)
@@ -96,7 +123,8 @@ Rest der Website nutzt ausschließlich die drei dokumentierten Mechanismen
 ## Offene Punkte vor Livegang
 
 - [ ] Impressum und Datenschutzerklärung juristisch final abstimmen (Platzhalter!)
-- [ ] Echte Fotos/Videos und Auftraggeber-Logos (mit Freigabe) einpflegen
+- [ ] Echte Fotos/Videos für die verbliebenen Platzhalterflächen einpflegen
+- [ ] Freigabe der Auftraggeber für die Verwendung ihrer Logos einholen
 - [ ] Referenzprojekte mit echten Daten befüllen (`src/data/site.ts`)
 - [ ] E-Mail-Versand des Kontaktformulars anbinden (`functions/api/contact.ts`)
 - [ ] Finale Domain in `astro.config.mjs` (`site`) prüfen

@@ -31,7 +31,8 @@ export const company = {
 
 export const hero = {
   badge: 'Spezialisiert seit 2006',
-  title: 'Brücken- und Bauwerksinstandsetzung',
+  /* weiches Trennzeichen, damit das Kompositum sauber umbricht */
+  title: 'Brücken- und Bauwerks­instandsetzung',
   subline:
     'Fachgerechte Sanierung und Instandsetzung für öffentliche und gewerbliche Auftraggeber in ganz NRW',
   ctaPrimary: { label: 'Projekt anfragen', href: '#kontakt' },
@@ -46,15 +47,25 @@ export const stats = [
   { value: 200, suffix: '+', label: 'zufriedene Auftraggeber' },
 ] as const;
 
-/** Logoleiste – Platzhalter, echte Logos folgen nach Freigabe der Auftraggeber. */
+/** Logoleiste – Auftraggeber und Partner (Dateien unter /public/logos). */
 export const clients = [
-  'Straßen.NRW',
-  'Stadt Minden',
-  'EUROVIA',
-  'PORR',
-  'Heitkamp',
-  'BLB Köln',
+  { name: 'Straßen.NRW', logo: '/logos/strassen-nrw.png' },
+  { name: 'BLB Köln', logo: '/logos/blb-koeln.png' },
+  { name: 'Stadt Minden', logo: '/logos/stadt-minden.png' },
+  { name: 'Stadt Rietberg', logo: '/logos/stadt-rietberg.png' },
+  { name: 'EUROVIA', logo: '/logos/eurovia.png' },
+  { name: 'PORR', logo: '/logos/porr.png' },
+  { name: 'Heitkamp', logo: '/logos/heitkamp.png' },
+  { name: 'Göschler Gruppe', logo: '/logos/goeschler-gruppe.png' },
+  { name: 'Karl Pollmann', logo: '/logos/karl-pollmann.png' },
 ] as const;
+
+/** Firmenlogo in beiden Fassungen (farbig für helle, weiß für dunkle Flächen). */
+export const brandLogo = {
+  color: '/logo/peter-willms-bauunternehmung.png',
+  white: '/logo/peter-willms-bauunternehmung-weiss.png',
+  alt: 'Peter Willms Bauunternehmung – Brücken- und Bauwerksinstandsetzung',
+} as const;
 
 export const servicesSection = {
   title: 'Gebündelte Kompetenz für Ihre Sanierungsmaßnahme',
@@ -261,13 +272,143 @@ export const contactSection = {
   text: 'Ob Ausschreibung, Direktvergabe oder Nachunternehmerleistung – wir melden uns kurzfristig zurück.',
 } as const;
 
+/* ============================================================
+   Seite „Über Uns“ (/ueber-uns)
+   ============================================================ */
+
+export const aboutPage = {
+  hero: {
+    kicker: 'Über uns',
+    title: 'Spezialisiert. Erfahren. Verlässlich.',
+    subline:
+      'Seit Jahrzehnten stehen wir für die fachgerechte Instandsetzung von Brücken, Betonbauwerken und Infrastruktur – mit dem Anspruch, Bausubstanz zu erhalten statt sie zu ersetzen.',
+  },
+  intro: {
+    kicker: 'Wer wir sind',
+    title: 'Spezialisiert auf Betonbauwerke und Infrastruktur seit über 30 Jahren.',
+    paragraphs: [
+      'Von unserem Standort in Ennigerloh-Westkirchen aus sind wir auf die Instandsetzung von Brücken- und Betonbauwerken spezialisiert. Was als Nebengewerbe eines gelernten Maurers begann, ist heute ein etablierter Fachbetrieb mit eigenen Kolonnen, eigener Technik und einem klaren Schwerpunkt.',
+      'Zu unseren Auftraggebern zählen Kommunen und Landesbetriebe, Ingenieurbüros sowie General- und Bauunternehmen, die eine termingerechte, normkonforme Ausführung durch qualifiziertes Fachpersonal erwarten.',
+      'Unser Leistungsspektrum reicht von der Betoninstandsetzung über Korrosionsschutz und den Austausch von Fahrbahnübergängen bis zur Bauwerksabdichtung – koordiniert aus einer Hand.',
+    ],
+  },
+  qualifications: {
+    kicker: 'Qualifikation',
+    title: 'Zertifiziert für anspruchsvolle Anforderungen im Ingenieurbau.',
+    intro:
+      'Öffentliche Ausschreibungen setzen Nachweise voraus. Die folgenden Qualifikationen sind bei uns Standard – nicht die Ausnahme für einzelne Projekte.',
+    items: [
+      {
+        title: 'SIVV-Schein',
+        text: 'Schützen, Instandsetzen, Verbinden und Verstärken von Betonbauteilen – ausgeführt durch nach DAfStb qualifiziertes Personal.',
+      },
+      {
+        title: 'KOR-Schein',
+        text: 'Korrosionsschutzarbeiten an Stahlbauteilen nach den einschlägigen Vorgaben und Beschichtungssystemen.',
+      },
+      {
+        title: 'RSA',
+        text: 'Baustellensicherung nach den Richtlinien für die Sicherung von Arbeitsstellen an Straßen.',
+      },
+      {
+        title: 'ZTV-ING / ZTV-SIB',
+        text: 'Ausführung nach den technischen Vertragsbedingungen für Ingenieurbauten und Bauwerkserhaltung im Bundesfernstraßenbau.',
+      },
+      {
+        title: 'DIN EN 1504',
+        text: 'Normkonforme Betoninstandsetzung – von der Produktauswahl bis zur dokumentierten Ausführung.',
+      },
+      {
+        title: 'VOB-Erfahrung',
+        text: 'Routinierte Abwicklung öffentlicher Vergabeverfahren und Bauverträge nach VOB/A, VOB/B und VOB/C.',
+      },
+    ],
+  },
+  history: {
+    kicker: 'Unsere Geschichte',
+    title: 'Vom Nebengewerbe zum Spezialisten für Bauwerks­instandsetzung.',
+    milestones: [
+      {
+        year: '2006',
+        title: 'Der Anfang',
+        text: 'Der gelernte Maurer Peter Willms startet im Nebengewerbe: Kellerabdichtungen, Bodenbeschichtungen und Balkonsanierungen.',
+      },
+      {
+        year: '2012',
+        title: 'Industriemeister Hochbau',
+        text: 'Peter Willms schließt die Weiterbildung zum Industriemeister Hochbau ab und legt damit die fachliche Grundlage für größere Bauvorhaben.',
+      },
+      {
+        year: '2014',
+        title: 'Volle Spezialisierung',
+        text: 'Der Betrieb konzentriert sich vollständig auf die Brücken- und Bauwerksinstandsetzung. Die ersten Aufträge öffentlicher Auftraggeber folgen.',
+      },
+      {
+        year: '2015',
+        title: 'Verstärkung und neuer Standort',
+        text: 'Dipl.-Ing. Marco Tankulic kommt für die Bauleitung an Bord. Der Betrieb zieht an die Münsterlandstraße 1 in Ennigerloh-Westkirchen.',
+      },
+      {
+        year: '2016',
+        title: 'Umwandlung in eine GmbH',
+        text: 'Zum 1. Januar wird aus dem Einzelbetrieb die Peter Willms Bauunternehmung GmbH. Im Oktober erhält Marco Tankulic Prokura.',
+      },
+      {
+        year: '2017',
+        title: 'Zweite Halle',
+        text: 'Der Bau einer zweiten Lagerhalle schafft Platz für Technik, Material und die wachsende Zahl an Baustellen.',
+      },
+      {
+        year: 'Heute',
+        title: 'Etablierter Spezialist in NRW',
+        text: '13 Mitarbeiter und rund 4,5 Mio. € Jahresumsatz: ein fest etablierter Spezialist für Brücken- und Bauwerksinstandsetzung in Nordrhein-Westfalen.',
+      },
+    ],
+  },
+  facts: [
+    { value: '13', label: 'Mitarbeiter' },
+    { value: '4,5 Mio. €', label: 'Jahresumsatz' },
+    { value: '2006', label: 'Gegründet' },
+  ],
+  team: {
+    kicker: 'Ansprechpartner',
+    title: 'Die Menschen hinter der Bauunternehmung.',
+    intro:
+      'Kurze Wege, feste Ansprechpartner: Bei uns sprechen Sie mit den Personen, die Ihr Projekt auch tatsächlich verantworten.',
+    members: [
+      {
+        name: 'Peter Willms',
+        role: 'Geschäftsführung',
+        qualification: 'Maurer · Industriemeister Hochbau',
+        text: 'Gründer des Unternehmens und seit 2006 dabei. Er bringt handwerkliche Tiefe und unternehmerische Erfahrung in jedes Projekt ein – und ist auf den Baustellen genauso zu Hause wie im Angebotsgespräch.',
+        photo: '/team/peter-willms.jpg',
+      },
+      {
+        name: 'Verena Willms',
+        role: 'Geschäftsführung',
+        qualification: 'Kaufmännische Leitung',
+        text: 'Verantwortet die kaufmännische Leitung des Unternehmens – von der Beschaffung über die Vertragsabwicklung bis zur Abrechnung öffentlicher Bauvorhaben.',
+        photo: '/team/verena-willms.jpg',
+      },
+      {
+        name: 'Dipl.-Ing. Marco Tankulic',
+        role: 'Prokurist · Oberbauleitung',
+        qualification: 'Im Unternehmen seit 2015 · Prokura seit 2016',
+        text: 'Leitet die technische Bauleitung und Kalkulation und begleitet Projekte von der Angebotsphase bis zum Projektabschluss – Ansprechpartner für Auftraggeber und Ingenieurbüros.',
+        photo: '/team/marco-tankulic.jpg',
+      },
+    ],
+  },
+} as const;
+
 export const navigation = [
   { label: 'Home', href: '/' },
-  { label: 'Über Uns', href: '/#ueber-uns' },
+  { label: 'Über Uns', href: '/ueber-uns' },
 ] as const;
 
 export const footerNav = {
   leistungen: [
+    { label: 'Über Uns', href: '/ueber-uns' },
     { label: 'Leistungen', href: '/#leistungen' },
     { label: 'Ablauf', href: '/#ablauf' },
     { label: 'Projekte', href: '/#projekte' },

@@ -73,6 +73,12 @@ import { hero, stats } from '../../data/site';
     gap: 2.5rem;
   }
 
+  /* verhindert, dass lange Wörter das Flex-Item über den Viewport hinaus dehnen */
+  .hero__main {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .hero__badge {
     display: inline-block;
     background: var(--color-red);

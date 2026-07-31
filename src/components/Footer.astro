@@ -1,5 +1,5 @@
 ---
-import { company, footerNav } from '../data/site';
+import { brandLogo, company, footerNav } from '../data/site';
 
 const year = new Date().getFullYear();
 ---
@@ -7,18 +7,16 @@ const year = new Date().getFullYear();
 <footer class="footer">
   <div class="container footer__grid">
     <div class="footer__col">
-      <!-- Logo-Platzhalter: wird durch das echte (farbige) Logo ersetzt -->
-      <div class="footer__logo" role="img" aria-label="Platzhalter – Logo Peter Willms Bauunternehmung">
-        <svg viewBox="0 0 40 26" width="56" height="36" fill="none" aria-hidden="true">
-          <path d="M20 1 38 15H2L20 1z" fill="var(--color-red)" />
-          <rect x="7" y="15" width="26" height="10" fill="#f7c600" />
-        </svg>
-        <span>
-          <small>Brücken &amp; Bauwerks-Instandsetzung</small>
-          <strong>Peter Willms</strong>
-          Bauunternehmung
-        </span>
-      </div>
+      <a href="/" class="footer__brand" aria-label="Peter Willms Bauunternehmung – Startseite">
+        <img
+          class="footer__logo"
+          src={brandLogo.white}
+          alt={brandLogo.alt}
+          width="1024"
+          height="800"
+          loading="lazy"
+        />
+      </a>
     </div>
 
     <div class="footer__col">
@@ -105,30 +103,13 @@ const year = new Date().getFullYear();
     padding-block: 4rem 3rem;
   }
 
+  .footer__brand {
+    display: inline-block;
+  }
+
   .footer__logo {
-    display: inline-flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    border: 1px dashed #4a4a4a;
-    padding: 1rem 1.25rem;
-  }
-
-  .footer__logo span {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.3;
-    color: #cfcfcf;
-  }
-
-  .footer__logo small {
-    font-size: 0.6rem;
-    color: #8a8a8a;
-  }
-
-  .footer__logo strong {
-    font-family: var(--font-heading);
-    color: #fff;
-    font-size: 1.1rem;
+    width: clamp(11rem, 16vw, 14rem);
+    height: auto;
   }
 
   .footer__address {

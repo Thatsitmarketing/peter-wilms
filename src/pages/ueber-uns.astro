@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AboutHero from '../components/sections/about/AboutHero.astro';
+import AboutIntro from '../components/sections/about/AboutIntro.astro';
+import Qualifications from '../components/sections/about/Qualifications.astro';
+import History from '../components/sections/about/History.astro';
+import Team from '../components/sections/about/Team.astro';
+import ClientLogos from '../components/sections/ClientLogos.astro';
+import Faq from '../components/sections/Faq.astro';
+import Contact from '../components/sections/Contact.astro';
+---
+
+<BaseLayout
+  title="Über uns – Peter Willms Bauunternehmung GmbH"
+  description="Spezialisiert, erfahren, verlässlich: Seit 2006 stehen wir für fachgerechte Brücken- und Bauwerksinstandsetzung in NRW. Qualifikationen, Firmengeschichte und Ansprechpartner im Überblick."
+>
+  <AboutHero />
+  <AboutIntro />
+  <Qualifications />
+  <History />
+  <Team />
+  <ClientLogos title="Auftraggeber und Partner, für die wir arbeiten" soft />
+  <Faq />
+  <Contact />
+</BaseLayout>
