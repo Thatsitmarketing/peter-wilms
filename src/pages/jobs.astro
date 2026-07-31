@@ -1,0 +1,251 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import JobsCta from '../components/sections/JobsCta.astro';
+import Faq from '../components/sections/Faq.astro';
+import Contact from '../components/sections/Contact.astro';
+import { jobsPage, company } from '../data/site';
+
+const applyMailto = (position: string) =>
+  `mailto:${company.contact.email}?subject=${encodeURIComponent(`Bewerbung: ${position}`)}`;
+---
+
+<BaseLayout
+  title="Jobs & Karriere – Peter Willms Bauunternehmung GmbH"
+  description="Bauen Sie Ihre Karriere mit uns auf: Offene Positionen bei der Peter Willms Bauunternehmung in Ennigerloh-Westkirchen. Polier, Bauleiter, Maurer und mehr."
+>
+  <PageHero
+    kicker={jobsPage.hero.kicker}
+    title={jobsPage.hero.title}
+    subline={jobsPage.hero.subline}
+    photoTag="Bild-Platzhalter: Team auf der Baustelle"
+  />
+
+  <!-- Offene Positionen -->
+  <section class="section positions" aria-labelledby="positions-title">
+    <div class="container">
+      <div class="positions__head">
+        <span class="section__kicker" data-reveal>{jobsPage.positionsIntro.kicker}</span>
+        <h2 class="section__title" id="positions-title" data-reveal style="--reveal-delay: 0.05s">
+          {jobsPage.positionsIntro.title}
+        </h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.1s">
+          {jobsPage.positionsIntro.text}
+        </p>
+      </div>
+
+      <ul class="positions__grid">
+        {jobsPage.positions.map((position, index) => (
+          <li class="position" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+            <p class="position__type">{position.type}</p>
+            <h3 class="position__title">{position.title}</h3>
+            <p class="position__text">{position.text}</p>
+            <a class="btn btn--red btn--small" href={applyMailto(position.title)}>{position.cta}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Kultur/Values -->
+  <section class="section section--soft benefits" aria-labelledby="benefits-title">
+    <div class="container benefits__grid">
+      <div>
+        <span class="section__kicker" data-reveal>{jobsPage.benefits.kicker}</span>
+        <h2 class="section__title" id="benefits-title" data-reveal style="--reveal-delay: 0.05s">
+          Das erwarten wir — und geben es Ihnen zurück.
+        </h2>
+      </div>
+      <ul class="benefits__list">
+        {jobsPage.benefits.items.map((item, index) => (
+          <li class="benefit" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+            <h3 class="benefit__title">{item.title}</h3>
+            <p class="benefit__text">{item.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Kultur-Statement -->
+  <section class="section culture" aria-labelledby="culture-title">
+    <div class="container culture__grid">
+      <div>
+        <span class="section__kicker" data-reveal>{jobsPage.culture.kicker}</span>
+        <h2 class="section__title" id="culture-title" data-reveal style="--reveal-delay: 0.05s">
+          {jobsPage.culture.title}
+        </h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.1s">
+          {jobsPage.culture.text}
+        </p>
+      </div>
+      <div class="culture__media photo-placeholder" aria-hidden="true">
+        <div class="photo-placeholder__tag">
+          <span>Bild-Platzhalter: Kollegen im Gespräch</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prozess -->
+  <section class="section section--dark process-steps" aria-labelledby="process-steps-title">
+    <div class="container">
+      <span class="section__kicker" data-reveal>{jobsPage.process.kicker}</span>
+      <h2 class="section__title" id="process-steps-title" data-reveal style="--reveal-delay: 0.05s">
+        {jobsPage.process.title}
+      </h2>
+
+      <ol class="process-steps__list">
+        {jobsPage.process.steps.map((step, index) => (
+          <li class="process-step" data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
+            <span class="process-step__day">{step.day}</span>
+            <span class="process-step__title">{step.title}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <JobsCta />
+  <Faq />
+  <Contact />
+</BaseLayout>
+
+<style>
+  .positions__head {
+    max-width: 42rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .positions__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+
+  .position {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: box-shadow 0.25s ease, transform 0.25s var(--ease-out);
+  }
+
+  .position:hover {
+    box-shadow: var(--shadow-card);
+    transform: translateY(-3px);
+  }
+
+  .position__type {
+    margin: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-red);
+  }
+
+  .position__title {
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    margin: 0.2rem 0 0.4rem;
+    color: var(--color-ink);
+  }
+
+  .position__text {
+    margin: 0 0 1.25rem;
+    color: var(--color-slate);
+    font-size: 0.95rem;
+    flex: 1;
+  }
+
+  .benefits__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .benefits__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .benefit {
+    padding: 1.5rem;
+    background: #fff;
+    border-left: 3px solid var(--color-red);
+  }
+
+  .benefit__title {
+    margin: 0 0 0.4rem;
+    font-size: 1.1rem;
+  }
+
+  .benefit__text {
+    margin: 0;
+    color: var(--color-slate);
+    font-size: 0.95rem;
+  }
+
+  .culture__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .culture__media {
+    aspect-ratio: 4 / 3;
+  }
+
+  .process-steps__list {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1.1rem;
+    counter-reset: step;
+  }
+
+  .process-step {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .process-step__day {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-red);
+    letter-spacing: 0.05em;
+  }
+
+  .process-step__title {
+    color: #fff;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 56rem) {
+    .benefits__grid,
+    .culture__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .process-step {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+  }
+</style>

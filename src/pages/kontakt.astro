@@ -1,0 +1,226 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import Contact from '../components/sections/Contact.astro';
+import Team from '../components/sections/about/Team.astro';
+import Faq from '../components/sections/Faq.astro';
+import { contactPage, company } from '../data/site';
+
+const { channels, waysIntro, ways } = contactPage;
+---
+
+<BaseLayout
+  title="Kontakt – Peter Willms Bauunternehmung GmbH"
+  description="Direkter Draht zur Peter Willms Bauunternehmung GmbH: Telefon, E-Mail und Adresse in Ennigerloh-Westkirchen. Wir melden uns kurzfristig zurück."
+>
+  <PageHero
+    kicker={contactPage.hero.kicker}
+    title={contactPage.hero.title}
+    subline={contactPage.hero.subline}
+    photoTag="Bild-Platzhalter: Firmensitz Ennigerloh"
+  />
+
+  <!-- Kontakt-Kanäle als Icon-Grid -->
+  <section class="section channels" aria-labelledby="channels-title">
+    <div class="container">
+      <span class="section__kicker" data-reveal>Kanäle</span>
+      <h2 class="section__title" id="channels-title" data-reveal style="--reveal-delay: 0.05s">
+        So erreichen Sie uns
+      </h2>
+
+      <ul class="channels__grid">
+        {channels.map((channel, index) => (
+          <li class="channel" data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
+            <h3 class="channel__title">{channel.title}</h3>
+            <p class="channel__text">{channel.text}</p>
+            <a class="channel__link" href={channel.href}>{channel.linkLabel}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Direkte Wege -->
+  <section class="section section--soft ways" aria-labelledby="ways-title">
+    <div class="container ways__grid">
+      <div class="ways__head">
+        <span class="section__kicker" data-reveal>{waysIntro.kicker}</span>
+        <h2 class="section__title" id="ways-title" data-reveal style="--reveal-delay: 0.05s">
+          {waysIntro.title}
+        </h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.1s">{waysIntro.text}</p>
+        <a href={`tel:${company.contact.phoneCentral.replace(/\s/g, '')}`} class="btn btn--red" style="margin-top:1.5rem;">
+          Anrufen
+        </a>
+      </div>
+      <ul class="ways__list">
+        {ways.map((way, index) => (
+          <li class="way" data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
+            <h3 class="way__title">{way.title}</h3>
+            <p class="way__text">{way.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Standort -->
+  <section class="section location" id="adresse" aria-labelledby="location-title">
+    <div class="container location__grid">
+      <div>
+        <span class="section__kicker" data-reveal>Standort</span>
+        <h2 class="section__title" id="location-title" data-reveal style="--reveal-delay: 0.05s">
+          Besuchen Sie uns vor Ort
+        </h2>
+        <address class="location__address">
+          <strong>{company.name}</strong><br />
+          {company.address.street}<br />
+          {company.address.zip} {company.address.city}<br />
+          {company.address.region}
+        </address>
+        <dl class="location__hours">
+          <div>
+            <dt>Montag bis Freitag</dt>
+            <dd>08:00 – 17:00 Uhr</dd>
+          </div>
+          <div>
+            <dt>Samstag &amp; Sonntag</dt>
+            <dd>Geschlossen</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="location__map photo-placeholder" aria-hidden="true">
+        <div class="photo-placeholder__tag">
+          <span>Karten-Platzhalter: Standort {company.address.city}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Team />
+  <Faq />
+  <Contact />
+</BaseLayout>
+
+<style>
+  .channels__grid {
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .channel {
+    padding-top: 1.5rem;
+    border-top: 3px solid var(--color-red);
+  }
+
+  .channel__title {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .channel__text {
+    margin: 0 0 0.75rem;
+    color: var(--color-slate);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .channel__link {
+    color: var(--color-ink);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-line);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .channel__link:hover {
+    color: var(--color-red);
+    border-color: var(--color-red);
+  }
+
+  .ways__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .ways__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .way {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    padding: 1.5rem;
+  }
+
+  .way__title {
+    margin: 0 0 0.4rem;
+    font-size: 1.05rem;
+  }
+
+  .way__text {
+    margin: 0;
+    color: var(--color-slate);
+    font-size: 0.95rem;
+  }
+
+  .location__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .location__address {
+    font-style: normal;
+    line-height: 1.9;
+    margin: 0 0 1.75rem;
+  }
+
+  .location__hours {
+    margin: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .location__hours div {
+    display: grid;
+    grid-template-columns: minmax(0, 12rem) 1fr;
+    gap: 0.5rem;
+  }
+
+  .location__hours dt {
+    font-weight: 700;
+  }
+
+  .location__hours dd {
+    margin: 0;
+    color: var(--color-slate);
+  }
+
+  .location__map {
+    aspect-ratio: 4 / 3;
+    min-height: 18rem;
+  }
+
+  @media (max-width: 56rem) {
+    .ways__grid,
+    .location__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .location__hours div {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

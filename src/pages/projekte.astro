@@ -1,0 +1,207 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import ClientLogos from '../components/sections/ClientLogos.astro';
+import Faq from '../components/sections/Faq.astro';
+import Contact from '../components/sections/Contact.astro';
+import { projectsPage } from '../data/site';
+---
+
+<BaseLayout
+  title="Projekte – Peter Willms Bauunternehmung GmbH"
+  description="Referenzprojekte aus Brücken- und Bauwerksinstandsetzung: abgeschlossene Sanierungen für öffentliche und gewerbliche Auftraggeber in NRW."
+>
+  <PageHero
+    kicker={projectsPage.hero.kicker}
+    title={projectsPage.hero.title}
+    subline={projectsPage.hero.subline}
+    photoTag="Bild-Platzhalter: Brückenbauwerk (Vollbild-Hintergrund)"
+  />
+
+  <!-- Kennzahlen -->
+  <section class="section stats-section" aria-labelledby="stats-title">
+    <div class="container">
+      <span class="section__kicker" data-reveal>Zahlen</span>
+      <h2 class="section__title" id="stats-title" data-reveal style="--reveal-delay: 0.05s">
+        Was wir erreicht haben
+      </h2>
+      <p class="section__intro" data-reveal style="--reveal-delay: 0.1s">
+        Projekte, die Bestand haben und Menschen prägen.
+      </p>
+      <dl class="stats-section__grid">
+        {projectsPage.stats.map((stat, index) => (
+          <div class="stat" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+            <dd class="stat__value">{stat.value}</dd>
+            <dt class="stat__label">{stat.label}</dt>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- Projekt-Liste -->
+  <section class="section section--soft project-list" aria-labelledby="project-list-title">
+    <div class="container">
+      <span class="section__kicker" data-reveal>Projekte</span>
+      <h2 class="section__title" id="project-list-title" data-reveal style="--reveal-delay: 0.05s">
+        Unsere abgeschlossenen Bauten
+      </h2>
+      <p class="section__intro" data-reveal style="--reveal-delay: 0.1s">
+        Jedes Projekt erzählt von Qualität und Dauerhaftigkeit.
+      </p>
+
+      <ul class="project-list__items">
+        {projectsPage.items.map((project, index) => (
+          <li class="project-card" data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
+            <div class="project-card__body">
+              <h3 class="project-card__title">{project.title}</h3>
+              <p class="project-card__meta">{project.meta}</p>
+              <p class="project-card__text">{project.text}</p>
+              <ul class="project-card__tags">
+                {project.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+              <a class="project-card__link" href="/kontakt">
+                Ansehen
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </a>
+            </div>
+            <div class="project-card__media photo-placeholder" aria-hidden="true">
+              <div class="photo-placeholder__tag">
+                <span>Bild-Platzhalter: {project.title}</span>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <ClientLogos title="Auftraggeber und Partner, für die wir arbeiten" soft />
+  <Faq />
+  <Contact />
+</BaseLayout>
+
+<style>
+  .stats-section__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding-top: 2rem;
+    border-top: 3px solid var(--color-red);
+  }
+
+  .stat__value {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1;
+    color: var(--color-red);
+  }
+
+  .stat__label {
+    font-size: 0.95rem;
+    color: var(--color-slate);
+    margin-top: 0.4rem;
+  }
+
+  .project-list__items {
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .project-card {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: center;
+    background: #fff;
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+    box-shadow: var(--shadow-card);
+  }
+
+  .project-card:nth-child(even) {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    direction: rtl;
+  }
+
+  .project-card:nth-child(even) .project-card__body {
+    direction: ltr;
+  }
+
+  .project-card__title {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+  }
+
+  .project-card__meta {
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    font-weight: 700;
+  }
+
+  .project-card__text {
+    color: var(--color-slate);
+    margin: 0 0 1rem;
+  }
+
+  .project-card__tags {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .project-card__tags li {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.7rem;
+    background: var(--color-bg-soft);
+    border: 1px solid var(--color-line);
+    color: var(--color-ink);
+  }
+
+  .project-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-red);
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--color-red);
+    padding-bottom: 0.3rem;
+    transition: gap 0.2s ease;
+  }
+
+  .project-card__link:hover {
+    gap: 0.8rem;
+  }
+
+  .project-card__media {
+    aspect-ratio: 4 / 3;
+    min-height: 14rem;
+  }
+
+  @media (max-width: 56rem) {
+    .project-card,
+    .project-card:nth-child(even) {
+      grid-template-columns: 1fr;
+      direction: ltr;
+    }
+  }
+</style>

@@ -410,6 +410,9 @@ export const aboutPage = {
 export const navigation = [
   { label: 'Home', href: '/' },
   { label: 'Über Uns', href: '/ueber-uns' },
+  { label: 'Projekte', href: '/projekte' },
+  { label: 'Jobs', href: '/jobs' },
+  { label: 'Kontakt', href: '/kontakt' },
 ] as const;
 
 export const footerNav = {
@@ -417,8 +420,202 @@ export const footerNav = {
     { label: 'Über Uns', href: '/ueber-uns' },
     { label: 'Leistungen', href: '/#leistungen' },
     { label: 'Ablauf', href: '/#ablauf' },
-    { label: 'Projekte', href: '/#projekte' },
+    { label: 'Projekte', href: '/projekte' },
+    { label: 'Jobs', href: '/jobs' },
     { label: 'FAQ', href: '/#faq' },
-    { label: 'Kontakt', href: '/#kontakt' },
+    { label: 'Kontakt', href: '/kontakt' },
+  ],
+} as const;
+
+/* ============================================================
+   Seite „Jobs" (/jobs)
+   ============================================================ */
+
+export const jobsPage = {
+  hero: {
+    kicker: 'Karriere',
+    title: 'Bauen Sie Ihre Karriere mit uns auf',
+    subline:
+      'Bei der Peter Willms Bauunternehmung arbeiten Sie an Projekten, die bleiben. Wir suchen engagierte Kolleginnen und Kollegen, die Handwerk ernst nehmen und Verantwortung übernehmen.',
+  },
+  positionsIntro: {
+    kicker: 'Offene Positionen',
+    title: 'Polier und Bauleiter gesucht',
+    text: 'Verstärkung für Baustellen und Teams — direkt bei uns im Betrieb.',
+  },
+  positions: [
+    {
+      title: 'Maurer mit Erfahrung',
+      type: 'Vollzeit',
+      text: 'Mauerarbeiten und Betoninstandsetzung in der Region. Erfahrung mit ZTV-ING wünschenswert, aber kein Muss.',
+      cta: 'Bewerben',
+    },
+    {
+      title: 'Elektrotechniker für moderne Baustellen',
+      type: 'Vollzeit',
+      text: 'Verkabelung und Qualität in jeder Ausführung, direkt aus unserem Stammbetrieb.',
+      cta: 'Bewerben',
+    },
+    {
+      title: 'Projektmanager und kaufmännische Kraft',
+      type: 'Vollzeit',
+      text: 'Organisation der Projekte, enge Zusammenarbeit mit den Bauleitern.',
+      cta: 'Bewerben',
+    },
+  ],
+  benefits: {
+    kicker: 'Das bringen Sie bei uns mit',
+    items: [
+      {
+        title: 'Handwerkliches Können',
+        text: 'Werkzeug in der Hand — und ein wacher Kopf für die typischen Herausforderungen unserer Baustellen.',
+      },
+      {
+        title: 'Zuverlässigkeit',
+        text: 'Auf Sie ist Verlass. Termine sind Termine, Qualität ist keine Verhandlungssache.',
+      },
+      {
+        title: 'Lernbereitschaft',
+        text: 'Wir helfen weiter, wo wir können. Wer neugierig bleibt, kommt bei uns weit.',
+      },
+    ],
+  },
+  culture: {
+    kicker: 'Kultur',
+    title: 'So arbeiten wir zusammen',
+    text: 'Bei Peter Willms Bauunternehmung ist Zusammenarbeit kein leeres Wort. Wir bauen an Projekten, die bleiben, in einem Team, das sich kennt und aufeinander verlässt. Kurze Wege, klare Verantwortung, faire Bezahlung.',
+  },
+  process: {
+    kicker: 'Prozess',
+    title: 'Ihr Weg zu Peter Willms',
+    steps: [
+      { day: 'Tag 1', title: 'Bewerbung einreichen und erstes Gespräch buchen' },
+      { day: 'Tag 3', title: 'Telefonisches Kennenlerngespräch mit der Personalabteilung' },
+      { day: 'Tag 7', title: 'Persönliches Treffen vor Ort mit dem zuständigen Bauleiter' },
+      { day: 'Tag 14', title: 'Praktischer Tag oder Arbeitsprobe je nach Position' },
+    ],
+  },
+  initiativApplication: {
+    kicker: 'Initiativbewerbung',
+    title: 'Keine passende Stelle dabei?',
+    text: 'Schreiben Sie uns trotzdem — wir freuen uns über engagierte Kolleginnen und Kollegen.',
+  },
+} as const;
+
+/* ============================================================
+   Seite „Projekte" (/projekte)
+   ============================================================ */
+
+export const projectsPage = {
+  hero: {
+    kicker: 'Referenzen',
+    title: 'Unsere abgeschlossenen Bauten',
+    subline:
+      'Jedes Projekt erzählt von Qualität und Dauerhaftigkeit. Ein Auszug aus unseren Instandsetzungs- und Sanierungsmaßnahmen für öffentliche und gewerbliche Auftraggeber.',
+  },
+  stats: [
+    { value: '850', label: 'Fertiggestellte Bauten' },
+    { value: '45', label: 'Jahre Erfahrung' },
+    { value: '2800', label: 'Zufriedene Auftraggeber' },
+  ],
+  items: [
+    {
+      title: 'Brückeninstandsetzung an einer Landesstraße',
+      meta: 'Öffentlicher Auftraggeber',
+      tags: ['Betoninstandsetzung', 'Kappensanierung', 'RSA'],
+      text: 'Umfassende Instandsetzung einer Landesstraßenbrücke — von der Betoninstandsetzung über Kappensanierung bis zur Bauwerksabdichtung.',
+    },
+    {
+      title: 'Fahrbahnübergänge an einem Autobahnbauwerk',
+      meta: 'Nachunternehmer',
+      tags: ['Fahrbahnübergänge', 'Betonbau'],
+      text: 'Ausbau und Einbau von Fahrbahnübergangskonstruktionen an einem Autobahnbauwerk — termingerecht und verkehrssicher.',
+    },
+    {
+      title: 'Rissverpressung an einem Ingenieurbauwerk',
+      meta: 'Ingenieurbüro',
+      tags: ['Rissverpressung', 'Injektion'],
+      text: 'Kraftschlüssige Rissverpressung an einem tragenden Ingenieurbauwerk, dokumentiert nach den einschlägigen Regelwerken.',
+    },
+    {
+      title: 'Betoninstandsetzung Parkhaus',
+      meta: 'Gewerblicher Auftraggeber',
+      tags: ['Betoninstandsetzung', 'Korrosionsschutz'],
+      text: 'Sanierung eines innerstädtischen Parkhauses — Karbonatisierungs- und Chloridschäden fachgerecht instandgesetzt.',
+    },
+    {
+      title: 'Bauwerksabdichtung Tunnelportal',
+      meta: 'Öffentlicher Auftraggeber',
+      tags: ['Abdichtung', 'Ingenieurbau'],
+      text: 'Abdichtungsarbeiten an einem Tunnelportal für dauerhaften Bauwerksschutz nach ZTV-ING.',
+    },
+    {
+      title: 'PCC-Spritzarbeiten Stützmauer',
+      meta: 'Nachunternehmer',
+      tags: ['PCC', 'Mörtelspritzarbeiten'],
+      text: 'Reprofilierung einer Stützmauer mit kunststoffmodifiziertem Zementmörtel im Spritzauftrag.',
+    },
+  ],
+} as const;
+
+/* ============================================================
+   Seite „Kontakt" (/kontakt)
+   ============================================================ */
+
+export const contactPage = {
+  hero: {
+    kicker: 'Kontakt',
+    title: 'Kontakt zur Peter Willms Bauunternehmung GmbH',
+    subline:
+      'Wir sind für Ihre Fragen und Projekte da. Erreichen Sie uns schnell und unkompliziert.',
+  },
+  channels: [
+    {
+      title: 'E-Mail',
+      text: 'Schreiben Sie uns jederzeit — wir antworten innerhalb von 24 Stunden.',
+      linkLabel: 'willmsbauunternehmung@web.de',
+      href: 'mailto:willmsbauunternehmung@web.de',
+    },
+    {
+      title: 'Telefon',
+      text: 'Montag bis Freitag von 8:00 bis 17:00 Uhr erreichbar.',
+      linkLabel: '+49 (0) 2587 / 93 50 06',
+      href: 'tel:+4925879350 06',
+    },
+    {
+      title: 'Mobil',
+      text: 'Für dringende Anliegen — direkt zum Verantwortlichen.',
+      linkLabel: '+49 (0) 171 / 981 44 64',
+      href: 'tel:+491719814464',
+    },
+    {
+      title: 'Büro',
+      text: 'Besuchen Sie uns nach Absprache in Ennigerloh-Westkirchen.',
+      linkLabel: 'Münsterlandstraße 1, 59320 Ennigerloh',
+      href: '#adresse',
+    },
+  ],
+  waysIntro: {
+    kicker: 'Erreichbar',
+    title: 'Direkte Kontaktwege zu uns',
+    text: 'Alle wichtigen Nummern und Adressen auf einen Blick. Wählen Sie den Weg, der für Sie passt.',
+  },
+  ways: [
+    {
+      title: 'Rufen Sie uns an',
+      text: 'Montag bis Freitag von 8 bis 17 Uhr erreichbar. Wir nehmen uns Zeit für Ihre Fragen.',
+    },
+    {
+      title: 'Schreiben Sie uns eine Nachricht',
+      text: 'Ihre Anfrage erreicht uns zuverlässig. Wir antworten innerhalb von 24 Stunden.',
+    },
+    {
+      title: 'Besuchen Sie uns vor Ort',
+      text: 'Münsterlandstraße 1, 59320 Ennigerloh-Westkirchen. Gerne zeigen wir Ihnen unsere Räume.',
+    },
+    {
+      title: 'Mobil für Ihre Projekte',
+      text: 'Unsere Bauleiter sind vor Ort für Sie da. Direkter Kontakt zu den Verantwortlichen.',
+    },
   ],
 } as const;
