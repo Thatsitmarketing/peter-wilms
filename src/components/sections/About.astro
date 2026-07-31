@@ -1,0 +1,67 @@
+---
+import { aboutSection } from '../../data/site';
+---
+
+<section class="section about" id="ueber-uns" aria-labelledby="about-title">
+  <div class="container about__grid">
+    <div class="about__media" data-reveal="left">
+      <div class="about__photo photo-placeholder">
+        <div class="photo-placeholder__tag">
+          <span>Bild-Platzhalter: Brückenbauwerk (freigestellt)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="about__content">
+      <span class="section__kicker" data-reveal>{aboutSection.kicker}</span>
+      <h2 class="section__title" id="about-title" data-reveal>{aboutSection.title}</h2>
+
+      {aboutSection.blocks.map((block, index) => (
+        <div class="about__block" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+          <h3 class="about__block-title">{block.title}</h3>
+          <p class="about__block-text">{block.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .about__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  .about__photo {
+    aspect-ratio: 4 / 5;
+  }
+
+  .about__block {
+    margin-top: 1.75rem;
+  }
+
+  /* Rote Zwischenüberschriften wie in der Referenz */
+  .about__block-title {
+    font-size: 1.45rem;
+    color: var(--color-red);
+    margin-bottom: 0.5rem;
+  }
+
+  .about__block-text {
+    margin: 0;
+    color: var(--color-ink);
+    max-width: 58ch;
+  }
+
+  @media (max-width: 56rem) {
+    .about__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .about__photo {
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>

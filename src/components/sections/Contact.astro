@@ -1,256 +1,129 @@
 ---
-import { company } from '../../data/site';
+import { contactSection } from '../../data/site';
 ---
 
-<section class="section section--ink" id="kontakt" aria-labelledby="contact-title">
+<section class="contact photo-placeholder" id="kontakt" aria-labelledby="contact-title">
+  <div class="contact__tint" aria-hidden="true"></div>
+  <div class="photo-placeholder__tag">
+    <span>Bild-Platzhalter: Baustellenfoto mit rotem Overlay (Vollbild-Hintergrund)</span>
+  </div>
+
   <div class="container">
-    <div class="contact__grid">
-      <div class="contact__info" data-reveal="left">
-        <span class="section__kicker">Kontakt</span>
-        <h2 class="section__title" id="contact-title">
-          Sprechen Sie mit uns über Ihr Bauwerk
-        </h2>
-        <p class="section__intro">
-          Ob Ausschreibung, Direktvergabe oder Nachunternehmerleistung – wir melden
-          uns kurzfristig zurück.
-        </p>
+    <form class="contact__panel" data-contact-form novalidate data-reveal="left">
+      <h2 class="contact__title" id="contact-title">{contactSection.title}</h2>
+      <p class="contact__text">{contactSection.text}</p>
 
-        <dl class="contact__details">
-          <div>
-            <dt>Anschrift</dt>
-            <dd>
-              {company.name}<br />
-              {company.address.street}<br />
-              {company.address.zip} {company.address.city}
-            </dd>
-          </div>
-          <div>
-            <dt>Telefon Zentrale</dt>
-            <dd>
-              <a href={`tel:${company.contact.phoneCentral.replace(/\s/g, '')}`}>
-                {company.contact.phoneCentralDisplay}
-              </a>
-            </dd>
-          </div>
-          <div>
-            <dt>Bauleitung</dt>
-            <dd>
-              <a href={`tel:${company.contact.siteManagement.replace(/\s/g, '')}`}>
-                {company.contact.siteManagementDisplay}
-              </a>
-            </dd>
-          </div>
-          <div>
-            <dt>E-Mail</dt>
-            <dd>
-              <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a>
-            </dd>
-          </div>
-        </dl>
-
-        <!-- Anfahrt: Zwei-Klick-Lösung. Die Karte (z. B. Google Maps) wird erst
-             nach Klick UND vorliegender Einwilligung „Darstellung & Funktion"
-             geladen – vorher fließen keine Daten an Google. -->
-        <div
-          class="contact__map"
-          data-consent-placeholder="functional"
-          data-map-src={`https://www.google.com/maps?q=${encodeURIComponent(
-            `${company.name}, ${company.address.street}, ${company.address.zip} ${company.address.city}`
-          )}&output=embed`}
-        >
-          <div class="contact__map-inner" data-map-placeholder>
-            <p class="contact__map-title">Anfahrt &amp; Karte</p>
-            <p class="contact__map-text">
-              Zum Schutz Ihrer Daten wird die Karte (Google Maps) erst nach Ihrer
-              Einwilligung geladen. Mit dem Klick stimmen Sie der Übertragung von
-              Daten an Google zu (Kategorie „Darstellung &amp; Funktion").
-            </p>
-            <button type="button" class="btn btn--ghost" data-map-load>
-              Karte laden
-            </button>
-          </div>
-        </div>
+      <div class="form-field">
+        <label for="cf-name">Dein Name *</label>
+        <input type="text" id="cf-name" name="name" required autocomplete="name" />
       </div>
 
-      <form class="contact__form" data-contact-form novalidate data-reveal="right">
-        <h3 class="contact__form-title">Anfrage senden</h3>
+      <div class="form-field">
+        <label for="cf-email">Deine E-Mail-Adresse *</label>
+        <input type="email" id="cf-email" name="email" required autocomplete="email" />
+      </div>
 
-        <div class="form-field">
-          <label for="cf-name">Name *</label>
-          <input type="text" id="cf-name" name="name" required autocomplete="name" />
-        </div>
+      <div class="form-field">
+        <label for="cf-subject">Betreff *</label>
+        <input type="text" id="cf-subject" name="subject" required />
+      </div>
 
-        <div class="form-field">
-          <label for="cf-company">Firma / Institution</label>
-          <input type="text" id="cf-company" name="company" autocomplete="organization" />
-        </div>
+      <div class="form-field">
+        <label for="cf-message">Deine Nachricht (optional)</label>
+        <textarea id="cf-message" name="message" rows="6"></textarea>
+      </div>
 
-        <div class="form-field">
-          <label for="cf-email">E-Mail *</label>
-          <input type="email" id="cf-email" name="email" required autocomplete="email" />
-        </div>
+      <!-- Honeypot gegen Spam-Bots: für Menschen unsichtbar, bleibt leer -->
+      <div class="form-field form-field--hp" aria-hidden="true">
+        <label for="cf-website">Website</label>
+        <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
 
-        <div class="form-field">
-          <label for="cf-phone">Telefon</label>
-          <input type="tel" id="cf-phone" name="phone" autocomplete="tel" />
-        </div>
+      <div class="form-field form-field--consent">
+        <input type="checkbox" id="cf-privacy" name="privacy" required />
+        <label for="cf-privacy">
+          Ich habe die <a href="/datenschutz">Datenschutzerklärung</a> zur Kenntnis genommen
+          und bin damit einverstanden, dass meine Angaben zur Bearbeitung der Anfrage
+          gespeichert werden. *
+        </label>
+      </div>
 
-        <div class="form-field">
-          <label for="cf-message">Ihre Nachricht *</label>
-          <textarea id="cf-message" name="message" rows="5" required></textarea>
-        </div>
+      <p class="form-note">
+        * Pflichtfelder. Ihre Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet.
+      </p>
 
-        <!-- Honeypot gegen Spam-Bots: für Menschen unsichtbar, bleibt leer -->
-        <div class="form-field form-field--hp" aria-hidden="true">
-          <label for="cf-website">Website</label>
-          <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
-        </div>
+      <button type="submit" class="btn btn--red">Senden</button>
 
-        <div class="form-field form-field--consent">
-          <input type="checkbox" id="cf-privacy" name="privacy" required />
-          <label for="cf-privacy">
-            Ich habe die <a href="/datenschutz">Datenschutzerklärung</a> zur Kenntnis
-            genommen und bin damit einverstanden, dass meine Angaben zur Bearbeitung
-            der Anfrage gespeichert werden. *
-          </label>
-        </div>
-
-        <p class="form-note">* Pflichtfelder. Ihre Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet.</p>
-
-        <button type="submit" class="btn btn--primary contact__submit">
-          Nachricht senden
-        </button>
-
-        <p class="form-status" data-form-status role="status" aria-live="polite"></p>
-      </form>
-    </div>
+      <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+    </form>
   </div>
 </section>
 
 <style>
-  .contact__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
-    gap: clamp(2.5rem, 6vw, 5rem);
-    align-items: start;
+  .contact {
+    position: relative;
+    padding-block: clamp(4rem, 8vw, 6.5rem);
   }
 
-  .contact__grid .section__title {
+  /* Rotes Overlay über dem Hintergrundfoto – wie in der Referenz */
+  .contact__tint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(229, 30, 33, 0.85), rgba(190, 18, 21, 0.82));
+    mix-blend-mode: normal;
+  }
+
+  .contact__panel {
+    position: relative;
+    z-index: 2;
+    max-width: 34rem;
+    background: var(--color-dark);
+    color: var(--color-on-dark);
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+  }
+
+  .contact__title {
     color: #fff;
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    margin-bottom: 0.5rem;
   }
 
-  .contact__details {
-    margin: 2rem 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-    gap: 1.5rem;
-  }
-
-  .contact__details dt {
-    font-size: 0.78rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #8697a8;
-    margin-bottom: 0.35rem;
-  }
-
-  .contact__details dd {
-    margin: 0;
-    line-height: 1.6;
-  }
-
-  .contact__details a {
-    color: #fff;
-    text-decoration: none;
-  }
-
-  .contact__details a:hover {
-    color: var(--color-accent);
-  }
-
-  /* Karten-Platzhalter (Zwei-Klick-Lösung) */
-  .contact__map {
-    border: 1px dashed rgba(255, 255, 255, 0.3);
-    border-radius: var(--radius);
-    overflow: hidden;
-    min-height: 14rem;
-    display: grid;
-  }
-
-  .contact__map-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding: 1.5rem;
-  }
-
-  .contact__map-title {
-    font-weight: 700;
-    color: #fff;
-    margin: 0;
-  }
-
-  .contact__map-text {
-    font-size: 0.85rem;
-    color: #97a5b3;
-    margin: 0 0 0.75rem;
-    max-width: 48ch;
-  }
-
-  .contact__map :global(iframe) {
-    width: 100%;
-    height: 100%;
-    min-height: 18rem;
-    border: 0;
-    display: block;
-  }
-
-  /* Formular */
-  .contact__form {
-    background: #fff;
-    color: var(--color-ink);
-    border-radius: var(--radius);
-    padding: clamp(1.5rem, 3vw, 2.25rem);
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
-  }
-
-  .contact__form-title {
-    font-size: 1.3rem;
-    margin-bottom: 1.25rem;
+  .contact__text {
+    color: var(--color-on-dark-soft);
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
   }
 
   .form-field {
-    margin-bottom: 1.1rem;
+    margin-bottom: 1.15rem;
   }
 
   .form-field label {
     display: block;
-    font-size: 0.88rem;
     font-weight: 600;
-    margin-bottom: 0.35rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+    color: #fff;
   }
 
   .form-field input[type='text'],
   .form-field input[type='email'],
-  .form-field input[type='tel'],
   .form-field textarea {
     width: 100%;
-    padding: 0.7rem 0.9rem;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius);
+    padding: 0.75rem 0.9rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
     font: inherit;
-    color: inherit;
+    color: var(--color-ink);
     background: #fff;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
   .form-field input:focus,
   .form-field textarea:focus {
     outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(232, 99, 10, 0.18);
+    border-color: var(--color-red);
+    box-shadow: 0 0 0 3px rgba(229, 30, 33, 0.35);
   }
 
   .form-field textarea {
@@ -273,83 +146,45 @@ import { company } from '../../data/site';
 
   .form-field--consent input {
     margin-top: 0.3rem;
-    width: 1.1rem;
-    height: 1.1rem;
-    accent-color: var(--color-accent);
+    width: 1.05rem;
+    height: 1.05rem;
+    accent-color: var(--color-red);
   }
 
   .form-field--consent label {
     font-weight: 400;
-    font-size: 0.85rem;
-    color: var(--color-slate);
+    font-size: 0.83rem;
+    color: var(--color-on-dark-soft);
     margin: 0;
   }
 
-  .form-note {
-    font-size: 0.78rem;
-    color: var(--color-slate);
-    margin-bottom: 1.25rem;
+  .form-field--consent a {
+    color: #fff;
   }
 
-  .contact__submit {
-    width: 100%;
-    justify-content: center;
+  .form-note {
+    font-size: 0.75rem;
+    color: var(--color-on-dark-soft);
+    margin-bottom: 1.4rem;
   }
 
   .form-status {
-    margin: 0.9rem 0 0;
-    font-size: 0.9rem;
+    margin: 1rem 0 0;
+    font-size: 0.92rem;
     font-weight: 600;
     min-height: 1.4em;
   }
 
   .form-status.is-success {
-    color: #15803d;
+    color: #7ede9c;
   }
 
   .form-status.is-error {
-    color: #b91c1c;
-  }
-
-  @media (max-width: 56rem) {
-    .contact__grid {
-      grid-template-columns: 1fr;
-    }
+    color: #ffb3b4;
   }
 </style>
 
 <script>
-  /* ---------- Karten-Platzhalter (Zwei-Klick-Lösung) ---------- */
-  import { consentManager } from '../../scripts/consent';
-
-  const mapContainer = document.querySelector<HTMLElement>('[data-consent-placeholder="functional"]');
-  const mapLoadBtn = document.querySelector<HTMLButtonElement>('[data-map-load]');
-
-  function loadMap() {
-    if (!mapContainer || mapContainer.querySelector('iframe')) return;
-    const src = mapContainer.dataset.mapSrc;
-    if (!src) return;
-    const iframe = document.createElement('iframe');
-    iframe.src = src;
-    iframe.title = 'Anfahrtskarte (Google Maps)';
-    iframe.loading = 'lazy';
-    iframe.referrerPolicy = 'no-referrer-when-downgrade';
-    mapContainer.querySelector('[data-map-placeholder]')?.remove();
-    mapContainer.appendChild(iframe);
-  }
-
-  // Klick auf „Karte laden" gilt als Einwilligung für „Darstellung & Funktion".
-  // Kein Auto-Load bei bereits erteilter Einwilligung – die Karte lädt erst,
-  // wenn sie bewusst angefordert wird.
-  mapLoadBtn?.addEventListener('click', () => {
-    if (!consentManager.hasConsent('functional')) {
-      consentManager.save({ functional: true });
-    }
-    loadMap();
-  });
-
-  /* ---------- Kontaktformular ---------- */
-
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
   const status = document.querySelector<HTMLElement>('[data-form-status]');
 

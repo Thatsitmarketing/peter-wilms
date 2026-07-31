@@ -1,0 +1,127 @@
+---
+import { projects, projectsSection } from '../../data/site';
+---
+
+<section class="section projects" id="projekte" aria-labelledby="projects-title">
+  <!-- Überbreite Riesen-Headline wie in der Referenz -->
+  <h2 class="projects__giant" id="projects-title" aria-label={projectsSection.title} data-reveal>
+    {projectsSection.title}
+  </h2>
+
+  <div class="container projects__grid">
+    <div class="projects__media" data-reveal="left">
+      <div class="projects__photo photo-placeholder">
+        <div class="photo-placeholder__tag">
+          <span>Bild-Platzhalter: Projektfoto Baustelle</span>
+        </div>
+      </div>
+    </div>
+
+    <ul class="projects__list">
+      {projects.map((project, index) => (
+        <li data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+          <a class="project-row" href="#kontakt">
+            <span class="project-row__text">
+              <span class="project-row__title">{project.title}</span>
+              <span class="project-row__meta">{project.meta} · (Platzhalter – Projektdetails folgen)</span>
+            </span>
+            <span class="project-row__arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 17 17 7M9 7h8v8" />
+              </svg>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .projects {
+    overflow: hidden;
+  }
+
+  .projects__giant {
+    font-size: clamp(3.5rem, 12vw, 11rem);
+    line-height: 0.95;
+    color: #d9d9d9;
+    white-space: nowrap;
+    margin: 0 0 clamp(2rem, 4vw, 3.5rem);
+    padding-inline: max(calc((100vw - var(--container)) / 2 + 1.25rem), 1.25rem);
+  }
+
+  .projects__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .projects__photo {
+    aspect-ratio: 4 / 3;
+  }
+
+  .projects__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .projects__list li {
+    border-top: 1px solid var(--color-ink);
+  }
+
+  .projects__list li:last-child {
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .project-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.5rem 0.25rem;
+    text-decoration: none;
+    color: var(--color-ink);
+    transition: color 0.25s ease, padding-left 0.3s var(--ease-out);
+  }
+
+  .project-row:hover {
+    color: var(--color-red);
+    padding-left: 0.9rem;
+  }
+
+  .project-row__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .project-row__title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 2.4vw, 1.8rem);
+    line-height: 1.25;
+  }
+
+  .project-row__meta {
+    font-size: 0.85rem;
+    color: var(--color-slate);
+  }
+
+  .project-row__arrow {
+    flex-shrink: 0;
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  .project-row:hover .project-row__arrow {
+    transform: translate(4px, -4px);
+  }
+
+  @media (max-width: 56rem) {
+    .projects__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

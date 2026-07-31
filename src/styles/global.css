@@ -1,30 +1,32 @@
 /* ============================================================
    Globale Styles – Peter Willms Bauunternehmung GmbH
-   Design: sachlich, seriös. Anthrazit/Tiefblau + Signal-Orange.
-   Systemschriften (keine externen Fonts → DSGVO-unkritisch).
+   Design nach Referenz: Rot #E51E21, Dunkelgrau #333, Weiß/#FAFAFA.
+   Headlines: Syne 700 · Fließtext: Inter 400 (beide selbst gehostet,
+   kein Google-Fonts-CDN → DSGVO-unkritisch).
    ============================================================ */
 
 :root {
-  /* Farben */
-  --color-ink: #16212c;          /* Tiefes Anthrazit-Blau – Text & dunkle Flächen */
-  --color-ink-soft: #24313f;
-  --color-slate: #51606f;        /* Sekundärtext */
-  --color-line: #dde3e9;         /* Linien, Rahmen */
+  /* Farben (aus der Referenzseite übernommen) */
+  --color-red: #e51e21;
+  --color-red-dark: #c01518;
+  --color-dark: #333333;
+  --color-dark-2: #2b2b2b;
+  --color-black: #0d0d0d;
+  --color-ink: #1f1f1f;          /* Fließtext auf hell */
+  --color-slate: #5a5a5a;        /* Sekundärtext */
+  --color-line: #e4e4e4;
   --color-bg: #ffffff;
-  --color-bg-soft: #f4f6f8;      /* Abwechselnde Section-Hintergründe */
-  --color-accent: #e8630a;       /* Signal-Orange – sparsam einsetzen */
-  --color-accent-dark: #c95208;
-  --color-on-ink: #eef2f6;
+  --color-bg-soft: #fafafa;
+  --color-on-dark: #f5f5f5;
+  --color-on-dark-soft: #c9c9c9;
 
-  /* Typografie – Systemstack, bewusst ohne externe Fonts */
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
+  /* Typografie */
+  --font-heading: 'Syne', 'Arial Black', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
 
   /* Layout */
-  --container: 72rem;
-  --radius: 6px;
-  --shadow-card: 0 1px 2px rgba(22, 33, 44, 0.06), 0 8px 24px rgba(22, 33, 44, 0.08);
-  --shadow-card-hover: 0 2px 4px rgba(22, 33, 44, 0.08), 0 16px 40px rgba(22, 33, 44, 0.14);
+  --container: 78rem;
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.05), 0 12px 32px rgba(0, 0, 0, 0.09);
 
   /* Animation */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -39,17 +41,18 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5.5rem; /* Höhe des Sticky-Headers */
+  scroll-padding-top: 5rem;
 }
 
 body {
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.65;
+  line-height: 1.7;
   color: var(--color-ink);
   background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 img,
@@ -62,10 +65,11 @@ h1,
 h2,
 h3,
 h4 {
-  line-height: 1.2;
-  margin: 0 0 0.75em;
+  font-family: var(--font-heading);
   font-weight: 700;
-  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 0 0 0.75em;
+  letter-spacing: 0.01em;
 }
 
 p {
@@ -73,7 +77,7 @@ p {
 }
 
 a {
-  color: var(--color-accent-dark);
+  color: var(--color-red);
 }
 
 /* ---------- Wiederkehrende Bausteine ---------- */
@@ -81,94 +85,132 @@ a {
 .container {
   max-width: var(--container);
   margin-inline: auto;
-  padding-inline: 1.25rem;
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
 }
 
 .section {
-  padding-block: clamp(3.5rem, 8vw, 6rem);
+  padding-block: clamp(4rem, 9vw, 7rem);
 }
 
 .section--soft {
   background: var(--color-bg-soft);
 }
 
-.section--ink {
-  background: var(--color-ink);
-  color: var(--color-on-ink);
-}
-
-.section__kicker {
-  display: inline-block;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--color-accent);
-  margin-bottom: 0.75rem;
+.section--dark {
+  background: var(--color-dark);
+  color: var(--color-on-dark);
 }
 
 .section__title {
-  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-  max-width: 40ch;
+  font-size: clamp(1.75rem, 3.6vw, 2.6rem);
+  max-width: 24ch;
 }
 
 .section__intro {
-  max-width: 60ch;
+  max-width: 62ch;
   color: var(--color-slate);
   font-size: 1.05rem;
 }
 
-.section--ink .section__intro {
-  color: #b7c2cd;
+.section--dark .section__intro {
+  color: var(--color-on-dark-soft);
 }
 
+.section__kicker {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-red);
+  margin-bottom: 0.9rem;
+}
+
+/* Buttons – eckig wie in der Referenz, mit Strich-Präfix */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.8rem 1.6rem;
-  border-radius: var(--radius);
-  border: 2px solid transparent;
-  font-weight: 600;
-  font-size: 1rem;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease,
-    color 0.2s ease, transform 0.2s var(--ease-out);
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s var(--ease-out);
+}
+
+.btn::before {
+  content: '—';
+  font-family: var(--font-body);
+  font-weight: 400;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.btn:hover::before {
+  transform: translateX(4px);
 }
 
 .btn:active {
   transform: translateY(1px);
 }
 
-.btn--primary {
-  background: var(--color-accent);
+.btn--red {
+  background: var(--color-red);
   color: #fff;
 }
 
-.btn--primary:hover {
-  background: var(--color-accent-dark);
+.btn--red:hover {
+  background: var(--color-red-dark);
 }
 
-.btn--ghost {
-  border-color: currentColor;
-  color: inherit;
-  background: transparent;
-}
-
-.btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.btn--ghost-dark {
-  border-color: var(--color-ink);
+.btn--white {
+  background: #fff;
   color: var(--color-ink);
-  background: transparent;
 }
 
-.btn--ghost-dark:hover {
-  background: var(--color-ink);
-  color: #fff;
+.btn--white:hover {
+  background: var(--color-bg-soft);
+}
+
+.btn--small {
+  padding: 0.7rem 1.4rem;
+  font-size: 0.95rem;
+}
+
+/* Foto-Platzhalter für großflächige Hintergründe (klar erkennbar) */
+.photo-placeholder {
+  position: relative;
+  background:
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.035) 0 14px, transparent 14px 28px),
+    radial-gradient(60rem 30rem at 20% 30%, #55504b 0%, transparent 60%),
+    radial-gradient(50rem 26rem at 80% 70%, #3d4248 0%, transparent 55%),
+    linear-gradient(160deg, #4a4642 0%, #2f2f31 55%, #232426 100%);
+}
+
+.photo-placeholder__tag {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0.75rem;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.photo-placeholder__tag span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.65);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  padding: 0.25rem 0.75rem;
 }
 
 /* ---------- Scroll-Reveal-Animationen ----------
