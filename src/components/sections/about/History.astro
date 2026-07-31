@@ -6,7 +6,7 @@ const { history } = aboutPage;
 
 <section class="section section--soft history" id="geschichte" aria-labelledby="history-title">
   <div class="container history__grid">
-    <!-- Linke Spalte: Kicker + Titel (sticky, damit sie während des Scrollens sichtbar bleibt) -->
+    <!-- Linke Spalte: Kicker + Titel (sticky, damit sie während des Stackings sichtbar bleibt) -->
     <aside class="history__head">
       <span class="section__kicker" data-reveal>{history.kicker}</span>
       <h2 class="section__title" id="history-title" data-reveal style="--reveal-delay: 0.06s">
@@ -14,7 +14,8 @@ const { history } = aboutPage;
       </h2>
     </aside>
 
-    <!-- Rechte Spalte: vertikal gestapelte Meilenstein-Karten -->
+    <!-- Rechte Spalte: Scroll-Stapel – jede Karte "klebt" beim Scrollen und die nächste
+         schiebt sich mit leichtem Versatz darüber. -->
     <ol class="history__list">
       {history.milestones.map((item, index) => (
         <li
@@ -22,8 +23,7 @@ const { history } = aboutPage;
             'milestone',
             index % 2 === 0 ? 'milestone--light' : 'milestone--dark',
           ]}
-          data-reveal="up"
-          style={`--reveal-delay: ${index * 0.05}s`}
+          style={`--i: ${index}; --total: ${history.milestones.length};`}
         >
           <article class="milestone__card">
             <header class="milestone__header">
@@ -59,26 +59,31 @@ const { history } = aboutPage;
     margin-bottom: 0;
   }
 
+  /* Der Stapel bekommt genug Raum, damit jede Karte ihren Scroll-Slot hat.
+     "overflow: clip" verhindert, dass ein umliegender Container die sticky-Logik zerstört. */
   .history__list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: clamp(2.25rem, 4vw, 3.25rem);
+    /* Puffer zwischen den Sticky-Punkten – gleichzeitig die Scroll-Distanz pro Karte */
+    gap: 65vh;
+    padding-bottom: 4rem;
   }
 
   .milestone {
-    position: relative;
+    position: sticky;
+    /* Jede Karte klebt etwas tiefer als die vorherige → sichtbarer Stapel-Effekt */
+    top: calc(6.5rem + var(--i, 0) * 1.25rem);
     width: 100%;
   }
 
-  /* Karte selbst */
   .milestone__card {
     position: relative;
     z-index: 2;
     padding: clamp(1.4rem, 2.6vw, 2.25rem) clamp(1.5rem, 2.8vw, 2.5rem);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
   }
 
   .milestone--light .milestone__card {
@@ -162,6 +167,10 @@ const { history } = aboutPage;
   }
 
   @media (max-width: 40rem) {
+    .history__list {
+      gap: 55vh;
+    }
+
     .milestone__shadow {
       left: 0.75rem;
       right: -0.75rem;
@@ -170,6 +179,18 @@ const { history } = aboutPage;
     .milestone__accent {
       left: 1.5rem;
       right: -1.5rem;
+    }
+  }
+
+  /* Reduced motion: klassische, statische Anordnung ohne Sticky-Stapel */
+  @media (prefers-reduced-motion: reduce) {
+    .history__list {
+      gap: clamp(2.25rem, 4vw, 3.25rem);
+      padding-bottom: 0;
+    }
+
+    .milestone {
+      position: static;
     }
   }
 </style>
