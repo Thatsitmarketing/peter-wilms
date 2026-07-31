@@ -3,18 +3,17 @@ import { processSection, processSteps } from '../../data/site';
 ---
 
 <section class="process" id="ablauf" aria-labelledby="process-title">
-  <!-- Kopfbereich -->
-  <div class="container process__intro">
-    <h2 class="section__title" id="process-title" data-reveal>{processSection.title}</h2>
-    <p class="section__intro" data-reveal style="--reveal-delay: 0.1s">{processSection.intro}</p>
-  </div>
-
   <!-- Pinned Horizontal-Scroll:
-       Vertikales Scrollen im Sticky-Viewport wird per Transform
-       in horizontale Bewegung übersetzt.
-       Cards starten mit Innenabstand (nicht am linken Rand). -->
+       Der komplette Sektions-Inhalt (Titel + Intro + Steps + Controls) sitzt
+       im Sticky-Viewport und bleibt gemeinsam an der Navigation kleben,
+       während der Track horizontal durchgescrollt wird. -->
   <div class="process__stage" data-process-stage>
     <div class="process__viewport" data-process-viewport>
+      <div class="container process__intro">
+        <h2 class="section__title" id="process-title" data-reveal>{processSection.title}</h2>
+        <p class="section__intro" data-reveal style="--reveal-delay: 0.1s">{processSection.intro}</p>
+      </div>
+
       <div class="process__track" data-process-track>
         {processSteps.map((step, index) => (
           <>
@@ -55,21 +54,45 @@ import { processSection, processSteps } from '../../data/site';
 
 <style>
   .process {
-    /* Mehr Luft nach oben – weniger nach unten (Steps sitzen dichter am Intro) */
-    padding-block: clamp(6rem, 10vw, 9rem) 0;
+    padding-top: clamp(3rem, 6vw, 5rem);
+    padding-bottom: 0;
   }
 
+  /* Stage bestimmt die vertikale Scroll-Distanz für den Sticky-Effekt.
+     Die Höhe wird zur Laufzeit vom JS gesetzt. */
+  .process__stage {
+    position: relative;
+    height: 300vh;
+  }
+
+  /* Sticky-Viewport enthält den kompletten Sektions-Inhalt (Intro + Steps +
+     Controls) und klebt an der Navigation, während intern der Track
+     horizontal durchgescrollt wird. */
+  .process__viewport {
+    position: sticky;
+    top: 4vh;
+    height: 92vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--color-bg);
+  }
+
+  /* Intro sitzt oben im Viewport und scrollt NICHT mit dem Track weg */
   .process__intro {
-    margin-bottom: 0;
+    flex-shrink: 0;
+    padding-top: clamp(1rem, 2vw, 1.75rem);
+    padding-bottom: clamp(1rem, 2vw, 1.5rem);
   }
 
-  /* Titel füllt ca. drei Viertel der Row (unter 62 rem = volle Breite) */
   .process__intro .section__title {
     max-width: 75%;
+    margin-bottom: 0.75rem;
   }
 
   .process__intro .section__intro {
     max-width: 75%;
+    margin: 0;
   }
 
   @media (max-width: 62rem) {
@@ -79,62 +102,33 @@ import { processSection, processSteps } from '../../data/site';
     }
   }
 
-  /* Stage bestimmt die Scroll-Distanz: höher = mehr horizontale Fläche */
-  .process__stage {
-    position: relative;
-    /* Wird per JS gesetzt (Fallback: eine Viewporthöhe pro sichtbarer Karte) */
-    height: 300vh;
-  }
-
-  /* Sticky-Viewport hält den Track auf Bildschirmhöhe, während vertikal gescrollt wird.
-     Sticky greift schon bei ~25 vh vom Oberrand – der horizontale Scroll setzt
-     bereits ein, sobald die Karten in die untere Hälfte des Viewports gescrollt
-     sind (statt erst wenn sie oben ankommen). */
-  .process__viewport {
-    position: sticky;
-    top: 25vh;
-    height: 70vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 1.25rem;
-    padding-top: 1rem;
-    overflow: hidden;
-    background: var(--color-bg);
-  }
-
+  /* Horizontaler Track: nimmt den mittleren, größten Raum ein */
   .process__track {
+    flex: 1 1 auto;
     display: flex;
+    align-items: stretch;
     gap: 1.25rem;
-    /* Karten kleben NICHT am linken Rand: gleicher Einzug wie der Container.
-       Rechts nur der reguläre Container-Einzug – der Puffer wird über den
-       expliziten Spacer am Ende gesetzt (garantiert im scrollWidth erfasst). */
     padding-inline: var(--gutter);
     will-change: transform;
     transform: translate3d(0, 0, 0);
+    min-height: 0;
   }
 
-  /* Spacer am Track-Ende: entspricht einem Slot (Foto + Gap) plus 10 vw
-     Freiraum – dadurch rutscht Schritt 4 mittiger und rechts bleibt sichtbar
-     Platz, bevor die Sektion vertikal weiter scrollt. */
   .process__end-spacer {
     flex: 0 0 calc(clamp(14rem, 22vw, 22rem) + 1.25rem + 10vw);
   }
 
   .process-card {
     flex: 0 0 clamp(20rem, 34vw, 30rem);
-    padding: clamp(1.75rem, 3vw, 3rem);
-    min-height: clamp(26rem, 60vh, 34rem);
+    padding: clamp(1.5rem, 2.5vw, 2.5rem);
     display: flex;
     flex-direction: column;
   }
 
   .process__photo {
     flex: 0 0 clamp(14rem, 22vw, 22rem);
-    min-height: clamp(26rem, 60vh, 34rem);
   }
 
-  /* Farbwelten der Karten (Referenz: hell → dunkel → rot → hell) */
   .process-card--light {
     background: var(--color-bg-soft);
     color: var(--color-ink);
@@ -152,10 +146,10 @@ import { processSection, processSteps } from '../../data/site';
 
   .process-card__number {
     font-family: var(--font-heading);
-    font-size: clamp(4.5rem, 8vw, 7rem);
+    font-size: clamp(4rem, 7vw, 6rem);
     font-weight: 700;
     line-height: 0.9;
-    margin: 0 0 1.5rem;
+    margin: 0 0 1.25rem;
   }
 
   .process-card--light .process-card__number {
@@ -167,7 +161,7 @@ import { processSection, processSteps } from '../../data/site';
     font-weight: 600;
     font-size: 0.95rem;
     padding: 0.35rem 0.9rem;
-    margin-bottom: 1.1rem;
+    margin-bottom: 1rem;
     background: var(--color-red);
     color: #fff;
   }
@@ -180,13 +174,13 @@ import { processSection, processSteps } from '../../data/site';
     font-family: var(--font-body);
     font-weight: 700;
     font-size: 1rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.65rem;
   }
 
   .process-card__text {
     margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.75;
+    font-size: 0.92rem;
+    line-height: 1.65;
   }
 
   .process-card--light .process-card__text {
@@ -197,13 +191,14 @@ import { processSection, processSteps } from '../../data/site';
     color: var(--color-on-dark-soft);
   }
 
-  /* Steuerung + Fortschrittsanzeige direkt unter dem Track */
+  /* Controls sitzen bündig unten im Viewport */
   .process__controls {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    margin-top: 0;
-    padding-block: 0;
+    padding-top: clamp(0.75rem, 1.5vw, 1.25rem);
+    padding-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
   }
 
   .process__progress {
@@ -302,12 +297,11 @@ import { processSection, processSteps } from '../../data/site';
 
 <script>
   /**
-   * Pinned Horizontal-Scroll:
-   *  - Die Stage ist deutlich höher als der Viewport.
-   *  - Sobald die Stage im Sichtbereich ist, wird der Track anhand
-   *    des Scroll-Fortschritts nach links verschoben.
-   *  - Auf Mobilgeräten (< 56rem) wird stattdessen der native
-   *    Overflow-Scroll des Tracks verwendet.
+   * Pinned Horizontal-Scroll mit sichtbarem Kopfbereich:
+   *  - Der gesamte Sektions-Inhalt (Titel + Intro + Steps + Controls) liegt
+   *    im Sticky-Viewport und klebt an der Navigation.
+   *  - Vertikales Scrollen im Sticky-Zustand wird per Transform in
+   *    horizontales Verschieben des Tracks übersetzt.
    */
   const isDesktop = () => window.matchMedia('(min-width: 56rem)').matches;
   const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -329,25 +323,21 @@ import { processSection, processSteps } from '../../data/site';
         maxScroll = 0;
         return;
       }
-      // Wie weit muss sich der Track bewegen können?
       maxScroll = track.scrollWidth - viewport.clientWidth;
       if (maxScroll < 0) maxScroll = 0;
-      // Extra Haltezeit nach Ende des horizontalen Scrolls, damit der 10 vw-
-      // Puffer rechts von Schritt 4 deutlich sichtbar bleibt, bevor die
-      // Sektion vertikal weiterlässt.
-      const holdPx = viewport.clientHeight * 0.5;
+      // Kleine Puffer-Halte-Zeit, damit der Endzustand ruhig „steht"
+      // bevor die Sektion vertikal weiter scrollt.
+      const holdPx = viewport.clientHeight * 0.25;
       stage.style.height = `${viewport.clientHeight + maxScroll + holdPx}px`;
       update();
     };
 
-    // Sticky-Offset synchron zum CSS-Wert (viewport top: 25vh)
-    const stickyOffset = () => window.innerHeight * 0.25;
+    // Sticky-Offset synchron zum CSS-Wert (viewport top: 4vh)
+    const stickyOffset = () => window.innerHeight * 0.04;
 
     const update = () => {
       if (!isDesktop() || prefersReduced()) return;
       const rect = stage.getBoundingClientRect();
-      // Effekt beginnt sobald die Sektion in die obere Bildschirmhälfte gescrollt ist,
-      // nicht erst am Viewport-Oben.
       const scrolled = Math.min(Math.max(stickyOffset() - rect.top, 0), maxScroll);
       track.style.transform = `translate3d(${-scrolled}px, 0, 0)`;
       const ratio = maxScroll === 0 ? 1 : scrolled / maxScroll;
@@ -356,7 +346,6 @@ import { processSection, processSteps } from '../../data/site';
       if (next) next.disabled = ratio >= 0.999;
     };
 
-    // Buttons scrollen die Stage vertikal weiter (weil der Effekt an vertical scroll gekoppelt ist)
     const stepDistance = () => {
       const card = track.querySelector<HTMLElement>('[data-process-card]');
       return (card?.offsetWidth ?? 480) + 20;
@@ -369,7 +358,6 @@ import { processSection, processSteps } from '../../data/site';
       window.scrollBy({ top: stepDistance(), behavior: 'smooth' });
     });
 
-    // Mobile Ansicht: native Scroll-Buttons für den Track
     const mobilePrev = () => track.scrollBy({ left: -stepDistance(), behavior: 'smooth' });
     const mobileNext = () => track.scrollBy({ left: stepDistance(), behavior: 'smooth' });
     prev?.addEventListener('click', () => { if (!isDesktop()) mobilePrev(); });
@@ -377,7 +365,6 @@ import { processSection, processSteps } from '../../data/site';
 
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', measure);
-    // Bilder / Fonts können Layout ändern → nachmessen
     window.addEventListener('load', measure);
     measure();
   }
