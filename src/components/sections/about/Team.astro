@@ -1,10 +1,11 @@
 ---
-import { aboutPage } from '../../../data/site';
+import { aboutPage, company } from '../../../data/site';
 
 const { team } = aboutPage;
+const contact = company.contact;
 ---
 
-<section class="section team" id="team" aria-labelledby="team-title">
+<section class="section section--soft team" id="team" aria-labelledby="team-title">
   <div class="container">
     <div class="team__head">
       <span class="section__kicker" data-reveal>{team.kicker}</span>
@@ -16,9 +17,91 @@ const { team } = aboutPage;
 
     <ul class="team__list">
       {team.members.map((member, index) => (
-        <li class="team-card" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+        <li data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+          <button
+            type="button"
+            class="team-card"
+            data-team-open={String(index)}
+            aria-label={`Details zu ${member.name} anzeigen`}
+          >
+            <img
+              class="team-card__photo"
+              src={member.photo}
+              alt={`${member.name} – ${member.role}`}
+              width="1080"
+              height="1400"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="team-card__body">
+              <p class="team-card__role">{member.role}</p>
+              <h3 class="team-card__name">{member.name}</h3>
+              <p class="team-card__qualification">{member.qualification}</p>
+              <span class="team-card__arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 12h16M14 6l6 6-6 6" />
+                </svg>
+              </span>
+            </div>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <!-- Detail-Overlay: pro Mitglied ein Panel, per JS geöffnet -->
+  {team.members.map((member, index) => (
+    <div
+      class="team-detail"
+      data-team-detail={String(index)}
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      aria-label={`Details zu ${member.name}`}
+    >
+      <div class="team-detail__cursor" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="16" cy="16" r="15" />
+          <path d="M11 11l10 10M21 11L11 21" />
+        </svg>
+      </div>
+
+      <div class="container team-detail__grid">
+        <div class="team-detail__content">
+          <p class="team-detail__role">{member.role}</p>
+          <h3 class="team-detail__name">{member.name}</h3>
+          <p class="team-detail__text">{member.text}</p>
+
+          <ul class="team-detail__contacts" aria-label="Kontaktmöglichkeiten">
+            <li>
+              <a href={`tel:${contact.phoneCentral.replace(/\s/g, '')}`} aria-label={`Telefon: ${contact.phoneCentralDisplay}`}>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.86 19.86 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href={`tel:${contact.mobile.replace(/\s/g, '')}`} aria-label={`Mobil: ${contact.mobileDisplay}`}>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="6" y="2" width="12" height="20" rx="2"/>
+                  <path d="M12 18h.01"/>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${contact.email}`} aria-label={`E-Mail: ${contact.email}`}>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <path d="m22 6-10 7L2 6"/>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="team-detail__media">
           <img
-            class="team-card__photo"
+            class="team-detail__photo"
             src={member.photo}
             alt={`${member.name} – ${member.role}`}
             width="1080"
@@ -26,16 +109,21 @@ const { team } = aboutPage;
             loading="lazy"
             decoding="async"
           />
-          <div class="team-card__body">
-            <h3 class="team-card__name">{member.name}</h3>
-            <p class="team-card__role">{member.role}</p>
-            <p class="team-card__qualification">{member.qualification}</p>
-            <p class="team-card__text">{member.text}</p>
-          </div>
-        </li>
-      ))}
-    </ul>
-  </div>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="team-detail__close"
+        data-team-close
+        aria-label="Details schließen"
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+  ))}
 </section>
 
 <style>
@@ -43,6 +131,7 @@ const { team } = aboutPage;
     margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
   }
 
+  /* --- Karten-Grid: kompakte Vorschau, nur Position / Name / Qualifikation --- */
   .team__list {
     list-style: none;
     margin: 0;
@@ -55,13 +144,25 @@ const { team } = aboutPage;
   .team-card {
     display: flex;
     flex-direction: column;
+    width: 100%;
     background: #fff;
     box-shadow: var(--shadow-card);
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.3s var(--ease-out), box-shadow 0.3s ease;
+  }
+
+  .team-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.14);
   }
 
   .team-card__photo {
     width: 100%;
-    /* height muss gesetzt werden, sonst gewinnt das height-Attribut über aspect-ratio */
     height: auto;
     aspect-ratio: 4 / 5;
     object-fit: cover;
@@ -75,31 +176,275 @@ const { team } = aboutPage;
   }
 
   .team-card__body {
-    padding: 1.75rem;
-  }
-
-  .team-card__name {
-    font-size: 1.35rem;
-    margin-bottom: 0.25rem;
+    padding: 1.5rem 1.5rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
   }
 
   .team-card__role {
-    margin: 0 0 0.15rem;
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+    color: var(--color-slate);
+  }
+
+  .team-card__name {
     font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--color-red);
+    font-size: 1.35rem;
+    line-height: 1.2;
+    margin: 0 0 0.35rem;
   }
 
   .team-card__qualification {
-    margin: 0 0 1rem;
-    font-size: 0.85rem;
+    margin: 0;
+    font-size: 0.9rem;
     color: var(--color-slate);
   }
 
-  .team-card__text {
-    margin: 0;
+  .team-card__arrow {
+    display: inline-flex;
+    margin-top: 1.25rem;
+    color: var(--color-ink);
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  .team-card:hover .team-card__arrow {
+    transform: translateX(6px);
+  }
+
+  /* --- Detail-Overlay --- */
+  .team-detail {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: #f5f5f5;
+    color: var(--color-ink);
+    display: grid;
+    align-items: center;
+    padding-block: clamp(3rem, 6vw, 5rem);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+    /* Cursor ausblenden, damit unser X-Cursor die Führung übernimmt */
+    cursor: none;
+  }
+
+  .team-detail[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.35s ease, visibility 0s linear 0s;
+  }
+
+  .team-detail__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+    height: 100%;
+  }
+
+  .team-detail__content {
+    max-width: 34rem;
+  }
+
+  .team-detail__role {
+    margin: 0 0 0.75rem;
     font-size: 0.95rem;
     color: var(--color-slate);
   }
+
+  .team-detail__name {
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+    line-height: 1.1;
+    margin: 0 0 1.5rem;
+  }
+
+  .team-detail__text {
+    margin: 0 0 2rem;
+    color: var(--color-slate);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .team-detail__contacts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.25rem;
+  }
+
+  .team-detail__contacts a {
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .team-detail__contacts a:hover {
+    color: var(--color-red);
+  }
+
+  .team-detail__media {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .team-detail__photo {
+    width: 100%;
+    height: auto;
+    max-height: min(85vh, 44rem);
+    object-fit: contain;
+  }
+
+  /* Der Kreis-X-Cursor folgt der Maus via CSS-Custom-Properties */
+  .team-detail__cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 4rem;
+    height: 4rem;
+    display: grid;
+    place-items: center;
+    color: var(--color-ink);
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate3d(
+      calc(var(--cursor-x, 50vw) - 2rem),
+      calc(var(--cursor-y, 50vh) - 2rem),
+      0
+    );
+    transition: opacity 0.2s ease, transform 0.08s linear;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 2;
+  }
+
+  .team-detail__cursor svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  /* Nur solange die Maus wirklich im Overlay ist */
+  .team-detail:not([data-cursor-active]) .team-detail__cursor {
+    opacity: 0;
+  }
+
+  /* Versteckter Fallback-Close – für Tastaturbedienung / Screenreader */
+  .team-detail__close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    border: 1px solid var(--color-line);
+    color: var(--color-ink);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 3;
+  }
+
+  .team-detail__close:focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 62rem) {
+    .team-detail {
+      cursor: auto;
+      padding-block: 5rem 3rem;
+      overflow-y: auto;
+      align-items: start;
+    }
+
+    .team-detail__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .team-detail__photo {
+      max-height: 60vh;
+    }
+
+    .team-detail__cursor {
+      display: none;
+    }
+  }
 </style>
+
+<script>
+  /**
+   * Team-Detail-Overlay:
+   * - Klick auf Karte öffnet das passende Detail-Panel.
+   * - Ein Kreis-X folgt der Maus und schließt beim Klick das Overlay.
+   * - Fallback-Close-Button, ESC-Taste und Klick auf leere Fläche schließen ebenfalls.
+   */
+  const cards = document.querySelectorAll<HTMLElement>('[data-team-open]');
+  const details = document.querySelectorAll<HTMLElement>('[data-team-detail]');
+  let activeDetail: HTMLElement | null = null;
+
+  const closeActive = () => {
+    if (!activeDetail) return;
+    activeDetail.setAttribute('aria-hidden', 'true');
+    activeDetail.removeAttribute('data-cursor-active');
+    activeDetail = null;
+    document.body.style.overflow = '';
+  };
+
+  const openDetail = (index: string) => {
+    if (activeDetail) closeActive();
+    const target = document.querySelector<HTMLElement>(`[data-team-detail="${index}"]`);
+    if (!target) return;
+    target.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    activeDetail = target;
+  };
+
+  cards.forEach((card) => {
+    card.addEventListener('click', () => {
+      const idx = card.getAttribute('data-team-open');
+      if (idx !== null) openDetail(idx);
+    });
+  });
+
+  details.forEach((panel) => {
+    // Mausposition → CSS-Variablen für X-Cursor
+    panel.addEventListener('mousemove', (event) => {
+      panel.setAttribute('data-cursor-active', 'true');
+      panel.style.setProperty('--cursor-x', `${event.clientX}px`);
+      panel.style.setProperty('--cursor-y', `${event.clientY}px`);
+    });
+
+    panel.addEventListener('mouseleave', () => {
+      panel.removeAttribute('data-cursor-active');
+    });
+
+    // Klick irgendwo im Overlay = schließen (außer auf interaktive Elemente)
+    panel.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (target.closest('a, button:not([data-team-close])')) return;
+      closeActive();
+    });
+
+    const close = panel.querySelector<HTMLButtonElement>('[data-team-close]');
+    close?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      closeActive();
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeActive();
+  });
+</script>
