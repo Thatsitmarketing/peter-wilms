@@ -22,6 +22,10 @@ import { aboutSection } from '../../data/site';
           <p class="about__block-text">{block.text}</p>
         </div>
       ))}
+
+      <div class="about__cta" data-reveal style="--reveal-delay: 0.24s">
+        <a href="/ueber-uns" class="btn btn--red btn--small">Mehr über uns</a>
+      </div>
     </div>
   </div>
 </section>
@@ -53,6 +57,10 @@ import { aboutSection } from '../../data/site';
     margin: 0;
     color: var(--color-ink);
     max-width: 58ch;
+  }
+
+  .about__cta {
+    margin-top: 2rem;
   }
 
   @media (max-width: 56rem) {

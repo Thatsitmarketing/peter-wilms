@@ -1,5 +1,5 @@
 ---
-import { navigation } from '../data/site';
+import { brandLogo, navigation } from '../data/site';
 
 interface Props {
   /** true = liegt transparent über dem Hero und wird beim Scrollen weiß */
@@ -7,24 +7,29 @@ interface Props {
 }
 
 const { transparent = false } = Astro.props;
-const { pathname } = Astro.url;
+/** Trailing Slash ignorieren, damit /ueber-uns und /ueber-uns/ gleich behandelt werden */
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
 ---
 
 <header class:list={['header', { 'header--transparent': transparent }]} data-header>
   <div class="container header__inner">
     <a href="/" class="header__brand" aria-label="Peter Willms Bauunternehmung – Startseite">
-      <!-- Logo-Platzhalter: wird durch das echte (farbige) Logo ersetzt -->
-      <span class="header__logo" aria-hidden="true">
-        <svg viewBox="0 0 40 26" width="34" height="22" fill="none" aria-hidden="true">
-          <path d="M20 1 38 15H2L20 1z" fill="var(--color-red)" />
-          <rect x="7" y="15" width="26" height="10" fill="#f7c600" />
-        </svg>
-      </span>
-      <span class="header__name">
-        <small>Brücken &amp; Bauwerks-Instandsetzung</small>
-        <strong>Peter Willms</strong>
-        <span>Bauunternehmung</span>
-      </span>
+      <!-- Zwei Fassungen: weiß über dem Hero, farbig auf weißem Header -->
+      <img
+        class="header__logo header__logo--color"
+        src={brandLogo.color}
+        alt={brandLogo.alt}
+        width="512"
+        height="400"
+      />
+      <img
+        class="header__logo header__logo--white"
+        src={brandLogo.white}
+        alt=""
+        aria-hidden="true"
+        width="1024"
+        height="800"
+      />
     </a>
 
     <nav class="header__nav" aria-label="Hauptnavigation">
@@ -43,7 +48,8 @@ const { pathname } = Astro.url;
           <li>
             <a
               href={item.href}
-              class:list={{ 'is-active': item.href === '/' && pathname === '/' }}
+              class:list={{ 'is-active': item.href === pathname }}
+              aria-current={item.href === pathname ? 'page' : undefined}
             >
               {item.label}
             </a>
@@ -86,44 +92,24 @@ const { pathname } = Astro.url;
     position: relative;
   }
 
+  /* Beide Logofassungen liegen übereinander – kein Layout-Sprung beim Wechsel */
   .header__brand {
-    display: flex;
+    display: grid;
     align-items: center;
-    gap: 0.7rem;
+    justify-items: start;
     text-decoration: none;
     color: var(--color-ink);
   }
 
   .header__logo {
-    display: grid;
-    place-items: center;
-    width: 3rem;
-    height: 3rem;
-    background: #fff;
-    border: 1px dashed #b9b9b9;
-    padding: 0.2rem;
+    grid-area: 1 / 1;
+    height: clamp(2.6rem, 4.5vw, 3.4rem);
+    width: auto;
+    transition: opacity 0.3s ease;
   }
 
-  .header__name {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-  }
-
-  .header__name small {
-    font-size: 0.58rem;
-    letter-spacing: 0.03em;
-    color: var(--color-slate);
-  }
-
-  .header__name strong {
-    font-family: var(--font-heading);
-    font-size: 1.05rem;
-  }
-
-  .header__name > span {
-    font-size: 0.72rem;
-    color: var(--color-slate);
+  .header__logo--white {
+    opacity: 0;
   }
 
   /* Nav mittig wie in der Referenz */
@@ -153,10 +139,18 @@ const { pathname } = Astro.url;
     color: var(--color-red);
   }
 
-  /* Über dem Hero: weiße Schrift */
+  /* Über dem Hero: weiße Schrift und weißes Logo */
   .header--transparent:not(.is-scrolled) .header__brand,
   .header--transparent:not(.is-scrolled) .header__menu a {
     color: #fff;
+  }
+
+  .header--transparent:not(.is-scrolled) .header__logo--color {
+    opacity: 0;
+  }
+
+  .header--transparent:not(.is-scrolled) .header__logo--white {
+    opacity: 1;
   }
 
   .header--transparent:not(.is-scrolled) .header__menu a:hover,
@@ -166,11 +160,6 @@ const { pathname } = Astro.url;
     text-underline-offset: 6px;
     text-decoration-thickness: 2px;
     text-decoration-color: var(--color-red);
-  }
-
-  .header--transparent:not(.is-scrolled) .header__name small,
-  .header--transparent:not(.is-scrolled) .header__name > span {
-    color: rgba(255, 255, 255, 0.75);
   }
 
   .header__toggle {

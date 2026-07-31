@@ -1,0 +1,76 @@
+---
+import { aboutPage } from '../../../data/site';
+
+const { qualifications } = aboutPage;
+---
+
+<section class="section section--dark qualifications" id="qualifikationen" aria-labelledby="qualifications-title">
+  <div class="container">
+    <div class="qualifications__head">
+      <span class="section__kicker" data-reveal>{qualifications.kicker}</span>
+      <h2 class="section__title" id="qualifications-title" data-reveal style="--reveal-delay: 0.06s">
+        {qualifications.title}
+      </h2>
+      <p class="section__intro" data-reveal style="--reveal-delay: 0.12s">{qualifications.intro}</p>
+    </div>
+
+    <ul class="qualifications__list">
+      {qualifications.items.map((item, index) => (
+        <li class="qual-card" data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
+          <h3 class="qual-card__title">{item.title}</h3>
+          <p class="qual-card__text">{item.text}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .qualifications .section__title {
+    color: #fff;
+    max-width: 26ch;
+  }
+
+  .qualifications__head {
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .qualifications__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1.5rem;
+  }
+
+  .qual-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 3px solid var(--color-red);
+    padding: 1.75rem;
+    transition: background-color 0.25s ease, transform 0.25s var(--ease-out);
+  }
+
+  .qual-card:hover {
+    background: rgba(255, 255, 255, 0.09);
+    transform: translateY(-3px);
+  }
+
+  .qual-card__title {
+    font-size: 1.25rem;
+    color: #fff;
+    margin-bottom: 0.6rem;
+  }
+
+  .qual-card__text {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-on-dark-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qual-card:hover {
+      transform: none;
+    }
+  }
+</style>

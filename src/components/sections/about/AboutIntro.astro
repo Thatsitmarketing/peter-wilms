@@ -1,0 +1,87 @@
+---
+import { aboutPage } from '../../../data/site';
+
+const { intro, facts } = aboutPage;
+---
+
+<section class="section about-intro" aria-labelledby="about-intro-title">
+  <div class="container about-intro__grid">
+    <div class="about-intro__head">
+      <span class="section__kicker" data-reveal>{intro.kicker}</span>
+      <h2 class="section__title" id="about-intro-title" data-reveal style="--reveal-delay: 0.06s">
+        {intro.title}
+      </h2>
+    </div>
+
+    <div class="about-intro__body">
+      {intro.paragraphs.map((text, index) => (
+        <p class="about-intro__text" data-reveal style={`--reveal-delay: ${index * 0.08}s`}>
+          {text}
+        </p>
+      ))}
+
+      <dl class="about-intro__facts" data-reveal style="--reveal-delay: 0.24s">
+        {facts.map((fact) => (
+          <div class="about-intro__fact">
+            <dd>{fact.value}</dd>
+            <dt>{fact.label}</dt>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-intro__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+
+  .about-intro .section__title {
+    max-width: 20ch;
+    margin-bottom: 0;
+  }
+
+  .about-intro__text {
+    color: var(--color-slate);
+    max-width: 62ch;
+  }
+
+  .about-intro__text:first-child {
+    color: var(--color-ink);
+    font-size: 1.1rem;
+  }
+
+  /* Eckdaten als roter Balken unter dem Fließtext */
+  .about-intro__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    margin: 2.25rem 0 0;
+    padding-top: 1.75rem;
+    border-top: 3px solid var(--color-red);
+  }
+
+  .about-intro__fact dd {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    line-height: 1.1;
+    color: var(--color-red);
+  }
+
+  .about-intro__fact dt {
+    font-size: 0.9rem;
+    color: var(--color-slate);
+  }
+
+  @media (max-width: 56rem) {
+    .about-intro__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
