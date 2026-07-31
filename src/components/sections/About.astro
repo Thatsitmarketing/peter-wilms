@@ -112,19 +112,21 @@ import { aboutSection } from '../../data/site';
     margin-top: 2rem;
   }
 
-  /* Brücken-Bühne links – kommt aus dem Container heraus und läuft nach unten weiter */
+  /* Brücken-Bühne links – ragt bewusst über den linken Rand hinaus */
   .about__bridge {
     position: relative;
     min-height: clamp(24rem, 55vh, 38rem);
-    margin-left: calc(var(--gutter, 1.5rem) * -1);
+    /* Kompletter linker Container-Einzug + zusätzlicher Bleed nach links */
+    margin-left: calc((var(--gutter, 1.5rem) + 4vw) * -1);
     align-self: stretch;
   }
 
   .about__bridge-img {
     position: absolute;
-    left: -6%;
+    /* Brücke bündig an den linken Bildschirmrand ziehen */
+    left: -18%;
     bottom: -12%;
-    width: 115%;
+    width: 125%;
     max-width: none;
     height: auto;
     object-fit: contain;
@@ -189,8 +191,9 @@ import { aboutSection } from '../../data/site';
       const total = rect.height + vh;
       const scrolled = vh - rect.top;
       const progress = clamp(scrolled / total);
-      // Schneller Crossfade: startet bei ~10% Sichtbarkeit, komplett saniert bei ~35%.
-      const eased = clamp((progress - 0.1) / 0.25);
+      // Effekt startet erst wenn die Sektion nahe der Bildschirmmitte ist (~40%),
+      // damit der Übergang wirklich sichtbar in der Mitte des Sichtbereichs stattfindet.
+      const eased = clamp((progress - 0.4) / 0.25);
       section.style.setProperty('--bridge-progress', eased.toFixed(3));
     };
 
