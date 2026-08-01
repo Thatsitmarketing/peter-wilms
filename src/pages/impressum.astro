@@ -4,9 +4,16 @@ import { company } from '../data/site';
 ---
 
 <BaseLayout title={`Impressum – ${company.name}`} description="Impressum der Peter Willms Bauunternehmung GmbH">
-  <section class="section">
+  <section class="section legal-section">
     <div class="container legal">
-      <h1>Impressum</h1>
+      <header class="legal__header">
+        <p class="legal__kicker">Rechtliches</p>
+        <h1 class="legal__title">Impressum</h1>
+        <p class="legal__lead">
+          Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG) und § 18 Absatz 2
+          Medienstaatsvertrag (MStV).
+        </p>
+      </header>
 
       <div class="legal__notice" role="note">
         <strong>Platzhalter:</strong> Die Inhalte dieser Seite müssen vor dem Livegang
@@ -14,59 +21,232 @@ import { company } from '../data/site';
         Geschäftsführung, USt-IdNr., Aufsichtsbehörde/Kammer).
       </div>
 
-      <h2>Angaben gemäß § 5 DDG</h2>
-      <p>
-        {company.name}<br />
-        {company.address.street}<br />
-        {company.address.zip} {company.address.city}
-      </p>
+      <section class="legal__section">
+        <div class="legal__section-head">
+          <h2>Anbieter</h2>
+          <p class="legal__section-hint">Angaben gemäß § 5 DDG</p>
+        </div>
+        <div class="legal__section-body">
+          <dl class="legal__data">
+            <div>
+              <dt>Firma</dt>
+              <dd>{company.name}</dd>
+            </div>
+            <div>
+              <dt>Anschrift</dt>
+              <dd>
+                {company.address.street}<br />
+                {company.address.zip} {company.address.city}
+              </dd>
+            </div>
+            <div>
+              <dt>Vertreten durch</dt>
+              <dd>[Platzhalter: Geschäftsführer:in eintragen]</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
 
-      <h2>Vertreten durch</h2>
-      <p>[Platzhalter: Geschäftsführer:in eintragen]</p>
+      <section class="legal__section">
+        <div class="legal__section-head">
+          <h2>Kontakt</h2>
+          <p class="legal__section-hint">Für Anfragen und Anliegen</p>
+        </div>
+        <div class="legal__section-body">
+          <dl class="legal__data">
+            <div>
+              <dt>Telefon</dt>
+              <dd>{company.contact.phoneCentralDisplay}</dd>
+            </div>
+            <div>
+              <dt>Telefax</dt>
+              <dd>{company.contact.fax}</dd>
+            </div>
+            <div>
+              <dt>E-Mail</dt>
+              <dd>
+                <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
 
-      <h2>Kontakt</h2>
-      <p>
-        Telefon: {company.contact.phoneCentralDisplay}<br />
-        Telefax: {company.contact.fax}<br />
-        E-Mail: <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a>
-      </p>
+      <section class="legal__section">
+        <div class="legal__section-head">
+          <h2>Register und Steuer</h2>
+          <p class="legal__section-hint">Handelsregister und Umsatzsteuer</p>
+        </div>
+        <div class="legal__section-body">
+          <dl class="legal__data">
+            <div>
+              <dt>Registereintrag</dt>
+              <dd>[Platzhalter: Registergericht und Handelsregisternummer eintragen]</dd>
+            </div>
+            <div>
+              <dt>Umsatzsteuer-ID</dt>
+              <dd>
+                [Platzhalter: Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG
+                eintragen]
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
 
-      <h2>Registereintrag</h2>
-      <p>
-        [Platzhalter: Registergericht und Handelsregisternummer eintragen]
-      </p>
-
-      <h2>Umsatzsteuer-ID</h2>
-      <p>
-        [Platzhalter: Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG eintragen]
-      </p>
-
-      <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
-      <p>[Platzhalter: Name und Anschrift der verantwortlichen Person eintragen]</p>
+      <section class="legal__section">
+        <div class="legal__section-head">
+          <h2>Verantwortlichkeit</h2>
+          <p class="legal__section-hint">§ 18 Abs. 2 MStV</p>
+        </div>
+        <div class="legal__section-body">
+          <dl class="legal__data">
+            <div>
+              <dt>Verantwortlich für den Inhalt</dt>
+              <dd>[Platzhalter: Name und Anschrift der verantwortlichen Person eintragen]</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
     </div>
   </section>
 </BaseLayout>
 
 <style>
+  /* Volle Container-Breite mit 10 % Gutter (bereits per globaler
+     `.container`-Regel) – Legal-Layout überschreibt daher keine max-width mehr. */
+  .legal-section {
+    padding-block: clamp(4rem, 8vw, 6rem);
+  }
+
   .legal {
-    max-width: 46rem;
+    width: 100%;
+    max-width: none;
   }
 
-  .legal h1 {
-    font-size: 2rem;
+  .legal__header {
+    max-width: 60ch;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
   }
 
-  .legal h2 {
-    font-size: 1.15rem;
-    margin-top: 2rem;
+  .legal__kicker {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.85rem;
+    color: var(--color-red);
+    margin: 0 0 0.75rem;
+  }
+
+  .legal__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.1;
+    margin: 0 0 1rem;
+  }
+
+  .legal__lead {
+    font-size: 1.05rem;
+    color: var(--color-slate);
+    line-height: 1.55;
+    margin: 0;
   }
 
   .legal__notice {
     background: #fdecec;
-    border: 1px solid var(--color-red);
-    border-radius: 0;
+    border-left: 3px solid var(--color-red);
     padding: 1rem 1.25rem;
-    margin-block: 1.5rem;
+    margin-bottom: 2.5rem;
     font-size: 0.92rem;
+    line-height: 1.55;
+    max-width: 80ch;
+  }
+
+  /* Zwei-Spalten-Grid pro Sektion: links Überschrift + Kurzhinweis,
+     rechts der eigentliche Inhalt – auf schmalen Viewports gestapelt. */
+  .legal__section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    padding: clamp(1.75rem, 3vw, 2.5rem) 0;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .legal__section:last-of-type {
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .legal__section-head h2 {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    margin: 0 0 0.35rem;
+    color: var(--color-ink);
+    line-height: 1.25;
+  }
+
+  .legal__section-hint {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-slate);
+    line-height: 1.4;
+  }
+
+  .legal__data {
+    display: grid;
+    gap: 1rem 2rem;
+    grid-template-columns: 1fr;
+    margin: 0;
+  }
+
+  .legal__data > div {
+    display: grid;
+    grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr);
+    gap: 0.5rem 1.5rem;
+    align-items: baseline;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px dashed var(--color-line);
+  }
+
+  .legal__data > div:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .legal__data dt {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-slate);
+  }
+
+  .legal__data dd {
+    margin: 0;
+    color: var(--color-ink);
+    line-height: 1.55;
+  }
+
+  .legal__data a {
+    color: var(--color-red);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .legal__data a:hover {
+    color: var(--color-red-dark);
+  }
+
+  @media (max-width: 62rem) {
+    .legal__section {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .legal__data > div {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
   }
 </style>
