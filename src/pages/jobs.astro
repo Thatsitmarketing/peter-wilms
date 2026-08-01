@@ -421,7 +421,7 @@ const timeline = [
   .position-card__flip {
     position: relative;
     width: 100%;
-    min-height: 26rem;
+    min-height: max(30rem, calc(25vh + 15rem));
     transform-style: preserve-3d;
     transition: transform 0.7s var(--ease-out);
   }
@@ -456,7 +456,8 @@ const timeline = [
   }
 
   .position-card__media {
-    height: 11rem;
+    height: 25vh;
+    min-height: 12rem;
     flex-shrink: 0;
   }
 
