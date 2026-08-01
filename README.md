@@ -95,36 +95,51 @@ Platzhalterfläche durch `<img>`/`<Image>` (als `object-fit: cover`-Hintergrund)
 bzw. eine echte Videoeinbindung ersetzen – die Beschriftung nennt jeweils das
 vorgesehene Motiv.
 
-## Cookie Consent / DSGVO
+## Datenschutz-System (Consent)
 
-- **Kategorien:** notwendig, Darstellung/Funktion, Statistik, Marketing
-- **Blockierung:** Nicht notwendige Skripte werden als
-  `<script type="text/plain" data-consent-category="statistics" data-src="…">`
-  eingebunden und erst nach Einwilligung aktiviert
-- **Zwei-Klick-Inhalte:** Mechanismus für externe Inhalte (z. B. Google Maps,
-  YouTube) über `data-consent-placeholder` vorbereitet – aktuell ist kein
-  externer Dienst eingebunden; bei Einbindung erst nach Klick + Einwilligung
-  laden (Kategorie „Darstellung & Funktion")
-- **Wiederöffnen:** Footer-Link „Cookie-Einstellungen" (`data-open-consent`)
-- **Speicherung:** `localStorage` (`willms-consent`), versioniert – bei
-  Kategorie-Änderungen `CONSENT_VERSION` in `src/scripts/consent.ts` erhöhen,
-  dann erscheint der Banner erneut
-- **Keine externen Fonts/Skripte:** Systemschriften, alles First-Party
+Die Website hat zwei automatische Betriebsmodi, gesteuert über die zentrale
+Service-Registry `src/scripts/consent/registry.ts`:
 
-### Austausch gegen eine agenturweite Consent-Lösung
+- **Modus A (aktuell aktiv):** Kein optionaler Dienst ist in der Registry
+  auf `enabled: true` gesetzt. Beim ersten Besuch wird ein zentrierter,
+  reiner Datenschutz-Hinweis eingeblendet (kein Consent-Banner, keine
+  fiktiven Statistik-/Marketing-Kategorien). Speicherung nur, dass der
+  Hinweis gesehen wurde: `localStorage["peter_willms_privacy_notice"]`.
+- **Modus B:** Sobald mindestens ein Dienst in der Registry auf
+  `enabled: true` steht, wird automatisch der vollständige Consent-Dialog
+  aktiviert (Alle akzeptieren / Alle ablehnen / Einstellungen). Vorbereitet
+  sind (deaktiviert): Google Tag Manager, Google Analytics 4, Google Ads,
+  Google Maps (Embed), externe Videodienste. Diese sind Blueprints ohne
+  echte IDs oder Loader – vor Aktivierung müssen Anbieter-Daten,
+  Datenschutzhinweise und die Consent-Version aktualisiert werden.
 
-Die gesamte Logik liegt in `src/scripts/consent.ts` (API: `window.wbConsent`,
-Events `consent:changed` / `consent:open`), die UI in
-`src/components/CookieConsent.astro`. Für einen Wechsel (z. B. Usercentrics,
-Cookiebot, Eigenlösung) müssen nur diese beiden Dateien ersetzt werden – der
-Rest der Website nutzt ausschließlich die drei dokumentierten Mechanismen
-(blockierte Skripte, `data-consent-placeholder`, `data-open-consent`).
+Öffnen des Dialogs: rotes Cookie-Widget links unten oder Footer-Link
+„Cookie-Einstellungen" (`[data-open-consent]`). Zusätzlich verfügbar:
+`window.wbConsent.open()`, Event `consent:changed`.
+
+Struktur:
+
+```
+src/scripts/consent/
+  registry.ts   ← Kategorien + Dienste (alle Zukunftsdienste enabled:false)
+  manager.ts    ← Manager, Speicherung, Loader-Aufruf
+src/scripts/consent.ts       ← Fassade, Footer-Verdrahtung
+src/components/CookieConsent.astro    ← Widget + zentrierter Dialog
+src/components/CookiePrivacyIcon.astro ← Baustellen-Cookie Inline-SVG
+```
+
+Speichernamen (First-Party `localStorage`, keine Cookies):
+
+- `peter_willms_privacy_notice` – Modus A: Hinweis bestätigt
+- `peter_willms_privacy_consent` – Modus B: Consent-Entscheidung
+  (Version, Zeitpunkt, Ablauf 12 Monate, aktive Kategorien, Dienst-IDs)
 
 ## Offene Punkte vor Livegang
 
-- [ ] Impressum und Datenschutzerklärung juristisch final abstimmen (Platzhalter!)
-- [ ] Echte Fotos/Videos für die verbliebenen Platzhalterflächen einpflegen
+- [ ] Impressum und Datenschutzerklärung juristisch final abstimmen
+- [ ] E-Mail-Dienstleister für `functions/api/contact.ts` festlegen und
+      anbinden (aktuell nur Validierungs-Stub, keine E-Mail wird versandt)
+- [ ] Echte Fotos/Videos für die Platzhalterflächen einpflegen
 - [ ] Freigabe der Auftraggeber für die Verwendung ihrer Logos einholen
 - [ ] Referenzprojekte mit echten Daten befüllen (`src/data/site.ts`)
-- [ ] E-Mail-Versand des Kontaktformulars anbinden (`functions/api/contact.ts`)
 - [ ] Finale Domain in `astro.config.mjs` (`site`) prüfen

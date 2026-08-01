@@ -3,15 +3,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { company } from '../data/site';
 ---
 
-<BaseLayout title={`Datenschutzerklärung – ${company.name}`} description="Datenschutzerklärung der Peter Willms Bauunternehmung GmbH">
+<BaseLayout
+  title={`Datenschutzerklärung – ${company.name}`}
+  description="Datenschutzerklärung der Peter Willms Bauunternehmung GmbH"
+>
   <section class="section">
     <div class="container legal">
       <h1>Datenschutzerklärung</h1>
 
       <div class="legal__notice" role="note">
-        <strong>Platzhalter:</strong> Diese Datenschutzerklärung ist eine strukturelle
-        Vorlage und muss vor dem Livegang final juristisch geprüft und auf die
-        tatsächlich eingesetzten Dienste abgestimmt werden.
+        <strong>Hinweis:</strong> Diese Datenschutzerklärung beschreibt die
+        technisch tatsächlich erkennbare Verarbeitung durch diese Website
+        (Cloudflare-Hosting, Kontaktformular über eine Cloudflare Pages Function).
+        Die als „<em>Zur juristischen Prüfung</em>" gekennzeichneten Passagen
+        müssen vor dem Livegang durch eine qualifizierte Datenschutz- oder
+        Rechtsberatung geprüft und ergänzt werden.
       </div>
 
       <h2>1. Verantwortlicher</h2>
@@ -19,61 +25,161 @@ import { company } from '../data/site';
         {company.name}<br />
         {company.address.street}<br />
         {company.address.zip} {company.address.city}<br />
+        Telefon: {company.contact.phoneCentralDisplay}<br />
         E-Mail: <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a>
       </p>
 
-      <h2>2. Hosting</h2>
+      <h2>2. Hosting bei Cloudflare</h2>
       <p>
-        Diese Website wird bei Cloudflare (Cloudflare, Inc.) gehostet. Beim Aufruf der
-        Website verarbeitet Cloudflare technisch notwendige Daten (z.&nbsp;B. IP-Adresse,
-        Datum und Uhrzeit des Zugriffs) zur Auslieferung und Absicherung der Website.
-        [Platzhalter: Details zum Auftragsverarbeitungsvertrag und zu
-        Standardvertragsklauseln ergänzen.]
+        Diese Website wird bei Cloudflare (Cloudflare, Inc., 101 Townsend Street,
+        San Francisco, CA 94107, USA) auf der Plattform Cloudflare Pages betrieben.
+        Beim Aufruf verarbeitet Cloudflare technisch notwendige Verbindungsdaten,
+        insbesondere die IP-Adresse des zugreifenden Geräts, den Zeitpunkt der
+        Anfrage, die aufgerufene Ressource und Meta-Angaben des Browsers.
+      </p>
+      <p>
+        Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO
+        (berechtigtes Interesse an einem sicheren und stabilen Betrieb der
+        Website).
+      </p>
+      <p class="legal__todo">
+        <strong>Zur juristischen Prüfung:</strong> konkrete Speicherdauer der
+        Server-Logs bei Cloudflare, Bestand eines Auftragsverarbeitungsvertrags,
+        gewählte Garantien für einen etwaigen Drittlandtransfer in die USA
+        (Data Privacy Framework, Standardvertragsklauseln, ergänzende
+        Maßnahmen).
       </p>
 
-      <h2>3. Cookies und Einwilligung</h2>
+      <h2>3. Datenschutz-Einstellungen und Speicherung Ihrer Auswahl</h2>
       <p>
-        Diese Website verwendet ausschließlich technisch notwendige Speicherung
-        (Speicherung Ihrer Cookie-Einstellungen im lokalen Speicher des Browsers).
-        Nicht notwendige Dienste und Inhalte werden erst nach Ihrer ausdrücklichen
-        Einwilligung geladen. Ihre Einwilligung können Sie jederzeit über den Link
-        „Cookie-Einstellungen" im Footer anpassen oder widerrufen.
+        Diese Website verwendet derzeit ausschließlich technisch notwendige
+        Funktionen. Es werden keine Analyse-, Marketing- oder Tracking-Dienste
+        eingebunden und keine Inhalte externer Anbieter (z.&nbsp;B. Karten,
+        Videos) geladen.
+      </p>
+      <p>
+        Zur Umsetzung Ihres Rechts auf informationelle Selbstbestimmung
+        speichern wir im lokalen Speicher Ihres Browsers ausschließlich, ob
+        Sie unseren Datenschutz-Hinweis bereits gesehen haben. Es werden dabei
+        weder Name, E-Mail-Adresse, IP-Adresse noch Formularinhalte gespeichert.
+        Verwendete Speicherorte (First-Party, keine Cookies):
+      </p>
+      <ul>
+        <li>
+          <code>peter_willms_privacy_notice</code>: speichert die Bestätigung
+          („Verstanden") des einleitenden Datenschutz-Hinweises, um ihn
+          nicht bei jedem Seitenwechsel erneut anzuzeigen. Rechtsgrundlage:
+          Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO sowie §&nbsp;25 Abs.&nbsp;2
+          Nr.&nbsp;2 TDDDG (unbedingt erforderliche Speicherung, um vom Nutzer
+          ausdrücklich gewünschte Funktion bereitzustellen).
+        </li>
+        <li>
+          <code>peter_willms_privacy_consent</code>: wird nur angelegt, wenn
+          die Website in Zukunft optionale Dienste einbindet und Sie eine
+          Auswahl treffen. Er speichert dann Consent-Version, Zeitpunkt,
+          Ablauf und die akzeptierten Kategorien. Solange keine optionalen
+          Dienste eingebunden sind, entsteht dieser Eintrag nicht.
+        </li>
+      </ul>
+      <p>
+        Sie können Ihre Datenschutz-Einstellungen jederzeit über das rote
+        Cookie-Symbol links unten oder über den Link „Cookie-Einstellungen"
+        im Footer öffnen und ändern. Die Speicherdauer eines späteren
+        Einwilligungs-Eintrags beträgt 12 Monate; danach fragen wir die
+        Einwilligung erneut ab.
       </p>
 
       <h2>4. Kontaktformular</h2>
       <p>
-        Wenn Sie uns über das Kontaktformular eine Anfrage senden, verarbeiten wir die
-        von Ihnen angegebenen Daten (Name, E-Mail-Adresse, ggf. Firma und Telefonnummer
-        sowie Ihre Nachricht) ausschließlich zur Bearbeitung Ihrer Anfrage.
-        Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO (vorvertragliche
-        Maßnahmen) bzw. Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes
-        Interesse an der Beantwortung). [Platzhalter: Speicherdauer und ggf.
-        eingesetzten E-Mail-/Formular-Dienstleister ergänzen.]
+        Wenn Sie uns über das Kontaktformular eine Nachricht senden,
+        verarbeiten wir die von Ihnen angegebenen Daten (Vor- und Nachname,
+        E-Mail-Adresse, Betreff, Nachricht) ausschließlich zur Bearbeitung
+        Ihrer Anfrage und zur Kommunikation mit Ihnen.
+      </p>
+      <p>
+        Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO, sofern
+        Ihre Anfrage der Anbahnung eines Vertragsverhältnisses dient, sowie
+        Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes Interesse an
+        einer effizienten Beantwortung von Kontaktanfragen).
+      </p>
+      <p>
+        Das Formular verwendet ein sogenanntes Honeypot-Feld („Website"), das
+        für Menschen unsichtbar ist. Wird es dennoch ausgefüllt, gehen wir von
+        einem automatisierten Zugriff (Bot) aus und verwerfen die Anfrage
+        stillschweigend. Über das Formularfeld hinaus verarbeitet die
+        annehmende Funktion (Cloudflare Pages Function <code>/api/contact</code>)
+        keine zusätzlichen personenbezogenen Daten.
+      </p>
+      <p class="legal__todo">
+        <strong>Zur juristischen Prüfung:</strong> Aktuell ist der eigentliche
+        E-Mail-Versand der Anfragen noch nicht angebunden. Vor Livegang muss
+        festgelegt werden, ob ein E-Mail-Dienstleister (z.&nbsp;B. Cloudflare
+        MailChannels, Resend oder ein eigener SMTP-Dienst) eingesetzt wird –
+        einschließlich Anbieter, Empfänger, Speicherdauer der Anfragen,
+        Auftragsverarbeitungsvertrag und etwaigem Drittlandtransfer. Bis dahin
+        werden die Formulardaten von der Function nicht dauerhaft gespeichert.
       </p>
 
-      <h2>5. Google Maps (Zwei-Klick-Lösung)</h2>
+      <h2>5. Externe Links</h2>
       <p>
-        Auf dieser Website ist eine Karte von Google Maps vorgesehen. Die Karte wird
-        erst geladen, nachdem Sie ihr Laden aktiv angestoßen und in die Kategorie
-        „Darstellung &amp; Funktion" eingewilligt haben. Erst dann werden Daten
-        (u.&nbsp;a. Ihre IP-Adresse) an Google übertragen. Rechtsgrundlage ist
-        Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;a DSGVO (Einwilligung). [Platzhalter:
-        vollständige Google-Maps-Klausel ergänzen.]
+        Diese Website enthält Links zu externen Websites Dritter, unter
+        anderem einen Link auf Google Maps zum Nachschlagen unseres Standorts.
+        Solche Links werden erst nach Ihrem bewussten Klick geöffnet; bis
+        dahin baut diese Website keine Verbindung zu Google auf und übermittelt
+        keine Daten an Google. Für die Verarbeitung Ihrer Daten auf der
+        jeweils verlinkten Website ist der dortige Anbieter verantwortlich.
       </p>
 
-      <h2>6. Ihre Rechte</h2>
+      <h2>6. Schriftarten</h2>
       <p>
-        Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der
-        Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die Verarbeitung
-        Ihrer personenbezogenen Daten. Außerdem besteht ein Beschwerderecht bei einer
-        Datenschutzaufsichtsbehörde. [Platzhalter: zuständige Aufsichtsbehörde für NRW
-        ergänzen – Landesbeauftragte für Datenschutz und Informationsfreiheit NRW.]
+        Diese Website verwendet ausschließlich selbst gehostete Schriftarten
+        (Inter, Syne über <code>@fontsource</code>). Es werden keine Schriften
+        von Google Fonts oder anderen externen Anbietern nachgeladen.
       </p>
 
-      <h2>7. Externe Schriften und Skripte</h2>
+      <h2>7. Nicht eingebunden</h2>
       <p>
-        Diese Website verwendet keine externen Schriftarten (z.&nbsp;B. Google Fonts)
-        und lädt keine Skripte von Drittservern ohne Ihre Einwilligung.
+        Zum Zeitpunkt der Veröffentlichung dieser Erklärung sind
+        <strong>nicht</strong> in die Website eingebunden:
+      </p>
+      <ul>
+        <li>Google Tag Manager, Google Analytics, Google Ads / Remarketing</li>
+        <li>Meta Pixel, LinkedIn Insight Tag, TikTok Pixel, Microsoft Clarity, Hotjar</li>
+        <li>Eingebettete Google-Maps-Karten (nur ein normaler Link ist vorhanden)</li>
+        <li>Eingebettete Videos (YouTube, Vimeo o. ä.)</li>
+        <li>Cloudflare Web Analytics, Cloudflare Zaraz, Cloudflare Turnstile</li>
+        <li>Chat-, Buchungs- oder Newsletter-Widgets</li>
+      </ul>
+      <p>
+        Sollten in Zukunft optionale Dienste dieser Art eingebunden werden,
+        werden sie erst nach Ihrer ausdrücklichen Einwilligung über den
+        Datenschutz-Dialog geladen. Diese Erklärung wird dann entsprechend
+        aktualisiert und die Einwilligung erneut abgefragt.
+      </p>
+
+      <h2>8. Ihre Rechte</h2>
+      <p>
+        Sie haben nach der DSGVO das Recht auf Auskunft (Art.&nbsp;15),
+        Berichtigung (Art.&nbsp;16), Löschung (Art.&nbsp;17), Einschränkung
+        der Verarbeitung (Art.&nbsp;18), Datenübertragbarkeit (Art.&nbsp;20)
+        und Widerspruch (Art.&nbsp;21). Zudem können Sie eine erteilte
+        Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen.
+      </p>
+      <p>
+        Zur Wahrnehmung Ihrer Rechte wenden Sie sich bitte an die oben unter
+        Punkt&nbsp;1 genannten Kontaktdaten.
+      </p>
+
+      <h2>9. Beschwerderecht</h2>
+      <p>
+        Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu
+        beschweren, insbesondere bei der für unseren Sitz zuständigen Behörde:
+        Landesbeauftragte für Datenschutz und Informationsfreiheit
+        Nordrhein-Westfalen, Kavalleriestraße 2–4, 40213 Düsseldorf.
+      </p>
+
+      <p class="legal__meta">
+        Stand: <time datetime="2025-01">{new Date().toLocaleDateString('de-DE', { year: 'numeric', month: 'long' })}</time>
       </p>
     </div>
   </section>
@@ -93,6 +199,18 @@ import { company } from '../data/site';
     margin-top: 2rem;
   }
 
+  .legal ul {
+    padding-left: 1.25rem;
+    margin: 0 0 1em;
+  }
+
+  .legal code {
+    background: var(--color-bg-soft);
+    padding: 0.1em 0.35em;
+    border: 1px solid var(--color-line);
+    font-size: 0.9em;
+  }
+
   .legal__notice {
     background: #fdecec;
     border: 1px solid var(--color-red);
@@ -100,5 +218,19 @@ import { company } from '../data/site';
     padding: 1rem 1.25rem;
     margin-block: 1.5rem;
     font-size: 0.92rem;
+  }
+
+  .legal__todo {
+    background: var(--color-bg-soft);
+    border-left: 3px solid var(--color-red);
+    padding: 0.75rem 1rem;
+    margin-block: 1rem;
+    font-size: 0.92rem;
+  }
+
+  .legal__meta {
+    margin-top: 2.5rem;
+    color: var(--color-slate);
+    font-size: 0.88rem;
   }
 </style>
