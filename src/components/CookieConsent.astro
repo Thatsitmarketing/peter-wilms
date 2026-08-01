@@ -1,17 +1,15 @@
 ---
 /**
- * Zentrale Consent-UI:
+ * Zentrale Consent-UI im Banner-Stil (Vorbild CCM19):
  *   1. Fest sichtbares Cookie-Widget unten rechts (öffnet den Dialog).
- *   2. Zentrierter Consent-Dialog nach klassischem Vorbild:
- *      Titel "Cookie-Einstellungen", Beschreibungstext, für jede Kategorie
- *      eine Karte (Titel, Beschreibung, Toggle, Details-Klappe), unten fest
- *      die drei Aktionen "Alle ablehnen", "Alle akzeptieren",
- *      "Auswahl speichern".
+ *   2. Großer Consent-Banner mit Titel, ausführlicher Beschreibung,
+ *      horizontaler Kategorien-Auswahl (Checkboxen + Info-Icons) und drei
+ *      Aktions-Buttons "Ablehnen", "Speichern", "Alles akzeptieren".
+ *   3. Unten eine schmale Fußleiste mit Links zu Impressum,
+ *      Datenschutzhinweis und den Cookie-Einstellungen.
  *
  * Optionale Dienste werden ausschließlich in der Service-Registry
- * (`src/scripts/consent/registry.ts`) hinzugefügt und aktiviert. Für
- * Kategorien ohne aktiven Dienst wird das transparent im Detailbereich
- * ausgewiesen ("Aktuell sind in dieser Kategorie keine Dienste eingebunden.").
+ * (`src/scripts/consent/registry.ts`) gepflegt.
  */
 import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
 ---
@@ -30,7 +28,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
   <span class="sr-only">Cookie-Einstellungen öffnen</span>
 </button>
 
-<!-- Zentrierter Consent-Dialog (Overlay + Panel) -->
+<!-- Consent-Banner (Overlay + Panel) -->
 <div
   class="privacy-overlay"
   data-privacy-overlay
@@ -47,43 +45,43 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     tabindex="-1"
     data-privacy-panel
   >
-    <header class="privacy-panel__head">
-      <span class="privacy-panel__icon" aria-hidden="true">
-        <CookiePrivacyIcon size={26} />
-      </span>
-      <h2 class="privacy-panel__title" id="privacy-dialog-title">Cookie-Einstellungen</h2>
-      <button
-        type="button"
-        class="privacy-panel__close"
-        data-privacy-close
-        aria-label="Dialog schließen"
-      >
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <path d="M6 6l12 12M6 18L18 6" />
-        </svg>
-      </button>
-    </header>
+    <button
+      type="button"
+      class="privacy-panel__close"
+      data-privacy-close
+      aria-label="Dialog schließen"
+    >
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M6 18L18 6" />
+      </svg>
+    </button>
 
     <div class="privacy-panel__body">
+      <h2 class="privacy-panel__title" id="privacy-dialog-title">
+        Wir nutzen Cookies und andere Technologien.
+      </h2>
       <p class="privacy-panel__description" id="privacy-dialog-description">
-        Wählen Sie aus, welche Kategorien Sie zulassen möchten. „Technisch
-        notwendig" ist immer aktiv, alle anderen Kategorien sind bis zu Ihrer
-        Zustimmung deaktiviert. Ihre Auswahl können Sie jederzeit über den
-        Link „Cookie-Einstellungen" im Footer oder über das rote Symbol unten
-        rechts wieder ändern.
+        Diese Website nutzt Cookies und vergleichbare Funktionen zur Verarbeitung
+        von Endgeräteinformationen und personenbezogenen Daten. Die Verarbeitung
+        dient der Einbindung von Inhalten, externen Diensten und Elementen
+        Dritter, der statistischen Analyse/Messung, der personalisierten Werbung
+        sowie der Einbindung sozialer Medien. Je nach Funktion werden dabei
+        Daten an Dritte weitergegeben und an Dritte in Ländern, in denen kein
+        angemessenes Datenschutzniveau vorliegt und von diesen verarbeitet wird,
+        z. B. die USA. Ihre Einwilligung ist stets freiwillig, für die Nutzung
+        unserer Website nicht erforderlich und kann jederzeit über das rote
+        Cookie-Symbol unten rechts abgelehnt oder widerrufen werden.
       </p>
 
       <div class="privacy-panel__categories" data-privacy-categories></div>
 
-      <p class="privacy-panel__links">
-        <a href="/datenschutz">Datenschutzerklärung</a>
-        <span aria-hidden="true">·</span>
-        <a href="/impressum">Impressum</a>
-      </p>
+      <div class="privacy-panel__actions" data-privacy-actions></div>
     </div>
 
-    <footer class="privacy-panel__actions" data-privacy-actions>
-      <!-- Buttons werden per JS eingefügt (drei Aktionen in Site-Button-Stil). -->
+    <footer class="privacy-panel__footer">
+      <a href="/impressum">Impressum</a>
+      <a href="/datenschutz">Datenschutzhinweis</a>
+      <a href="/datenschutz#cookies" data-privacy-settings-link>Einstellungen</a>
     </footer>
   </div>
 </div>
@@ -134,7 +132,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     }
   }
 
-  /* ---------- Overlay + zentriertes Panel ---------- */
+  /* ---------- Overlay + Banner-Panel ---------- */
   .privacy-overlay {
     position: fixed;
     inset: 0;
@@ -146,7 +144,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
              max(1rem, env(safe-area-inset-right, 0))
              max(1rem, env(safe-area-inset-bottom, 0))
              max(1rem, env(safe-area-inset-left, 0));
-    background: rgba(22, 22, 22, 0.45);
+    background: rgba(22, 22, 22, 0.55);
   }
 
   .privacy-overlay[hidden] {
@@ -155,20 +153,12 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
 
   .privacy-panel {
     position: relative;
-    width: min(100%, 65vw);
-    min-width: min(100%, 36rem);
-    /* Höhe so bemessen, dass der Aktionen-Footer und der Beschreibungstext
-       auf typischen Desktop-Viewports (>= 720 px) sichtbar sind, ohne
-       scrollen zu müssen. Die Kategorien-Liste scrollt intern, falls die
-       Anzeigehöhe knapp wird. */
+    width: min(100%, 68rem);
     max-height: min(calc(100dvh - 2rem), 46rem);
     display: flex;
     flex-direction: column;
     background: #ffffff;
     color: var(--color-ink);
-    border: 2px solid var(--color-ink);
-    border-top: 4px solid var(--color-red);
-    border-radius: 2px;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
     outline: none;
     animation: privacy-panel-in 0.25s var(--ease-out);
@@ -191,47 +181,24 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     }
   }
 
-  .privacy-panel__head {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 0.9rem;
-    padding: 0.9rem 1.25rem;
-    border-bottom: 1px solid var(--color-line);
-    flex-shrink: 0;
-  }
-
-  .privacy-panel__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.4rem;
-    height: 2.4rem;
-    background: var(--color-red);
-    color: #ffffff;
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-
-  .privacy-panel__title {
-    margin: 0;
-    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-    line-height: 1.2;
-    color: var(--color-ink);
-  }
-
   .privacy-panel__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
     background: none;
     border: 1px solid transparent;
-    padding: 0.35rem;
-    color: var(--color-ink);
+    padding: 0.4rem;
+    color: var(--color-slate);
     cursor: pointer;
     line-height: 0;
     border-radius: 2px;
+    z-index: 1;
+    transition: background-color 0.15s ease, color 0.15s ease;
   }
 
   .privacy-panel__close:hover {
     background: var(--color-bg-soft);
+    color: var(--color-ink);
   }
 
   .privacy-panel__close:focus-visible {
@@ -240,378 +207,263 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
   }
 
   .privacy-panel__body {
-    padding: 1.4rem 1.75rem 1.1rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 4vw, 3rem)
+             clamp(1.25rem, 2.5vw, 1.75rem);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     flex: 1;
     min-height: 0;
-    background: #161616;
-    color: #f4f4f4;
   }
 
-  /* Scrollbar an die dunkle Fläche anpassen (Firefox / WebKit). */
-  .privacy-panel__body {
-    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
-    scrollbar-width: thin;
-  }
-
-  .privacy-panel__body::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  .privacy-panel__body::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-  }
-
-  .privacy-panel__body::-webkit-scrollbar-track {
-    background: transparent;
+  .privacy-panel__title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    line-height: 1.2;
+    margin: 0 0 1rem;
+    color: var(--color-ink);
+    padding-right: 2.25rem;
   }
 
   .privacy-panel__description {
-    margin: 0 0 1.25rem;
-    color: rgba(244, 244, 244, 0.82);
-    font-size: 0.92rem;
+    margin: 0 0 1.5rem;
+    color: var(--color-slate);
+    font-size: 0.95rem;
     line-height: 1.6;
   }
 
-  .privacy-panel__links {
-    margin: 1.25rem 0 0.25rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 0.75rem;
-    font-size: 0.85rem;
-    color: rgba(244, 244, 244, 0.7);
-  }
-
-  .privacy-panel__links a {
-    color: #ffffff;
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-
-  .privacy-panel__links a:hover {
-    color: var(--color-red);
-  }
-
-  /* ---------- Kategorien-Liste ---------- */
+  /* ---------- Kategorien-Zeile (horizontal, wrap bei Bedarf) ---------- */
   .privacy-panel__categories {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem 2.25rem;
+    margin: 0 0 1.75rem;
   }
 
   .privacy-category {
-    border: 0;
-    background: transparent;
-    padding: 1rem 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .privacy-category:first-child {
-    border-top: 0;
-    padding-top: 0.25rem;
-  }
-
-  .privacy-category__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.25rem;
-    padding: 0 0 0.5rem;
-  }
-
-  .privacy-category__label {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 1.02rem;
-    color: #ffffff;
     display: inline-flex;
     align-items: center;
     gap: 0.65rem;
-    flex-wrap: wrap;
-  }
-
-  .privacy-category__meta {
-    font-family: var(--font-body);
-    font-size: 0.66rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(244, 244, 244, 0.55);
-    font-weight: 600;
-    padding: 0.15rem 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 2px;
-  }
-
-  .privacy-category__body {
-    padding: 0;
-  }
-
-  .privacy-category__desc {
-    margin: 0;
-    font-size: 0.9rem;
-    color: rgba(244, 244, 244, 0.72);
-    line-height: 1.55;
-    max-width: 62ch;
-  }
-
-  .privacy-category__details-toggle {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.35rem;
-    margin-top: 0.55rem;
-    background: none;
-    border: 0;
-    padding: 0;
-    color: var(--color-red);
-    font: inherit;
-    font-size: 0.82rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    text-decoration: underline;
-    text-underline-offset: 0.28em;
-    text-decoration-thickness: 1px;
     cursor: pointer;
-    transition: color 0.15s ease;
+    user-select: none;
   }
 
-  .privacy-category__details-toggle:hover {
-    color: #ff6a6c;
-    text-decoration-thickness: 1.5px;
-  }
-
-  .privacy-category__details-toggle:focus-visible {
-    outline: 2px solid var(--color-red);
-    outline-offset: 3px;
-    border-radius: 2px;
-  }
-
-  .privacy-category__details {
-    margin-top: 0.85rem;
-    padding: 0.9rem 1rem;
-    background: rgba(255, 255, 255, 0.04);
-    border-left: 2px solid var(--color-red);
-    font-size: 0.82rem;
-    color: rgba(244, 244, 244, 0.78);
-    line-height: 1.55;
-  }
-
-  .privacy-category__details[hidden] {
-    display: none;
-  }
-
-  .privacy-category__details p {
-    margin: 0 0 0.5rem;
-  }
-
-  .privacy-category__details p:last-child {
-    margin: 0;
-  }
-
-  .privacy-service-mini {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding-top: 0.65rem;
-    margin-top: 0.65rem;
-  }
-
-  .privacy-service-mini:first-of-type {
-    border-top: 0;
-    padding-top: 0;
-    margin-top: 0;
-  }
-
-  .privacy-service-mini__title {
-    display: block;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 0.88rem;
-    color: #ffffff;
-    margin-bottom: 0.3rem;
-  }
-
-  .privacy-service-mini dl {
-    margin: 0;
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: 0.2rem 0.75rem;
-    font-size: 0.78rem;
-  }
-
-  .privacy-service-mini dt {
-    color: rgba(244, 244, 244, 0.92);
-    font-weight: 600;
-  }
-
-  .privacy-service-mini dd {
-    margin: 0;
-    color: rgba(244, 244, 244, 0.7);
-  }
-
-  .privacy-service-mini a {
-    color: var(--color-red);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-
-  .privacy-service-mini a:hover {
-    color: #ff6a6c;
-  }
-
-  /* ---------- Toggle-Schalter ---------- */
-  .privacy-toggle {
+  .privacy-category__checkbox {
     position: relative;
-    display: inline-flex;
-    align-items: center;
+    display: inline-block;
+    width: 1.15rem;
+    height: 1.15rem;
     flex-shrink: 0;
-    cursor: pointer;
-    padding: 0;
   }
 
-  .privacy-toggle input {
+  .privacy-category__checkbox input {
     position: absolute;
-    opacity: 0;
     inset: 0;
+    opacity: 0;
     margin: 0;
     cursor: pointer;
   }
 
-  .privacy-toggle input:disabled {
+  .privacy-category__checkbox input:disabled {
     cursor: not-allowed;
   }
 
-  .privacy-toggle__track {
-    display: inline-block;
-    width: 3.1rem;
-    height: 1.7rem;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    position: relative;
+  .privacy-category__box {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    border: 1.5px solid var(--color-ink);
     border-radius: 2px;
-    transition:
-      background-color 0.22s ease,
-      border-color 0.22s ease,
-      box-shadow 0.22s ease;
+    position: relative;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
   }
 
-  .privacy-toggle__track::after {
+  .privacy-category__box::after {
     content: '';
     position: absolute;
-    top: 0.2rem;
-    left: 0.2rem;
-    width: 1.15rem;
-    height: 1.15rem;
-    background: #ffffff;
-    border-radius: 1px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-    transition:
-      transform 0.22s var(--ease-out),
-      background-color 0.22s ease;
+    top: 0.05rem;
+    left: 0.32rem;
+    width: 0.35rem;
+    height: 0.6rem;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0);
+    transform-origin: center;
+    transition: transform 0.15s var(--ease-out);
   }
 
-  .privacy-toggle input:checked + .privacy-toggle__track {
+  .privacy-category__checkbox input:checked + .privacy-category__box {
     background: var(--color-red);
-    border-color: var(--color-red-dark);
-    box-shadow: 0 0 0 1px rgba(229, 30, 33, 0.35);
+    border-color: var(--color-red);
   }
 
-  .privacy-toggle input:checked + .privacy-toggle__track::after {
-    transform: translateX(1.4rem);
+  .privacy-category__checkbox input:checked + .privacy-category__box::after {
+    transform: rotate(45deg) scale(1);
   }
 
-  .privacy-toggle input:disabled + .privacy-toggle__track {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.12);
-    opacity: 0.7;
+  .privacy-category__checkbox input:disabled + .privacy-category__box {
+    background: #d9d9d9;
+    border-color: #b8b8b8;
   }
 
-  .privacy-toggle input:disabled + .privacy-toggle__track::after {
-    background: rgba(255, 255, 255, 0.55);
-    box-shadow: none;
+  .privacy-category__checkbox input:disabled:checked + .privacy-category__box::after {
+    border-color: #ffffff;
   }
 
-  .privacy-toggle input:focus-visible + .privacy-toggle__track {
+  .privacy-category__checkbox input:focus-visible + .privacy-category__box {
     outline: 2px solid var(--color-red);
     outline-offset: 3px;
   }
 
-  /* ---------- Aktionen-Footer ---------- */
+  .privacy-category__label {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--color-ink);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .privacy-category__info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.05rem;
+    height: 1.05rem;
+    border: 1px solid var(--color-slate);
+    border-radius: 50%;
+    color: var(--color-slate);
+    font-size: 0.68rem;
+    font-weight: 700;
+    font-family: var(--font-body);
+    background: transparent;
+    cursor: help;
+    line-height: 1;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .privacy-category__info:hover,
+  .privacy-category__info:focus-visible {
+    color: var(--color-red);
+    border-color: var(--color-red);
+    outline: none;
+  }
+
+  /* ---------- Aktions-Buttons ---------- */
   .privacy-panel__actions {
     display: flex;
-    flex-wrap: nowrap;
-    gap: 0.65rem;
-    padding: 1rem 1.75rem 1.1rem;
-    border-top: 1px solid var(--color-line);
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    justify-content: stretch;
+  }
+
+  .privacy-btn {
+    flex: 1 1 12rem;
+    min-width: 0;
+    padding: 0.95rem 1.25rem;
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    background: #ffffff;
+    color: var(--color-red);
+    border: 1.5px solid var(--color-red);
+    cursor: pointer;
+    transition:
+      background-color 0.18s ease,
+      color 0.18s ease,
+      border-color 0.18s ease;
+  }
+
+  .privacy-btn:hover {
+    background: var(--color-red);
+    color: #ffffff;
+  }
+
+  .privacy-btn:focus-visible {
+    outline: 2px solid var(--color-red-dark);
+    outline-offset: 2px;
+  }
+
+  .privacy-btn--neutral {
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  .privacy-btn--neutral:hover {
+    background: var(--color-ink);
+    color: #ffffff;
+  }
+
+  .privacy-btn--primary {
+    background: var(--color-red);
+    color: #ffffff;
+    border-color: var(--color-red);
+  }
+
+  .privacy-btn--primary:hover {
+    background: var(--color-red-dark);
+    border-color: var(--color-red-dark);
+  }
+
+  /* ---------- Fußleiste ---------- */
+  .privacy-panel__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    padding: 0.85rem clamp(1.5rem, 4vw, 3rem);
     background: var(--color-bg-soft);
+    border-top: 1px solid var(--color-line);
+    font-size: 0.82rem;
+    color: var(--color-slate);
     flex-shrink: 0;
   }
 
-  /* Kompakte Ausprägung der globalen `.btn`-Klassen für die Buttonleiste im
-     Dialog. Der `—`-Präfix samt Hover-Translate wird hier unterdrückt, damit
-     die Buttonbreite konstant bleibt. */
-  .privacy-panel__actions .btn {
-    padding: 0.75rem 1.1rem;
-    font-size: 0.88rem;
-    letter-spacing: 0.02em;
-    box-shadow: none;
-    flex: 1 1 0;
-    min-width: 0;
-    white-space: nowrap;
+  .privacy-panel__footer a {
+    color: var(--color-slate);
+    text-decoration: none;
+    transition: color 0.15s ease;
   }
 
-  .privacy-panel__actions .btn--outline {
-    padding: calc(0.75rem - 2px) calc(1.1rem - 2px);
+  .privacy-panel__footer a:hover,
+  .privacy-panel__footer a:focus-visible {
+    color: var(--color-red);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    outline: none;
   }
 
-  .privacy-panel__actions .btn::before {
-    display: none;
-  }
-
-  /* ---------- Layout-Anpassung für mittlere / kleine Bildschirme ---------- */
-  @media (max-width: 62rem) {
-    .privacy-panel {
-      width: min(100%, 90vw);
-      min-width: 0;
+  /* ---------- Layout-Anpassung für kleinere Bildschirme ---------- */
+  @media (max-width: 48rem) {
+    .privacy-panel__categories {
+      gap: 0.85rem 1.5rem;
     }
-  }
-
-  @media (max-width: 44rem) {
-    .privacy-panel__body,
-    .privacy-panel__actions {
-      padding-inline: 1.15rem;
-    }
-    .privacy-panel__actions {
-      flex-wrap: wrap;
-    }
-    .privacy-panel__actions .btn {
+    .privacy-btn {
       flex: 1 1 100%;
     }
   }
 
   @media (max-width: 32rem) {
-    .privacy-panel__head {
-      padding: 0.8rem 1rem;
-      gap: 0.7rem;
+    .privacy-panel__body {
+      padding: 1.25rem 1.15rem 1rem;
     }
-    .privacy-panel__icon {
-      width: 2.2rem;
-      height: 2.2rem;
+    .privacy-panel__footer {
+      padding: 0.75rem 1.15rem;
     }
-    .privacy-panel__body,
-    .privacy-panel__actions {
-      padding-inline: 1rem;
+    .privacy-panel__title {
+      font-size: 1.35rem;
     }
-    .privacy-service-mini dl {
-      grid-template-columns: 1fr;
+    .privacy-panel__description {
+      font-size: 0.9rem;
     }
   }
 </style>
 
 <script>
-  import type {
-    ConsentCategoryDefinition,
-    ConsentServiceDefinition,
-  } from '../scripts/consent/registry';
+  import type { ConsentCategoryDefinition } from '../scripts/consent/registry';
   import { consentManager } from '../scripts/consent/manager';
 
   const overlay = document.querySelector<HTMLDivElement>('[data-privacy-overlay]');
@@ -620,6 +472,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
   const actionsContainer = document.querySelector<HTMLElement>('[data-privacy-actions]');
   const closeBtn = document.querySelector<HTMLButtonElement>('[data-privacy-close]');
   const widget = document.querySelector<HTMLButtonElement>('[data-cookie-widget]');
+  const settingsLink = document.querySelector<HTMLAnchorElement>('[data-privacy-settings-link]');
 
   if (!overlay || !panel || !categoriesContainer || !actionsContainer) {
     throw new Error('[consent] Erwartete DOM-Struktur des Privacy-Dialogs fehlt.');
@@ -629,8 +482,6 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
   let lastFocused: HTMLElement | null = null;
-  /** Merkt sich pro Kategorie-ID, ob die Details-Klappe offen ist. */
-  const detailsOpenState = new Map<string, boolean>();
 
   function setPanelInert(inert: boolean): void {
     if (inert) {
@@ -650,32 +501,23 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
 
     categoriesContainer!.replaceChildren();
     for (const cat of categories) {
-      const services = consentManager.getServicesByCategory(cat.id);
       categoriesContainer!.appendChild(
-        buildCategoryCard(cat, current[cat.id] === true, services),
+        buildCategoryChip(cat, current[cat.id] === true),
       );
     }
 
     actionsContainer!.replaceChildren(
       buildButton({
-        label: 'Alle ablehnen',
-        className: 'btn btn--outline btn--small',
+        label: 'Ablehnen',
+        className: 'privacy-btn',
         onClick: () => {
           consentManager.rejectAll();
           closeDialog();
         },
       }),
       buildButton({
-        label: 'Alle akzeptieren',
-        className: 'btn btn--red btn--small',
-        onClick: () => {
-          consentManager.acceptAll();
-          closeDialog();
-        },
-      }),
-      buildButton({
-        label: 'Auswahl speichern',
-        className: 'btn btn--outline btn--small',
+        label: 'Speichern',
+        className: 'privacy-btn privacy-btn--neutral',
         onClick: () => {
           const selection: Record<string, boolean> = {};
           categoriesContainer!
@@ -688,150 +530,53 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
           closeDialog();
         },
       }),
+      buildButton({
+        label: 'Alles akzeptieren',
+        className: 'privacy-btn privacy-btn--primary',
+        onClick: () => {
+          consentManager.acceptAll();
+          closeDialog();
+        },
+      }),
     );
   }
 
-  function buildCategoryCard(
+  function buildCategoryChip(
     cat: ConsentCategoryDefinition,
     checked: boolean,
-    services: ConsentServiceDefinition[],
-  ): HTMLDivElement {
-    const wrap = document.createElement('div');
+  ): HTMLLabelElement {
+    const wrap = document.createElement('label');
     wrap.className = 'privacy-category';
 
-    const head = document.createElement('div');
-    head.className = 'privacy-category__head';
+    const box = document.createElement('span');
+    box.className = 'privacy-category__checkbox';
 
-    const label = document.createElement('span');
-    label.className = 'privacy-category__label';
-    label.append(document.createTextNode(cat.label));
-    if (cat.required) {
-      const meta = document.createElement('span');
-      meta.className = 'privacy-category__meta';
-      meta.textContent = 'Immer aktiv';
-      label.append(meta);
-    }
-    head.appendChild(label);
-
-    const toggle = document.createElement('label');
-    toggle.className = 'privacy-toggle';
     const input = document.createElement('input');
     input.type = 'checkbox';
     input.dataset.category = cat.id;
     input.checked = cat.required ? true : checked;
     input.disabled = cat.required;
     input.setAttribute('aria-label', `Kategorie ${cat.label} zulassen`);
-    const track = document.createElement('span');
-    track.className = 'privacy-toggle__track';
-    toggle.append(input, track);
-    head.appendChild(toggle);
 
-    wrap.appendChild(head);
+    const visual = document.createElement('span');
+    visual.className = 'privacy-category__box';
 
-    const body = document.createElement('div');
-    body.className = 'privacy-category__body';
+    box.append(input, visual);
 
-    const desc = document.createElement('p');
-    desc.className = 'privacy-category__desc';
-    desc.textContent = cat.description;
-    body.appendChild(desc);
+    const label = document.createElement('span');
+    label.className = 'privacy-category__label';
+    label.textContent = cat.label;
 
-    const detailsId = `privacy-cat-${cat.id}-details`;
-    const detailsBtn = document.createElement('button');
-    detailsBtn.type = 'button';
-    detailsBtn.className = 'privacy-category__details-toggle';
-    detailsBtn.setAttribute('aria-expanded', String(detailsOpenState.get(cat.id) === true));
-    detailsBtn.setAttribute('aria-controls', detailsId);
-    const openLabel = 'Details anzeigen';
-    const closeLabel = 'Details ausblenden';
-    detailsBtn.textContent = detailsOpenState.get(cat.id) ? closeLabel : openLabel;
-    body.appendChild(detailsBtn);
+    const info = document.createElement('span');
+    info.className = 'privacy-category__info';
+    info.setAttribute('role', 'img');
+    info.setAttribute('tabindex', '0');
+    info.setAttribute('aria-label', `Info: ${cat.description}`);
+    info.setAttribute('title', cat.description);
+    info.textContent = '?';
 
-    const details = document.createElement('div');
-    details.className = 'privacy-category__details';
-    details.id = detailsId;
-    if (!detailsOpenState.get(cat.id)) {
-      details.hidden = true;
-    }
-    fillCategoryDetails(details, cat, services);
-    body.appendChild(details);
-
-    detailsBtn.addEventListener('click', () => {
-      const nextOpen = details.hidden;
-      details.hidden = !nextOpen;
-      detailsBtn.setAttribute('aria-expanded', String(nextOpen));
-      detailsBtn.textContent = nextOpen ? closeLabel : openLabel;
-      detailsOpenState.set(cat.id, nextOpen);
-    });
-
-    wrap.appendChild(body);
+    wrap.append(box, label, info);
     return wrap;
-  }
-
-  function fillCategoryDetails(
-    container: HTMLElement,
-    cat: ConsentCategoryDefinition,
-    services: ConsentServiceDefinition[],
-  ): void {
-    container.replaceChildren();
-
-    if (services.length === 0) {
-      const info = document.createElement('p');
-      info.textContent =
-        cat.id === 'necessary'
-          ? 'Diese Kategorie umfasst ausschließlich die First-Party-Speicherung Ihrer Cookie-Entscheidung im lokalen Browser-Speicher (kein Cookie, kein Drittanbieter). Sie ist zwingend erforderlich und kann nicht deaktiviert werden.'
-          : 'Aktuell sind in dieser Kategorie keine Dienste eingebunden. Sollte sich das ändern, aktualisieren wir die Datenschutzerklärung und fragen Ihre Einwilligung erneut ab.';
-      container.appendChild(info);
-      return;
-    }
-
-    for (const service of services) {
-      const box = document.createElement('div');
-      box.className = 'privacy-service-mini';
-
-      const title = document.createElement('span');
-      title.className = 'privacy-service-mini__title';
-      title.textContent = service.name;
-      box.appendChild(title);
-
-      const dl = document.createElement('dl');
-      const rows: Array<[string, string | HTMLElement]> = [
-        ['Anbieter', service.provider],
-        ['Zweck', service.purpose],
-      ];
-      if (service.storage.length > 0) {
-        rows.push([
-          'Speicherung',
-          service.storage
-            .map((s) => `${s.name} (${s.type}, ${s.duration})`)
-            .join('; '),
-        ]);
-      }
-      if (service.thirdCountryTransfer) {
-        rows.push(['Drittland', service.thirdCountryTransfer]);
-      }
-      if (service.providerPrivacyUrl) {
-        const link = document.createElement('a');
-        link.href = service.providerPrivacyUrl;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.textContent = 'Datenschutzerklärung des Anbieters';
-        rows.push(['Anbieter-Info', link]);
-      }
-      for (const [term, value] of rows) {
-        const dt = document.createElement('dt');
-        dt.textContent = term;
-        const dd = document.createElement('dd');
-        if (typeof value === 'string') {
-          dd.textContent = value;
-        } else {
-          dd.appendChild(value);
-        }
-        dl.append(dt, dd);
-      }
-      box.appendChild(dl);
-      container.appendChild(box);
-    }
   }
 
   interface ButtonConfig {
@@ -917,6 +662,10 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
       closeDialog();
     }
   });
+
+  /* "Einstellungen" im Footer schließt den Dialog, damit der Sprung zum
+     Anker auf der Datenschutzseite sichtbar wird. */
+  settingsLink?.addEventListener('click', () => closeDialog());
 
   document.addEventListener('consent:open', () => openDialog());
 
