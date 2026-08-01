@@ -1,389 +1,876 @@
 ---
 /**
- * Cookie-Consent-UI: Banner (Erstbesuch) + Einstellungs-Dialog (jederzeit über
- * Footer-Link „Cookie-Einstellungen" erreichbar). Die Logik liegt vollständig
- * in src/scripts/consent.ts – diese Komponente ist nur die Oberfläche und kann
- * zusammen mit dem Skript später gegen eine agenturweite Lösung getauscht werden.
+ * Zentrale Consent-UI:
+ *   1. Fest sichtbares Cookie-Widget links unten (öffnet den Dialog).
+ *   2. Zentrierter Datenschutz-/Consent-Dialog. Der Dialog rendert sich
+ *      dynamisch abhängig vom Betriebsmodus des Consent-Managers:
+ *        - Modus A (kein optionaler Dienst aktiv):
+ *          Nur-Hinweis mit "Verstanden" / "Datenschutz ansehen".
+ *        - Modus B (mindestens ein optionaler Dienst aktiv):
+ *          Voller Consent mit "Alle akzeptieren", "Alle ablehnen",
+ *          "Einstellungen".
+ *
+ * Registriert wird über die Service-Registry in
+ * `src/scripts/consent/registry.ts` – dort werden Dienste hinzugefügt und
+ * aktiviert. Diese Komponente selbst enthält keinerlei Kategorie- oder
+ * Dienst-Definition.
  */
-
-const categories = [
-  {
-    id: 'necessary',
-    label: 'Notwendig',
-    locked: true,
-    description:
-      'Erforderlich für den Betrieb der Website, z. B. das Speichern Ihrer Cookie-Einstellungen. Kann nicht deaktiviert werden.',
-  },
-  {
-    id: 'functional',
-    label: 'Darstellung & Funktion',
-    locked: false,
-    description:
-      'Ermöglicht das Nachladen externer Inhalte wie Kartendienste (z. B. Google Maps). Ohne Einwilligung werden diese Inhalte nicht geladen.',
-  },
-  {
-    id: 'statistics',
-    label: 'Statistik',
-    locked: false,
-    description:
-      'Hilft uns zu verstehen, wie die Website genutzt wird (z. B. anonymisierte Reichweitenmessung). Derzeit sind keine Statistik-Dienste eingebunden.',
-  },
-  {
-    id: 'marketing',
-    label: 'Marketing',
-    locked: false,
-    description:
-      'Dienste zur Erfolgsmessung von Werbung. Derzeit sind keine Marketing-Dienste eingebunden.',
-  },
-] as const;
+import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
 ---
 
-<!-- Banner beim Erstbesuch -->
-<div class="consent-banner" data-consent-banner hidden role="region" aria-label="Cookie-Hinweis">
-  <div class="consent-banner__inner">
-    <div>
-      <p class="consent-banner__title">Datenschutz-Einstellungen</p>
-      <p class="consent-banner__text">
-        Wir verwenden nur technisch notwendige Cookies. Externe Inhalte (z.&nbsp;B.
-        Kartendienste) werden erst nach Ihrer Einwilligung geladen. Details finden Sie in
-        unserer <a href="/datenschutz">Datenschutzerklärung</a>.
+<!-- Rotes eckiges Cookie-Widget (immer sichtbar) -->
+<button
+  type="button"
+  class="cookie-widget"
+  data-cookie-widget
+  aria-label="Cookie-Einstellungen öffnen"
+  aria-haspopup="dialog"
+  aria-controls="privacy-dialog"
+  title="Cookie-Einstellungen"
+>
+  <CookiePrivacyIcon size={26} />
+  <span class="sr-only">Cookie-Einstellungen öffnen</span>
+</button>
+
+<!-- Zentrierter Datenschutz-Dialog (Overlay + Panel) -->
+<div
+  class="privacy-overlay"
+  data-privacy-overlay
+  hidden
+  aria-hidden="true"
+>
+  <div
+    class="privacy-panel"
+    id="privacy-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="privacy-dialog-title"
+    aria-describedby="privacy-dialog-description"
+    tabindex="-1"
+    data-privacy-panel
+  >
+    <header class="privacy-panel__head">
+      <span class="privacy-panel__icon" aria-hidden="true">
+        <CookiePrivacyIcon size={30} />
+      </span>
+      <div>
+        <p class="privacy-panel__kicker">Datenschutz</p>
+        <h2 class="privacy-panel__title" id="privacy-dialog-title" data-privacy-title>
+          Datenschutz auf unserer Website
+        </h2>
+      </div>
+      <button
+        type="button"
+        class="privacy-panel__close"
+        data-privacy-close
+        aria-label="Dialog schließen"
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M6 18L18 6" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="privacy-panel__body">
+      <p class="privacy-panel__description" id="privacy-dialog-description" data-privacy-description>
+        <!-- Beschreibung wird per JS abhängig vom Modus gesetzt. -->
+      </p>
+
+      <div class="privacy-panel__categories" data-privacy-categories hidden></div>
+
+      <div class="privacy-panel__services" data-privacy-services hidden></div>
+
+      <p class="privacy-panel__links">
+        <a href="/datenschutz">Datenschutzerklärung</a>
+        <span aria-hidden="true">·</span>
+        <a href="/impressum">Impressum</a>
       </p>
     </div>
-    <div class="consent-banner__actions">
-      <button type="button" class="btn btn--red btn--small" data-consent-accept-all>
-        Alle akzeptieren
-      </button>
-      <button type="button" class="btn btn--outline btn--small" data-consent-necessary-only>
-        Nur notwendige
-      </button>
-      <button type="button" class="consent-banner__settings" data-consent-show-settings>
-        Einstellungen anpassen
-      </button>
-    </div>
+
+    <footer class="privacy-panel__actions" data-privacy-actions>
+      <!-- Buttons werden per JS eingesetzt (Modus A / Modus B). -->
+    </footer>
   </div>
 </div>
 
-<!-- Einstellungs-Dialog -->
-<dialog class="consent-dialog" data-consent-dialog aria-labelledby="consent-dialog-title">
-  <form method="dialog" class="consent-dialog__inner" data-consent-form>
-    <h2 class="consent-dialog__title" id="consent-dialog-title">Cookie-Einstellungen</h2>
-    <p class="consent-dialog__intro">
-      Legen Sie fest, welche Kategorien Sie zulassen möchten. Ihre Auswahl können Sie
-      jederzeit über den Link „Cookie-Einstellungen" im Footer ändern.
-    </p>
-
-    <div class="consent-dialog__categories">
-      {categories.map((cat) => (
-        <div class="consent-category">
-          <div class="consent-category__head">
-            <span class="consent-category__label" id={`consent-label-${cat.id}`}>{cat.label}</span>
-            <label class="consent-switch">
-              <input
-                type="checkbox"
-                name={cat.id}
-                checked={cat.locked}
-                disabled={cat.locked}
-                aria-labelledby={`consent-label-${cat.id}`}
-              />
-              <span class="consent-switch__track" aria-hidden="true"></span>
-            </label>
-          </div>
-          <p class="consent-category__description">{cat.description}</p>
-        </div>
-      ))}
-    </div>
-
-    <div class="consent-dialog__actions">
-      <button type="button" class="btn btn--red btn--small" data-consent-accept-all>
-        Alle akzeptieren
-      </button>
-      <button type="submit" class="btn btn--outline btn--small" value="save">
-        Auswahl speichern
-      </button>
-    </div>
-
-    <p class="consent-dialog__links">
-      <a href="/datenschutz">Datenschutzerklärung</a>
-      <a href="/impressum">Impressum</a>
-    </p>
-  </form>
-</dialog>
-
 <style>
-  /* Dunkler Outline-Button nur für die Consent-UI */
-  .btn--outline {
-    background: transparent;
-    color: var(--color-ink);
-    box-shadow: inset 0 0 0 2px var(--color-ink);
-  }
-
-  .btn--outline:hover {
-    background: var(--color-ink);
-    color: #fff;
-  }
-
-  .consent-banner {
+  /* ---------- Widget links unten ---------- */
+  .cookie-widget {
     position: fixed;
-    inset-inline: 0;
-    bottom: 0;
-    z-index: 150;
-    background: #fff;
-    border-top: 3px solid var(--color-red);
-    box-shadow: 0 -12px 40px rgba(22, 33, 44, 0.18);
-    animation: consent-slide-up 0.45s var(--ease-out);
-  }
-
-  @keyframes consent-slide-up {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-
-  .consent-banner__inner {
-    margin-inline: auto;
-    padding: 1.5rem var(--gutter);
-    display: flex;
-    flex-wrap: wrap;
+    left: max(1rem, env(safe-area-inset-left, 0));
+    bottom: max(1rem, env(safe-area-inset-bottom, 0));
+    z-index: 140;
+    width: 3.25rem;
+    height: 3.25rem;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1.25rem;
-  }
-
-  .consent-banner__title {
-    font-weight: 700;
-    margin-bottom: 0.35rem;
-  }
-
-  .consent-banner__text {
-    margin: 0;
-    max-width: 56ch;
-    font-size: 0.92rem;
-    color: var(--color-slate);
-  }
-
-  .consent-banner__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .consent-banner__settings {
-    background: none;
-    border: none;
-    font: inherit;
-    font-size: 0.9rem;
-    color: var(--color-slate);
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 0.5rem 0.25rem;
-  }
-
-  .consent-banner__settings:hover {
-    color: var(--color-ink);
-  }
-
-  .consent-dialog {
-    border: none;
-    border-radius: 0;
+    justify-content: center;
     padding: 0;
-    max-width: 34rem;
-    width: calc(100vw - 2.5rem);
-    box-shadow: 0 24px 80px rgba(22, 33, 44, 0.35);
+    background: var(--color-red);
+    color: #ffffff;
+    border: 2px solid var(--color-red-dark);
+    border-radius: 2px;
+    box-shadow: 0 6px 20px rgba(22, 22, 22, 0.28);
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      transform 0.2s var(--ease-out),
+      box-shadow 0.2s ease;
   }
 
-  .consent-dialog::backdrop {
-    background: rgba(22, 33, 44, 0.55);
-    backdrop-filter: blur(2px);
+  .cookie-widget:hover {
+    background: var(--color-red-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(22, 22, 22, 0.35);
   }
 
-  .consent-dialog__inner {
-    padding: 2rem 1.75rem;
-    max-height: min(85vh, 44rem);
-    overflow-y: auto;
+  .cookie-widget:focus-visible {
+    outline: 3px solid var(--color-red);
+    outline-offset: 3px;
+    background: var(--color-red-dark);
   }
 
-  .consent-dialog__title {
-    font-size: 1.35rem;
-    margin-bottom: 0.5rem;
+  @media (prefers-reduced-motion: reduce) {
+    .cookie-widget {
+      transition: none;
+    }
+    .cookie-widget:hover {
+      transform: none;
+    }
   }
 
-  .consent-dialog__intro {
-    font-size: 0.92rem;
-    color: var(--color-slate);
+  /* ---------- Overlay + zentriertes Panel ---------- */
+  .privacy-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(1rem, env(safe-area-inset-top, 0))
+             max(1rem, env(safe-area-inset-right, 0))
+             max(1rem, env(safe-area-inset-bottom, 0))
+             max(1rem, env(safe-area-inset-left, 0));
+    background: rgba(22, 22, 22, 0.45);
   }
 
-  .consent-dialog__categories {
+  .privacy-overlay[hidden] {
+    display: none;
+  }
+
+  .privacy-panel {
+    position: relative;
+    width: min(100%, 40rem);
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin-block: 1.5rem;
+    background: #ffffff;
+    color: var(--color-ink);
+    border: 2px solid var(--color-ink);
+    border-top: 4px solid var(--color-red);
+    border-radius: 2px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    outline: none;
+    animation: privacy-panel-in 0.25s var(--ease-out);
   }
 
-  .consent-category {
-    border: 1px solid var(--color-line);
-    border-radius: 0;
-    padding: 1rem 1.15rem;
+  @keyframes privacy-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
-  .consent-category__head {
-    display: flex;
+  @media (prefers-reduced-motion: reduce) {
+    .privacy-panel {
+      animation: none;
+    }
+  }
+
+  .privacy-panel__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    justify-content: space-between;
     gap: 1rem;
+    padding: 1.1rem 1.25rem 1rem;
+    border-bottom: 1px solid var(--color-line);
   }
 
-  .consent-category__label {
-    font-weight: 600;
+  .privacy-panel__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: var(--color-red);
+    color: #ffffff;
+    border-radius: 2px;
+    flex-shrink: 0;
   }
 
-  .consent-category__description {
-    margin: 0.5rem 0 0;
+  .privacy-panel__kicker {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-red);
+  }
+
+  .privacy-panel__title {
+    margin: 0.15rem 0 0;
+    font-size: clamp(1.1rem, 2.4vw, 1.35rem);
+    line-height: 1.2;
+    color: var(--color-ink);
+  }
+
+  .privacy-panel__close {
+    background: none;
+    border: 1px solid transparent;
+    padding: 0.4rem;
+    color: var(--color-ink);
+    cursor: pointer;
+    line-height: 0;
+    border-radius: 2px;
+  }
+
+  .privacy-panel__close:hover {
+    background: var(--color-bg-soft);
+  }
+
+  .privacy-panel__close:focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 2px;
+  }
+
+  .privacy-panel__body {
+    padding: 1.1rem 1.25rem 0.5rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .privacy-panel__description {
+    margin: 0;
+    color: var(--color-slate);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .privacy-panel__links {
+    margin: 1.25rem 0 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
     font-size: 0.85rem;
     color: var(--color-slate);
   }
 
-  /* Schalter */
-  .consent-switch {
-    position: relative;
-    display: inline-block;
-    width: 2.9rem;
-    height: 1.6rem;
-    flex-shrink: 0;
+  .privacy-panel__links a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
-  .consent-switch input {
+  .privacy-panel__links a:hover {
+    color: var(--color-red);
+  }
+
+  /* ---------- Kategorien-Liste (nur in Modus B) ---------- */
+  .privacy-panel__categories {
+    margin: 1.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .privacy-category {
+    border: 1px solid var(--color-line);
+    padding: 0.85rem 1rem;
+    background: var(--color-bg-soft);
+  }
+
+  .privacy-category__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .privacy-category__label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+  }
+
+  .privacy-category__meta {
+    font-size: 0.78rem;
+    color: var(--color-slate);
+    font-weight: 400;
+    margin-left: 0.35rem;
+  }
+
+  .privacy-category__desc {
+    margin: 0.35rem 0 0;
+    font-size: 0.85rem;
+    color: var(--color-slate);
+    line-height: 1.5;
+  }
+
+  .privacy-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .privacy-toggle input {
     position: absolute;
     opacity: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     margin: 0;
     cursor: pointer;
   }
 
-  .consent-switch input:disabled {
+  .privacy-toggle input:disabled {
     cursor: not-allowed;
   }
 
-  .consent-switch__track {
-    position: absolute;
-    inset: 0;
-    background: #c4ccd4;
-    border-radius: 999px;
+  .privacy-toggle__track {
+    display: inline-block;
+    width: 2.6rem;
+    height: 1.4rem;
+    background: #b8bec4;
+    position: relative;
+    border-radius: 2px;
     transition: background-color 0.2s ease;
-    pointer-events: none;
   }
 
-  .consent-switch__track::after {
+  .privacy-toggle__track::after {
     content: '';
     position: absolute;
     top: 0.2rem;
     left: 0.2rem;
-    width: 1.2rem;
-    height: 1.2rem;
-    background: #fff;
-    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    background: #ffffff;
+    border-radius: 1px;
     transition: transform 0.2s var(--ease-out);
   }
 
-  .consent-switch input:checked + .consent-switch__track {
+  .privacy-toggle input:checked + .privacy-toggle__track {
     background: var(--color-red);
   }
 
-  .consent-switch input:disabled + .consent-switch__track {
+  .privacy-toggle input:checked + .privacy-toggle__track::after {
+    transform: translateX(1.2rem);
+  }
+
+  .privacy-toggle input:disabled + .privacy-toggle__track {
     background: var(--color-dark);
-    opacity: 0.5;
+    opacity: 0.55;
   }
 
-  .consent-switch input:checked + .consent-switch__track::after {
-    transform: translateX(1.3rem);
-  }
-
-  .consent-switch input:focus-visible + .consent-switch__track {
+  .privacy-toggle input:focus-visible + .privacy-toggle__track {
     outline: 2px solid var(--color-red-dark);
     outline-offset: 2px;
   }
 
-  .consent-dialog__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
+  /* ---------- Dienste-Detail-Liste (nur wenn Dienste vorhanden) ---------- */
+  .privacy-panel__services {
+    margin: 1.25rem 0 0;
+    border-top: 1px solid var(--color-line);
+    padding-top: 1rem;
   }
 
-  .consent-dialog__links {
-    margin: 1.25rem 0 0;
-    display: flex;
-    gap: 1.25rem;
+  .privacy-panel__services h3 {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-slate);
+  }
+
+  .privacy-service {
+    border: 1px solid var(--color-line);
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .privacy-service__title {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+  }
+
+  .privacy-service dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 0.75rem;
     font-size: 0.85rem;
+    color: var(--color-slate);
+  }
+
+  .privacy-service dt {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .privacy-service dd {
+    margin: 0;
+  }
+
+  .privacy-service a {
+    color: var(--color-red);
+  }
+
+  /* ---------- Aktionen-Footer ---------- */
+  .privacy-panel__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 1rem 1.25rem 1.15rem;
+    border-top: 1px solid var(--color-line);
+    background: var(--color-bg-soft);
+  }
+
+  .privacy-btn {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    border-radius: 2px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .privacy-btn:focus-visible {
+    outline: 2px solid var(--color-red-dark);
+    outline-offset: 2px;
+  }
+
+  .privacy-btn--primary {
+    background: var(--color-red);
+    color: #ffffff;
+    border: 2px solid var(--color-red);
+  }
+
+  .privacy-btn--primary:hover {
+    background: var(--color-red-dark);
+    border-color: var(--color-red-dark);
+  }
+
+  .privacy-btn--outline {
+    background: #ffffff;
+    color: var(--color-ink);
+    border: 2px solid var(--color-ink);
+  }
+
+  .privacy-btn--outline:hover {
+    background: var(--color-ink);
+    color: #ffffff;
+  }
+
+  .privacy-btn--ghost {
+    background: transparent;
+    color: var(--color-ink);
+    border: 2px solid var(--color-line);
+  }
+
+  .privacy-btn--ghost:hover {
+    border-color: var(--color-ink);
+  }
+
+  /* ---------- Layout-Anpassung für kleine Bildschirme ---------- */
+  @media (max-width: 32rem) {
+    .privacy-panel__head {
+      grid-template-columns: auto 1fr auto;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem 0.85rem;
+    }
+    .privacy-panel__icon {
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+    .privacy-panel__body,
+    .privacy-panel__actions {
+      padding-inline: 1rem;
+    }
+    .privacy-btn {
+      flex: 1 1 100%;
+    }
+    .privacy-service dl {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
 <script>
-  import { consentManager } from '../scripts/consent';
+  import {
+    NOTICE_CONFIG,
+    type ConsentCategoryDefinition,
+    type ConsentServiceDefinition,
+  } from '../scripts/consent/registry';
+  import { consentManager } from '../scripts/consent/manager';
 
-  const banner = document.querySelector<HTMLElement>('[data-consent-banner]');
-  const dialog = document.querySelector<HTMLDialogElement>('[data-consent-dialog]');
-  const form = document.querySelector<HTMLFormElement>('[data-consent-form]');
+  const overlay = document.querySelector<HTMLDivElement>('[data-privacy-overlay]');
+  const panel = document.querySelector<HTMLDivElement>('[data-privacy-panel]');
+  const titleEl = document.querySelector<HTMLElement>('[data-privacy-title]');
+  const descEl = document.querySelector<HTMLElement>('[data-privacy-description]');
+  const categoriesContainer = document.querySelector<HTMLDivElement>('[data-privacy-categories]');
+  const servicesContainer = document.querySelector<HTMLDivElement>('[data-privacy-services]');
+  const actionsContainer = document.querySelector<HTMLElement>('[data-privacy-actions]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-privacy-close]');
+  const widget = document.querySelector<HTMLButtonElement>('[data-cookie-widget]');
 
-  function hideBanner() {
-    banner?.setAttribute('hidden', '');
+  if (!overlay || !panel || !titleEl || !descEl || !categoriesContainer || !servicesContainer || !actionsContainer) {
+    throw new Error('[consent] Erwartete DOM-Struktur des Privacy-Dialogs fehlt.');
   }
 
-  function syncFormWithState() {
-    if (!form) return;
-    const state = consentManager.getConsent();
-    (['functional', 'statistics', 'marketing'] as const).forEach((cat) => {
-      const input = form.elements.namedItem(cat) as HTMLInputElement | null;
-      if (input) input.checked = state[cat];
-    });
+  const FOCUSABLE_SELECTOR =
+    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  let lastFocused: HTMLElement | null = null;
+
+  function setPanelInert(inert: boolean): void {
+    if (inert) {
+      overlay?.setAttribute('hidden', '');
+      overlay?.setAttribute('aria-hidden', 'true');
+      document.documentElement.style.removeProperty('overflow');
+    } else {
+      overlay?.removeAttribute('hidden');
+      overlay?.setAttribute('aria-hidden', 'false');
+      document.documentElement.style.overflow = 'hidden';
+    }
   }
 
-  function openDialog() {
-    if (!dialog) return;
-    syncFormWithState();
-    dialog.showModal();
+  function renderModeA(): void {
+    titleEl!.textContent = 'Datenschutz auf unserer Website';
+    descEl!.textContent =
+      'Wir verwenden derzeit ausschließlich technisch notwendige Funktionen, die für den sicheren Betrieb dieser Website erforderlich sind. Analyse- und Marketingdienste sind nicht aktiviert.';
+
+    categoriesContainer!.hidden = true;
+    categoriesContainer!.replaceChildren();
+    servicesContainer!.hidden = true;
+    servicesContainer!.replaceChildren();
+
+    actionsContainer!.replaceChildren(
+      buildButton({
+        label: 'Verstanden',
+        variant: 'primary',
+        onClick: () => {
+          consentManager.acknowledgeNotice();
+          closeDialog();
+        },
+      }),
+      buildLink({
+        label: 'Datenschutz ansehen',
+        href: '/datenschutz',
+        variant: 'ghost',
+      }),
+    );
   }
 
-  // Banner nur zeigen, wenn noch keine Entscheidung vorliegt
-  if (!consentManager.hasDecided()) {
-    banner?.removeAttribute('hidden');
+  function renderModeB(): void {
+    titleEl!.textContent = 'Ihre Privatsphäre. Sicher geregelt.';
+    descEl!.textContent =
+      'Wir verwenden notwendige Technologien für den Betrieb dieser Website. Optionale Dienste laden wir nur mit Ihrer Zustimmung. Sie können Ihre Auswahl jederzeit ändern.';
+
+    const categories = consentManager.activeCategories;
+    const services = consentManager.enabledServices;
+    const current = consentManager.categories;
+
+    renderCategories(categories, current);
+    renderServices(services);
+
+    actionsContainer!.replaceChildren(
+      buildButton({
+        label: 'Alle akzeptieren',
+        variant: 'primary',
+        onClick: () => {
+          consentManager.acceptAll();
+          closeDialog();
+        },
+      }),
+      buildButton({
+        label: 'Alle ablehnen',
+        variant: 'outline',
+        onClick: () => {
+          consentManager.rejectAll();
+          closeDialog();
+        },
+      }),
+      buildButton({
+        label: 'Auswahl speichern',
+        variant: 'ghost',
+        onClick: () => {
+          const selection: Record<string, boolean> = {};
+          categoriesContainer!
+            .querySelectorAll<HTMLInputElement>('input[type="checkbox"][data-category]')
+            .forEach((input) => {
+              const id = input.dataset.category;
+              if (id) selection[id] = input.checked;
+            });
+          consentManager.saveSelection(selection);
+          closeDialog();
+        },
+      }),
+    );
   }
 
-  // „Alle akzeptieren" (Banner und Dialog)
-  document.querySelectorAll('[data-consent-accept-all]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      consentManager.acceptAll();
-      hideBanner();
-      dialog?.close();
-    });
+  function renderCategories(
+    categories: ConsentCategoryDefinition[],
+    current: Record<string, boolean | undefined>,
+  ): void {
+    if (categories.length === 0) {
+      categoriesContainer!.hidden = true;
+      categoriesContainer!.replaceChildren();
+      return;
+    }
+    categoriesContainer!.hidden = false;
+    categoriesContainer!.replaceChildren(
+      ...categories.map((cat) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'privacy-category';
+
+        const head = document.createElement('div');
+        head.className = 'privacy-category__head';
+
+        const label = document.createElement('span');
+        label.className = 'privacy-category__label';
+        label.textContent = cat.label;
+        if (cat.required) {
+          const meta = document.createElement('span');
+          meta.className = 'privacy-category__meta';
+          meta.textContent = '(immer aktiv)';
+          label.append(' ', meta);
+        }
+        head.appendChild(label);
+
+        const toggle = document.createElement('label');
+        toggle.className = 'privacy-toggle';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.dataset.category = cat.id;
+        input.checked = cat.required ? true : current[cat.id] === true;
+        input.disabled = cat.required;
+        input.setAttribute('aria-label', `Kategorie ${cat.label} zulassen`);
+        const track = document.createElement('span');
+        track.className = 'privacy-toggle__track';
+        toggle.append(input, track);
+        head.appendChild(toggle);
+
+        wrap.appendChild(head);
+
+        const desc = document.createElement('p');
+        desc.className = 'privacy-category__desc';
+        desc.textContent = cat.description;
+        wrap.appendChild(desc);
+
+        return wrap;
+      }),
+    );
+  }
+
+  function renderServices(services: ConsentServiceDefinition[]): void {
+    if (services.length === 0) {
+      servicesContainer!.hidden = true;
+      servicesContainer!.replaceChildren();
+      return;
+    }
+    servicesContainer!.hidden = false;
+    servicesContainer!.replaceChildren();
+
+    const heading = document.createElement('h3');
+    heading.textContent = 'Eingebundene Dienste';
+    servicesContainer!.appendChild(heading);
+
+    for (const service of services) {
+      const box = document.createElement('div');
+      box.className = 'privacy-service';
+
+      const title = document.createElement('p');
+      title.className = 'privacy-service__title';
+      title.textContent = service.name;
+      box.appendChild(title);
+
+      const dl = document.createElement('dl');
+      const rows: Array<[string, string | HTMLElement]> = [
+        ['Anbieter', service.provider],
+        ['Zweck', service.purpose],
+        ['Kategorie', service.category],
+      ];
+      if (service.storage.length > 0) {
+        const storageText = service.storage
+          .map((s) => `${s.name} (${s.type}, Speicherdauer: ${s.duration})`)
+          .join('; ');
+        rows.push(['Speicherung', storageText]);
+      }
+      if (service.thirdCountryTransfer) {
+        rows.push(['Drittland', service.thirdCountryTransfer]);
+      }
+      if (service.providerPrivacyUrl) {
+        const link = document.createElement('a');
+        link.href = service.providerPrivacyUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = 'Datenschutzerklärung des Anbieters';
+        rows.push(['Anbieter-Info', link]);
+      }
+      for (const [term, value] of rows) {
+        const dt = document.createElement('dt');
+        dt.textContent = term;
+        const dd = document.createElement('dd');
+        if (typeof value === 'string') {
+          dd.textContent = value;
+        } else {
+          dd.appendChild(value);
+        }
+        dl.append(dt, dd);
+      }
+      box.appendChild(dl);
+      servicesContainer!.appendChild(box);
+    }
+  }
+
+  interface ButtonConfig {
+    label: string;
+    variant: 'primary' | 'outline' | 'ghost';
+    onClick: () => void;
+  }
+
+  function buildButton(config: ButtonConfig): HTMLButtonElement {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `privacy-btn privacy-btn--${config.variant}`;
+    btn.textContent = config.label;
+    btn.addEventListener('click', config.onClick);
+    return btn;
+  }
+
+  interface LinkConfig {
+    label: string;
+    href: string;
+    variant: 'primary' | 'outline' | 'ghost';
+  }
+
+  function buildLink(config: LinkConfig): HTMLAnchorElement {
+    const link = document.createElement('a');
+    link.href = config.href;
+    link.className = `privacy-btn privacy-btn--${config.variant}`;
+    link.textContent = config.label;
+    return link;
+  }
+
+  function renderContent(): void {
+    if (consentManager.mode === 'notice-only') {
+      renderModeA();
+    } else {
+      renderModeB();
+    }
+  }
+
+  function openDialog(): void {
+    lastFocused = (document.activeElement as HTMLElement | null) ?? null;
+    renderContent();
+    setPanelInert(false);
+    panel!.focus({ preventScroll: true });
+  }
+
+  function closeDialog(): void {
+    setPanelInert(true);
+    if (lastFocused && document.body.contains(lastFocused)) {
+      lastFocused.focus({ preventScroll: true });
+    }
+    lastFocused = null;
+  }
+
+  function isOpen(): boolean {
+    return overlay!.hasAttribute('hidden') === false;
+  }
+
+  function trapFocus(event: KeyboardEvent): void {
+    if (!isOpen()) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      /* Escape schließt den Dialog. In Modus B wird das NICHT als Zustimmung
+         gewertet – der Nutzer kann den Dialog jederzeit über das rote Widget
+         oder den Footer-Link erneut öffnen. */
+      closeDialog();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const focusable = Array.from(
+      panel!.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+    ).filter((el) => !el.hasAttribute('hidden'));
+    if (focusable.length === 0) {
+      event.preventDefault();
+      panel!.focus();
+      return;
+    }
+    const first = focusable[0]!;
+    const last = focusable[focusable.length - 1]!;
+    const active = document.activeElement as HTMLElement | null;
+    if (event.shiftKey && (active === first || active === panel)) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  document.addEventListener('keydown', trapFocus);
+
+  widget?.addEventListener('click', () => {
+    if (isOpen()) {
+      closeDialog();
+    } else {
+      openDialog();
+    }
   });
 
-  // „Nur notwendige"
-  document.querySelectorAll('[data-consent-necessary-only]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      consentManager.acceptNecessaryOnly();
-      hideBanner();
-    });
+  closeBtn?.addEventListener('click', () => closeDialog());
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) {
+      /* Klick auf das Overlay schließt den Dialog wie Escape – wertet nichts. */
+      closeDialog();
+    }
   });
 
-  // „Einstellungen anpassen" im Banner
-  document.querySelectorAll('[data-consent-show-settings]').forEach((btn) => {
-    btn.addEventListener('click', openDialog);
+  document.addEventListener('consent:open', () => openDialog());
+
+  document.addEventListener('consent:changed', () => {
+    if (isOpen()) renderContent();
   });
 
-  // Öffnen über die Consent-API (z. B. Footer-Link)
-  document.addEventListener('consent:open', openDialog);
-
-  // „Auswahl speichern" – Dialog-Submit
-  form?.addEventListener('submit', () => {
-    consentManager.save({
-      functional: (form.elements.namedItem('functional') as HTMLInputElement).checked,
-      statistics: (form.elements.namedItem('statistics') as HTMLInputElement).checked,
-      marketing: (form.elements.namedItem('marketing') as HTMLInputElement).checked,
-    });
-    hideBanner();
-  });
+  /* Initial: nur öffnen, wenn noch keine Entscheidung / Bestätigung vorliegt.
+     In Modus A auch nur, wenn der zentrale Hinweis aktiviert ist. */
+  if (
+    !consentManager.hasDecided() &&
+    (consentManager.mode !== 'notice-only' || NOTICE_CONFIG.showInitialNotice)
+  ) {
+    /* Erst nach dem nächsten Frame öffnen, damit der Fokus nicht mit dem
+       initialen Fokus konkurriert. */
+    requestAnimationFrame(() => openDialog());
+  }
 </script>

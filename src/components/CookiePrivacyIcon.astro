@@ -1,0 +1,69 @@
+---
+/**
+ * Baustellen-Cookie-Icon als Inline-SVG.
+ *
+ * Reduzierte, robuste Silhouette: runde Cookie-Grundform mit angebissener
+ * Kante, drei Punkte, die an Nieten / Schraubenköpfe erinnern, und ein
+ * stark vereinfachter Bauhelmbogen oben. Nutzt `currentColor`, damit die
+ * Farbe vom umgebenden Element gesteuert werden kann (weiß im roten
+ * Widget, dunkel im Dialog-Kopf).
+ */
+interface Props {
+  size?: number;
+  title?: string;
+  class?: string;
+}
+
+const { size = 24, title, class: className = '' } = Astro.props;
+const hasTitle = typeof title === 'string' && title.length > 0;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 32 32"
+  width={size}
+  height={size}
+  role={hasTitle ? 'img' : 'presentation'}
+  aria-hidden={hasTitle ? undefined : 'true'}
+  aria-labelledby={hasTitle ? 'cookie-icon-title' : undefined}
+  focusable="false"
+  class={`cookie-privacy-icon ${className}`.trim()}
+>
+  {hasTitle && <title id="cookie-icon-title">{title}</title>}
+  <g fill="currentColor">
+    <!-- Bauhelm-Krempe oberhalb der Cookie-Form -->
+    <rect x="6" y="8.4" width="20" height="1.6" />
+    <!-- Bauhelm-Schale -->
+    <path d="M9 8.4 A7 5 0 0 1 23 8.4 Z" />
+
+    <!-- Cookie-Grundform mit angebissener Kante rechts oben.
+         Kreis-Radius ca. 10 um (16, 21) mit "Biss" bei 2 Uhr. -->
+    <path
+      d="M16 11
+         C 9.9 11 5 15.9 5 22
+         C 5 28.1 9.9 33 16 33
+         C 22.1 33 27 28.1 27 22
+         C 27 21.55 26.97 21.11 26.91 20.68
+         C 25.6 21.32 23.98 21.05 22.9 19.97
+         C 21.82 18.89 21.55 17.27 22.19 15.96
+         C 20.95 14.55 19.35 13.51 17.55 13.05
+         C 17.85 11.85 17.05 11 16 11 Z"
+    />
+  </g>
+
+  <!-- Nieten- / Schrauben-Punkte in Weiß aus der Cookie-Form ausgestanzt -->
+  <g fill="#ffffff">
+    <circle cx="11.5" cy="19.5" r="1.5" />
+    <circle cx="16.5" cy="25" r="1.7" />
+    <circle cx="21.5" cy="27" r="1.4" />
+  </g>
+</svg>
+
+<style>
+  .cookie-privacy-icon {
+    display: inline-block;
+    vertical-align: middle;
+    color: currentColor;
+    flex-shrink: 0;
+  }
+</style>
