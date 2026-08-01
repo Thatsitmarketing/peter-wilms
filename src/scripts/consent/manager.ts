@@ -1,19 +1,15 @@
 /**
  * Consent-Manager – schlanke, datensparsame Implementierung.
  *
- * Zwei Betriebsmodi (abgeleitet aus der Service-Registry):
- *   Modus A – kein optionaler Dienst aktiv: der zentrierte Hinweis ist reine
- *             Information, es wird keine Einwilligung eingeholt.
- *   Modus B – mindestens ein optionaler Dienst ist aktiv: vollständiger
- *             Consent-Dialog mit "Alle akzeptieren", "Alle ablehnen",
- *             "Einstellungen".
+ * Zeigt eine einheitliche Consent-Oberfläche mit allen Kategorien; der Nutzer
+ * entscheidet über "Alle akzeptieren", "Alle ablehnen" oder eine individuelle
+ * Auswahl. Optionale Dienste laden nur, wenn sie in der Registry auf
+ * `enabled: true` gesetzt sind UND die entsprechende Kategorie akzeptiert
+ * wurde.
  *
- * Speichert ausschließlich First-Party in `localStorage`:
- *   - `peter_willms_privacy_consent` (nur in Modus B nach Entscheidung)
- *   - `peter_willms_privacy_notice`  (in Modus A nach Bestätigung "Verstanden")
- *
- * Es werden keine Cookies, keine IP-Adressen, keine Formulardaten und keine
- * Nutzer-IDs gespeichert.
+ * Speichert ausschließlich First-Party in `localStorage` unter
+ * `peter_willms_privacy_consent`. Keine Cookies, keine IP-Adressen, keine
+ * Formulardaten, keine Nutzer-IDs.
  */
 
 import {
@@ -22,15 +18,12 @@ import {
   CONSENT_SERVICES,
   CONSENT_VERSION,
   STORAGE_KEYS,
-  getActiveCategories,
   getEnabledServices,
   hasEnabledServices,
   type ConsentCategoryDefinition,
   type ConsentCategoryId,
   type ConsentServiceDefinition,
 } from './registry';
-
-export type ConsentMode = 'notice-only' | 'full-consent';
 
 export type CategorySelection = Partial<Record<ConsentCategoryId, boolean>>;
 
@@ -40,11 +33,6 @@ export interface ConsentDecision {
   expiresAt: string;
   categories: CategorySelection;
   services: string[];
-}
-
-interface NoticeAcknowledgement {
-  version: number;
-  acknowledgedAt: string;
 }
 
 function safeParse<T>(raw: string | null): T | null {
@@ -93,14 +81,6 @@ function readDecision(): ConsentDecision | null {
   return decision;
 }
 
-function readNotice(): NoticeAcknowledgement | null {
-  const notice = safeParse<NoticeAcknowledgement>(
-    localStorage.getItem(STORAGE_KEYS.notice),
-  );
-  if (!notice || notice.version !== CONSENT_VERSION) return null;
-  return notice;
-}
-
 function categoryDefaults(): CategorySelection {
   const defaults: CategorySelection = {};
   for (const cat of CONSENT_CATEGORIES) {
@@ -136,7 +116,6 @@ function runServiceCleanups(previous: CategorySelection, next: CategorySelection
 }
 
 export interface ConsentChangeDetail {
-  mode: ConsentMode;
   categories: CategorySelection;
 }
 
@@ -149,32 +128,35 @@ class ConsentManager {
   private hasDecidedFlag = false;
 
   constructor() {
-    if (this.mode === 'full-consent') {
-      const decision = readDecision();
-      if (decision) {
-        this.currentCategories = { ...categoryDefaults(), ...decision.categories };
-        this.hasDecidedFlag = true;
-        runServiceLoaders(this.currentCategories);
-      }
-    } else {
-      this.hasDecidedFlag = readNotice() !== null;
+    const decision = readDecision();
+    if (decision) {
+      this.currentCategories = { ...categoryDefaults(), ...decision.categories };
+      this.hasDecidedFlag = true;
+      runServiceLoaders(this.currentCategories);
     }
+    /* Aufräumen: alten Notice-Key aus früheren Versionen entfernen. */
+    safeRemove(STORAGE_KEYS.notice);
   }
 
-  get mode(): ConsentMode {
-    return hasEnabledServices() ? 'full-consent' : 'notice-only';
+  /** Wird derzeit mindestens ein optionaler Dienst tatsächlich geladen? */
+  get hasActiveServices(): boolean {
+    return hasEnabledServices();
   }
 
   get categories(): CategorySelection {
     return { ...this.currentCategories };
   }
 
-  get activeCategories(): ConsentCategoryDefinition[] {
-    return getActiveCategories();
+  get allCategories(): readonly ConsentCategoryDefinition[] {
+    return CONSENT_CATEGORIES;
   }
 
   get enabledServices(): ConsentServiceDefinition[] {
     return getEnabledServices();
+  }
+
+  getServicesByCategory(categoryId: ConsentCategoryId): ConsentServiceDefinition[] {
+    return getEnabledServices().filter((s) => s.category === categoryId);
   }
 
   hasDecided(): boolean {
@@ -186,29 +168,14 @@ class ConsentManager {
   }
 
   /**
-   * Modus A: einfache Bestätigung, dass der Datenschutz-Hinweis gesehen wurde.
-   * Speichert keinerlei Consent-Zustand für Dienste.
-   */
-  acknowledgeNotice(): void {
-    if (this.mode !== 'notice-only') return;
-    const ack: NoticeAcknowledgement = {
-      version: CONSENT_VERSION,
-      acknowledgedAt: nowIso(),
-    };
-    safeWrite(STORAGE_KEYS.notice, ack);
-    this.hasDecidedFlag = true;
-    this.dispatchChange();
-  }
-
-  /**
-   * Modus B: speichert eine explizite Auswahl aktiver Kategorien.
-   * Nicht angegebene Kategorien werden als abgelehnt gewertet.
+   * Speichert eine explizite Auswahl aktiver Kategorien. Nicht angegebene
+   * Kategorien werden als abgelehnt gewertet; die notwendige Kategorie bleibt
+   * immer aktiv.
    */
   saveSelection(selection: CategorySelection): void {
-    if (this.mode !== 'full-consent') return;
     const previous = this.currentCategories;
     const next: CategorySelection = { ...categoryDefaults() };
-    for (const cat of this.activeCategories) {
+    for (const cat of CONSENT_CATEGORIES) {
       next[cat.id] = cat.required ? true : selection[cat.id] === true;
     }
     this.currentCategories = next;
@@ -228,18 +195,16 @@ class ConsentManager {
   }
 
   acceptAll(): void {
-    if (this.mode !== 'full-consent') return;
     const all: CategorySelection = {};
-    for (const cat of this.activeCategories) {
+    for (const cat of CONSENT_CATEGORIES) {
       all[cat.id] = true;
     }
     this.saveSelection(all);
   }
 
   rejectAll(): void {
-    if (this.mode !== 'full-consent') return;
     const none: CategorySelection = {};
-    for (const cat of this.activeCategories) {
+    for (const cat of CONSENT_CATEGORIES) {
       none[cat.id] = cat.required;
     }
     this.saveSelection(none);
@@ -262,7 +227,7 @@ class ConsentManager {
   private dispatchChange(): void {
     document.dispatchEvent(
       new CustomEvent<ConsentChangeDetail>('consent:changed', {
-        detail: { mode: this.mode, categories: this.categories },
+        detail: { categories: this.categories },
       }),
     );
   }
