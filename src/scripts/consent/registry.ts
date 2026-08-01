@@ -88,37 +88,37 @@ export interface ConsentServiceDefinition {
 export const CONSENT_CATEGORIES: readonly ConsentCategoryDefinition[] = [
   {
     id: 'necessary',
-    label: 'Notwendig',
+    label: 'Technisch notwendig',
     description:
-      'Für den sicheren Betrieb dieser Website unverzichtbar (z. B. Speicherung Ihrer Datenschutz-Einstellungen).',
+      'Erforderlich, damit die Website sicher und wie gewünscht funktioniert. Diese Kategorie kann nicht deaktiviert werden.',
     required: true,
   },
   {
     id: 'functional',
-    label: 'Funktion & Darstellung',
+    label: 'Funktionale Dienste',
     description:
-      'Erlaubt zusätzliche Funktionen zur Bedienung oder Darstellung der Website.',
+      'Ermöglichen Komfortfunktionen, die über die reine Darstellung der Seite hinausgehen – zum Beispiel eine aktiv aufgerufene Terminbuchung oder ein Chat-Widget.',
     required: false,
   },
   {
     id: 'analytics',
-    label: 'Statistik',
+    label: 'Statistik und Analyse',
     description:
-      'Anonymisierte Reichweitenmessung, um die Website zu verbessern.',
+      'Helfen zu verstehen, wie die Website genutzt wird, um sie zu verbessern – zum Beispiel mit anonymisierten Reichweitenmessungen.',
     required: false,
   },
   {
     id: 'marketing',
     label: 'Marketing',
     description:
-      'Erfolgsmessung von Werbung und personalisierte Werbeansprache.',
+      'Dienen der Erfolgsmessung von Werbung und dem gezielten Ansprechen von Zielgruppen – zum Beispiel Google Ads oder Meta-Pixel.',
     required: false,
   },
   {
     id: 'externalMedia',
-    label: 'Externe Inhalte',
+    label: 'Externe Medien',
     description:
-      'Inhalte externer Anbieter (z. B. Karten, Videos), die erst nach Ihrer Einwilligung geladen werden.',
+      'Inhalte externer Anbieter wie Karten, Videos oder Social-Media-Widgets, die erst nach Ihrer Einwilligung geladen werden.',
     required: false,
   },
 ] as const;
