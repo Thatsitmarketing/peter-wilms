@@ -1,24 +1,24 @@
 ---
 /**
  * Zentrale Consent-UI:
- *   1. Fest sichtbares Cookie-Widget links unten (öffnet den Dialog).
+ *   1. Fest sichtbares Cookie-Widget unten rechts (öffnet den Dialog).
  *   2. Zentrierter Datenschutz-/Consent-Dialog. Der Dialog rendert sich
  *      dynamisch abhängig vom Betriebsmodus des Consent-Managers:
  *        - Modus A (kein optionaler Dienst aktiv):
- *          Nur-Hinweis mit "Verstanden" / "Datenschutz ansehen".
+ *          Kategorien-Übersicht "Technisch notwendig" + "Optionale Dienste"
+ *          (Hinweis, dass aktuell keine aktiv sind), Aktionen "Verstanden"
+ *          und "Datenschutz ansehen".
  *        - Modus B (mindestens ein optionaler Dienst aktiv):
- *          Voller Consent mit "Alle akzeptieren", "Alle ablehnen",
- *          "Einstellungen".
+ *          Voller Consent mit dynamischen Kategorien, Toggles und
+ *          "Alle akzeptieren", "Alle ablehnen", "Auswahl speichern".
  *
- * Registriert wird über die Service-Registry in
- * `src/scripts/consent/registry.ts` – dort werden Dienste hinzugefügt und
- * aktiviert. Diese Komponente selbst enthält keinerlei Kategorie- oder
- * Dienst-Definition.
+ * Optionale Dienste werden ausschließlich in der Service-Registry
+ * (`src/scripts/consent/registry.ts`) hinzugefügt und aktiviert.
  */
 import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
 ---
 
-<!-- Rotes eckiges Cookie-Widget (immer sichtbar) -->
+<!-- Rotes eckiges Cookie-Widget (immer sichtbar, rechts unten) -->
 <button
   type="button"
   class="cookie-widget"
@@ -76,7 +76,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
         <!-- Beschreibung wird per JS abhängig vom Modus gesetzt. -->
       </p>
 
-      <div class="privacy-panel__categories" data-privacy-categories hidden></div>
+      <div class="privacy-panel__categories" data-privacy-categories></div>
 
       <div class="privacy-panel__services" data-privacy-services hidden></div>
 
@@ -94,10 +94,10 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
 </div>
 
 <style>
-  /* ---------- Widget links unten ---------- */
+  /* ---------- Widget rechts unten ---------- */
   .cookie-widget {
     position: fixed;
-    left: max(1rem, env(safe-area-inset-left, 0));
+    right: max(1rem, env(safe-area-inset-right, 0));
     bottom: max(1rem, env(safe-area-inset-bottom, 0));
     z-index: 140;
     width: 3.25rem;
@@ -280,7 +280,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     color: var(--color-red);
   }
 
-  /* ---------- Kategorien-Liste (nur in Modus B) ---------- */
+  /* ---------- Kategorien-Liste ---------- */
   .privacy-panel__categories {
     margin: 1.25rem 0 0;
     display: flex;
@@ -309,6 +309,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
   }
 
   .privacy-category__meta {
+    font-family: var(--font-body);
     font-size: 0.78rem;
     color: var(--color-slate);
     font-weight: 400;
@@ -320,6 +321,13 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     font-size: 0.85rem;
     color: var(--color-slate);
     line-height: 1.5;
+  }
+
+  .privacy-category__hint {
+    margin: 0.5rem 0 0;
+    font-size: 0.8rem;
+    color: var(--color-slate);
+    font-style: italic;
   }
 
   .privacy-toggle {
@@ -383,7 +391,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     outline-offset: 2px;
   }
 
-  /* ---------- Dienste-Detail-Liste (nur wenn Dienste vorhanden) ---------- */
+  /* ---------- Dienste-Detail-Liste (nur bei aktiven Diensten) ---------- */
   .privacy-panel__services {
     margin: 1.25rem 0 0;
     border-top: 1px solid var(--color-line);
@@ -393,7 +401,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
   .privacy-panel__services h3 {
     margin: 0 0 0.75rem;
     font-family: var(--font-heading);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--color-slate);
@@ -435,7 +443,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     color: var(--color-red);
   }
 
-  /* ---------- Aktionen-Footer ---------- */
+  /* ---------- Aktionen-Footer (nutzt die Site-Buttons `.btn`) ---------- */
   .privacy-panel__actions {
     display: flex;
     flex-wrap: wrap;
@@ -445,58 +453,24 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     background: var(--color-bg-soft);
   }
 
-  .privacy-btn {
+  /* Kompakte Ausprägung der globalen `.btn`-Klassen für die kompakte
+     Buttonleiste im Dialog. Der `—`-Präfix samt Hover-Translate wird hier
+     unterdrückt, damit die Button-Breite konstant bleibt. */
+  .privacy-panel__actions .btn {
+    padding: 0.7rem 1.15rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    box-shadow: none;
     flex: 1 1 auto;
     min-width: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.7rem 1rem;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 0.9rem;
-    line-height: 1.2;
-    border-radius: 2px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
-  .privacy-btn:focus-visible {
-    outline: 2px solid var(--color-red-dark);
-    outline-offset: 2px;
+  .privacy-panel__actions .btn--outline {
+    padding: calc(0.7rem - 2px) calc(1.15rem - 2px);
   }
 
-  .privacy-btn--primary {
-    background: var(--color-red);
-    color: #ffffff;
-    border: 2px solid var(--color-red);
-  }
-
-  .privacy-btn--primary:hover {
-    background: var(--color-red-dark);
-    border-color: var(--color-red-dark);
-  }
-
-  .privacy-btn--outline {
-    background: #ffffff;
-    color: var(--color-ink);
-    border: 2px solid var(--color-ink);
-  }
-
-  .privacy-btn--outline:hover {
-    background: var(--color-ink);
-    color: #ffffff;
-  }
-
-  .privacy-btn--ghost {
-    background: transparent;
-    color: var(--color-ink);
-    border: 2px solid var(--color-line);
-  }
-
-  .privacy-btn--ghost:hover {
-    border-color: var(--color-ink);
+  .privacy-panel__actions .btn::before {
+    display: none;
   }
 
   /* ---------- Layout-Anpassung für kleine Bildschirme ---------- */
@@ -514,7 +488,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     .privacy-panel__actions {
       padding-inline: 1rem;
     }
-    .privacy-btn {
+    .privacy-panel__actions .btn {
       flex: 1 1 100%;
     }
     .privacy-service dl {
@@ -525,6 +499,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
 
 <script>
   import {
+    CONSENT_CATEGORIES,
     NOTICE_CONFIG,
     type ConsentCategoryDefinition,
     type ConsentServiceDefinition,
@@ -565,17 +540,16 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
   function renderModeA(): void {
     titleEl!.textContent = 'Datenschutz auf unserer Website';
     descEl!.textContent =
-      'Wir verwenden derzeit ausschließlich technisch notwendige Funktionen, die für den sicheren Betrieb dieser Website erforderlich sind. Analyse- und Marketingdienste sind nicht aktiviert.';
+      'Wir verwenden derzeit ausschließlich technisch notwendige Funktionen, die für den sicheren Betrieb dieser Website erforderlich sind. Optionale Dienste (z. B. Statistik, Marketing, externe Inhalte) sind nicht aktiviert.';
 
-    categoriesContainer!.hidden = true;
-    categoriesContainer!.replaceChildren();
+    renderCategoriesModeA();
     servicesContainer!.hidden = true;
     servicesContainer!.replaceChildren();
 
     actionsContainer!.replaceChildren(
       buildButton({
         label: 'Verstanden',
-        variant: 'primary',
+        className: 'btn btn--red btn--small',
         onClick: () => {
           consentManager.acknowledgeNotice();
           closeDialog();
@@ -584,7 +558,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
       buildLink({
         label: 'Datenschutz ansehen',
         href: '/datenschutz',
-        variant: 'ghost',
+        className: 'btn btn--outline btn--small',
       }),
     );
   }
@@ -598,13 +572,13 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     const services = consentManager.enabledServices;
     const current = consentManager.categories;
 
-    renderCategories(categories, current);
+    renderCategoriesModeB(categories, current);
     renderServices(services);
 
     actionsContainer!.replaceChildren(
       buildButton({
         label: 'Alle akzeptieren',
-        variant: 'primary',
+        className: 'btn btn--red btn--small',
         onClick: () => {
           consentManager.acceptAll();
           closeDialog();
@@ -612,7 +586,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
       }),
       buildButton({
         label: 'Alle ablehnen',
-        variant: 'outline',
+        className: 'btn btn--outline btn--small',
         onClick: () => {
           consentManager.rejectAll();
           closeDialog();
@@ -620,7 +594,7 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
       }),
       buildButton({
         label: 'Auswahl speichern',
-        variant: 'ghost',
+        className: 'btn btn--outline btn--small',
         onClick: () => {
           const selection: Record<string, boolean> = {};
           categoriesContainer!
@@ -636,58 +610,146 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
     );
   }
 
-  function renderCategories(
+  /**
+   * Modus A: zeigt "Technisch notwendig" (immer aktiv, gesperrter Toggle)
+   * und eine Sammelkategorie "Optionale Dienste" mit dem Hinweis, dass
+   * derzeit keine aktiv sind. So sieht der Nutzer die gleiche Struktur
+   * wie bei einem normalen Consent-Banner – ohne dass wir fiktive
+   * Einwilligungsschalter anzeigen.
+   */
+  function renderCategoriesModeA(): void {
+    const necessary = CONSENT_CATEGORIES.find((cat) => cat.id === 'necessary');
+    categoriesContainer!.replaceChildren();
+
+    if (necessary) {
+      categoriesContainer!.appendChild(
+        buildCategoryRow({
+          label: necessary.label,
+          description: necessary.description,
+          checked: true,
+          disabled: true,
+          categoryId: necessary.id,
+          metaText: '(immer aktiv)',
+        }),
+      );
+    }
+
+    categoriesContainer!.appendChild(
+      buildInfoRow({
+        label: 'Optionale Dienste',
+        description:
+          'Analyse, Marketing oder externe Inhalte werden auf dieser Website derzeit nicht eingesetzt.',
+        hint: 'Sollten künftig optionale Dienste eingebunden werden, fragen wir Ihre Einwilligung erneut ab.',
+      }),
+    );
+  }
+
+  function renderCategoriesModeB(
     categories: ConsentCategoryDefinition[],
     current: Record<string, boolean | undefined>,
   ): void {
-    if (categories.length === 0) {
-      categoriesContainer!.hidden = true;
-      categoriesContainer!.replaceChildren();
-      return;
+    categoriesContainer!.replaceChildren();
+    for (const cat of categories) {
+      categoriesContainer!.appendChild(
+        buildCategoryRow({
+          label: cat.label,
+          description: cat.description,
+          checked: cat.required ? true : current[cat.id] === true,
+          disabled: cat.required,
+          categoryId: cat.id,
+          metaText: cat.required ? '(immer aktiv)' : undefined,
+        }),
+      );
     }
-    categoriesContainer!.hidden = false;
-    categoriesContainer!.replaceChildren(
-      ...categories.map((cat) => {
-        const wrap = document.createElement('div');
-        wrap.className = 'privacy-category';
+  }
 
-        const head = document.createElement('div');
-        head.className = 'privacy-category__head';
+  interface CategoryRowConfig {
+    label: string;
+    description: string;
+    checked: boolean;
+    disabled: boolean;
+    categoryId: string;
+    metaText?: string;
+  }
 
-        const label = document.createElement('span');
-        label.className = 'privacy-category__label';
-        label.textContent = cat.label;
-        if (cat.required) {
-          const meta = document.createElement('span');
-          meta.className = 'privacy-category__meta';
-          meta.textContent = '(immer aktiv)';
-          label.append(' ', meta);
-        }
-        head.appendChild(label);
+  function buildCategoryRow(config: CategoryRowConfig): HTMLDivElement {
+    const wrap = document.createElement('div');
+    wrap.className = 'privacy-category';
 
-        const toggle = document.createElement('label');
-        toggle.className = 'privacy-toggle';
-        const input = document.createElement('input');
-        input.type = 'checkbox';
-        input.dataset.category = cat.id;
-        input.checked = cat.required ? true : current[cat.id] === true;
-        input.disabled = cat.required;
-        input.setAttribute('aria-label', `Kategorie ${cat.label} zulassen`);
-        const track = document.createElement('span');
-        track.className = 'privacy-toggle__track';
-        toggle.append(input, track);
-        head.appendChild(toggle);
+    const head = document.createElement('div');
+    head.className = 'privacy-category__head';
 
-        wrap.appendChild(head);
+    const label = document.createElement('span');
+    label.className = 'privacy-category__label';
+    label.textContent = config.label;
+    if (config.metaText) {
+      const meta = document.createElement('span');
+      meta.className = 'privacy-category__meta';
+      meta.textContent = config.metaText;
+      label.append(' ', meta);
+    }
+    head.appendChild(label);
 
-        const desc = document.createElement('p');
-        desc.className = 'privacy-category__desc';
-        desc.textContent = cat.description;
-        wrap.appendChild(desc);
+    const toggle = document.createElement('label');
+    toggle.className = 'privacy-toggle';
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.dataset.category = config.categoryId;
+    input.checked = config.checked;
+    input.disabled = config.disabled;
+    input.setAttribute('aria-label', `Kategorie ${config.label} zulassen`);
+    const track = document.createElement('span');
+    track.className = 'privacy-toggle__track';
+    toggle.append(input, track);
+    head.appendChild(toggle);
 
-        return wrap;
-      }),
-    );
+    wrap.appendChild(head);
+
+    const desc = document.createElement('p');
+    desc.className = 'privacy-category__desc';
+    desc.textContent = config.description;
+    wrap.appendChild(desc);
+
+    return wrap;
+  }
+
+  interface InfoRowConfig {
+    label: string;
+    description: string;
+    hint?: string;
+  }
+
+  function buildInfoRow(config: InfoRowConfig): HTMLDivElement {
+    const wrap = document.createElement('div');
+    wrap.className = 'privacy-category';
+
+    const head = document.createElement('div');
+    head.className = 'privacy-category__head';
+
+    const label = document.createElement('span');
+    label.className = 'privacy-category__label';
+    label.textContent = config.label;
+    const meta = document.createElement('span');
+    meta.className = 'privacy-category__meta';
+    meta.textContent = '(nicht aktiv)';
+    label.append(' ', meta);
+    head.appendChild(label);
+
+    wrap.appendChild(head);
+
+    const desc = document.createElement('p');
+    desc.className = 'privacy-category__desc';
+    desc.textContent = config.description;
+    wrap.appendChild(desc);
+
+    if (config.hint) {
+      const hint = document.createElement('p');
+      hint.className = 'privacy-category__hint';
+      hint.textContent = config.hint;
+      wrap.appendChild(hint);
+    }
+
+    return wrap;
   }
 
   function renderServices(services: ConsentServiceDefinition[]): void {
@@ -753,14 +815,14 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
 
   interface ButtonConfig {
     label: string;
-    variant: 'primary' | 'outline' | 'ghost';
+    className: string;
     onClick: () => void;
   }
 
   function buildButton(config: ButtonConfig): HTMLButtonElement {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = `privacy-btn privacy-btn--${config.variant}`;
+    btn.className = config.className;
     btn.textContent = config.label;
     btn.addEventListener('click', config.onClick);
     return btn;
@@ -769,13 +831,13 @@ import CookiePrivacyIcon from './CookiePrivacyIcon.astro';
   interface LinkConfig {
     label: string;
     href: string;
-    variant: 'primary' | 'outline' | 'ghost';
+    className: string;
   }
 
   function buildLink(config: LinkConfig): HTMLAnchorElement {
     const link = document.createElement('a');
     link.href = config.href;
-    link.className = `privacy-btn privacy-btn--${config.variant}`;
+    link.className = config.className;
     link.textContent = config.label;
     return link;
   }

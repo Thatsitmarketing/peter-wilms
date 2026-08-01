@@ -170,55 +170,59 @@ const timeline = [
               <!-- Rückseite -->
               <div class="position-card__face position-card__face--back" aria-hidden="true">
                 <div class="position-card__body position-card__body--back">
-                  <div class="position-card__back-head">
-                    <div>
-                      <p class="position-card__kind">{position.kind}</p>
-                      <h3 class="position-card__title">{position.title}</h3>
+                  <div class="position-card__back-scroll">
+                    <div class="position-card__back-head">
+                      <div>
+                        <p class="position-card__kind">{position.kind}</p>
+                        <h3 class="position-card__title">{position.title}</h3>
+                      </div>
+                      <button type="button" class="position-card__close" data-flip-close aria-label="Details schließen">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M18 6 6 18M6 6l12 12" />
+                        </svg>
+                      </button>
                     </div>
-                    <button type="button" class="position-card__close" data-flip-close aria-label="Details schließen">
-                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M18 6 6 18M6 6l12 12" />
-                      </svg>
-                    </button>
+
+                    <dl class="position-card__meta">
+                      <div>
+                        <dt>Start</dt>
+                        <dd>{position.details.start}</dd>
+                      </div>
+                      <div>
+                        <dt>Einsatzort</dt>
+                        <dd>{position.details.location}</dd>
+                      </div>
+                      <div>
+                        <dt>Vergütung</dt>
+                        <dd>{position.details.pay}</dd>
+                      </div>
+                    </dl>
+
+                    <div class="position-card__section">
+                      <h4>Ihre Aufgaben</h4>
+                      <ul>
+                        {position.details.tasks.map((task) => <li>{task}</li>)}
+                      </ul>
+                    </div>
+
+                    <div class="position-card__section">
+                      <h4>Qualifikationen</h4>
+                      <ul>
+                        {position.details.qualifications.map((qual) => <li>{qual}</li>)}
+                      </ul>
+                    </div>
+
+                    <div class="position-card__section">
+                      <h4>Benefits</h4>
+                      <ul>
+                        {position.details.benefits.map((benefit) => <li>{benefit}</li>)}
+                      </ul>
+                    </div>
                   </div>
 
-                  <dl class="position-card__meta">
-                    <div>
-                      <dt>Start</dt>
-                      <dd>{position.details.start}</dd>
-                    </div>
-                    <div>
-                      <dt>Einsatzort</dt>
-                      <dd>{position.details.location}</dd>
-                    </div>
-                    <div>
-                      <dt>Vergütung</dt>
-                      <dd>{position.details.pay}</dd>
-                    </div>
-                  </dl>
-
-                  <div class="position-card__section">
-                    <h4>Ihre Aufgaben</h4>
-                    <ul>
-                      {position.details.tasks.map((task) => <li>{task}</li>)}
-                    </ul>
+                  <div class="position-card__back-footer">
+                    <a class="btn btn--red btn--small position-card__apply" href={mailto}>Jetzt bewerben</a>
                   </div>
-
-                  <div class="position-card__section">
-                    <h4>Qualifikationen</h4>
-                    <ul>
-                      {position.details.qualifications.map((qual) => <li>{qual}</li>)}
-                    </ul>
-                  </div>
-
-                  <div class="position-card__section">
-                    <h4>Benefits</h4>
-                    <ul>
-                      {position.details.benefits.map((benefit) => <li>{benefit}</li>)}
-                    </ul>
-                  </div>
-
-                  <a class="btn btn--red position-card__apply" href={mailto}>Jetzt bewerben</a>
                 </div>
               </div>
             </div>
@@ -410,11 +414,14 @@ const timeline = [
     display: block;
   }
 
-  /* Flip-Container – hält Vorder- und Rückseite, dreht sich um Y-Achse. */
+  /* Flip-Container – hält Vorder- und Rückseite, dreht sich um Y-Achse.
+     min-height ist so gewählt, dass die Vorderseite (Bild + Kicker + Titel +
+     Kurztext + Aktionen) vollständig ohne Abschneiden dargestellt wird. Die
+     ausführliche Rückseite scrollt innerhalb der Karte. */
   .position-card__flip {
     position: relative;
     width: 100%;
-    min-height: 30rem;
+    min-height: 26rem;
     transform-style: preserve-3d;
     transition: transform 0.7s var(--ease-out);
   }
@@ -437,7 +444,6 @@ const timeline = [
 
   .position-card__face--back {
     transform: rotateY(180deg);
-    overflow-y: auto;
   }
 
   /* Wenn geflippt, die Rückseite anfassbar machen und die Vorderseite deaktivieren */
@@ -450,19 +456,44 @@ const timeline = [
   }
 
   .position-card__media {
-    aspect-ratio: 4 / 3;
+    height: 11rem;
+    flex-shrink: 0;
   }
 
   .position-card__body {
-    padding: 1.5rem;
+    padding: 1.25rem 1.5rem 1.5rem;
     display: flex;
     flex-direction: column;
     flex: 1;
+    min-height: 0;
   }
 
+  /* Rückseite: scrollt intern, Aktionsleiste bleibt sichtbar am unteren Rand. */
   .position-card__body--back {
-    padding: 1.5rem;
+    padding: 0;
+    gap: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .position-card__back-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 1.25rem 1.5rem 0.75rem;
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
+  }
+
+  .position-card__back-footer {
+    padding: 0.9rem 1.5rem 1rem;
+    border-top: 1px solid var(--color-line);
+    background: #fff;
+    display: flex;
+    justify-content: flex-start;
   }
 
   .position-card__back-head {
@@ -501,22 +532,46 @@ const timeline = [
 
   .position-card__title {
     font-family: var(--font-heading);
-    font-size: 1.25rem;
-    margin: 0 0 0.75rem;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    margin: 0 0 0.6rem;
   }
 
   .position-card__text {
-    margin: 0 0 1.25rem;
+    margin: 0 0 1rem;
     color: var(--color-slate);
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .position-card__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
+    gap: 0.5rem;
     margin-top: auto;
+  }
+
+  /* Kompakte Buttons für die Karten-Aktionen (kleinere Padding-Fassung der
+     globalen .btn-Klassen; ohne Hover-Translate der Präfixmarke, damit die
+     Karten stabil bleiben). */
+  .position-card__actions .btn {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    box-shadow: none;
+    flex: 1 1 auto;
+  }
+
+  .position-card__actions .btn--outline {
+    padding: calc(0.55rem - 2px) calc(0.9rem - 2px);
+  }
+
+  .position-card__actions .btn::before {
+    display: none;
   }
 
   .position-card__meta {
