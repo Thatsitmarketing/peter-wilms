@@ -59,7 +59,10 @@ const year = new Date().getFullYear();
 
   <div class="footer__bottom">
     <div class="container footer__bottom-inner">
-      <p>© {year} {company.name}. Alle Rechte vorbehalten.</p>
+      <p>
+        © {year} {company.name}. Alle Rechte vorbehalten.
+        <span class="footer__credit">Made by <a href="https://thatsit.marketing" target="_blank" rel="noopener">That's it. Marketing</a></span>
+      </p>
       <div class="footer__social">
         <!-- Platzhalter-Links: echte Profile eintragen oder Icons entfernen -->
         <a href="#" aria-label="Facebook (Link folgt)">
@@ -165,6 +168,21 @@ const year = new Date().getFullYear();
 
   .footer__bottom-inner p {
     margin: 0;
+  }
+
+  .footer__credit {
+    display: inline-block;
+    margin-left: 0.75rem;
+  }
+
+  .footer__bottom-inner .footer__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .footer__bottom-inner .footer__credit a:hover {
+    color: var(--color-red);
   }
 
   .footer__social {

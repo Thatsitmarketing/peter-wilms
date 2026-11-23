@@ -108,6 +108,17 @@ import { company } from '../data/site';
           </dl>
         </div>
       </section>
+
+      <section class="legal__section">
+        <div class="legal__section-head">
+          <h2>Webdesign und Umsetzung</h2>
+        </div>
+        <div class="legal__section-body">
+          <p class="legal__text">
+            Diese Website wurde von <a href="https://thatsit.marketing" rel="noopener">That's it. Marketing</a> konzipiert, gestaltet und technisch umgesetzt. That's it. Marketing ist eine Full Service Agentur für Webdesign, Online Marketing, Social Media sowie Foto und Videoproduktion und betreut Unternehmen in ganz Deutschland, Österreich und der Schweiz.
+          </p>
+        </div>
+      </section>
     </div>
   </section>
 </BaseLayout>
@@ -226,6 +237,22 @@ import { company } from '../data/site';
     margin: 0;
     color: var(--color-ink);
     line-height: 1.55;
+  }
+
+  .legal__text {
+    margin: 0;
+    color: var(--color-ink);
+    line-height: 1.55;
+  }
+
+  .legal__text a {
+    color: var(--color-red);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .legal__text a:hover {
+    color: var(--color-red-dark);
   }
 
   .legal__data a {
